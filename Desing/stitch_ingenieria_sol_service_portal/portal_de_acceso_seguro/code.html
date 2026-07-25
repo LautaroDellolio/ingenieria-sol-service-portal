@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ingenieria Sol - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#565e74",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed": "#dae2fd",
+                        "on-error": "#ffffff",
+                        "on-background": "#0b1c30",
+                        "secondary-fixed": "#ffdbca",
+                        "on-tertiary-fixed": "#002113",
+                        "on-surface": "#0b1c30",
+                        "surface-dim": "#cbdbf5",
+                        "outline": "#76777d",
+                        "secondary-fixed-dim": "#ffb690",
+                        "on-primary-container": "#7c839b",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "surface": "#f8f9ff",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#341100",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#131b2e",
+                        "surface-container-high": "#dce9ff",
+                        "surface-bright": "#f8f9ff",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "background": "#f8f9ff",
+                        "secondary": "#9d4300",
+                        "tertiary-container": "#002113",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary-fixed-dim": "#bec6e0",
+                        "outline-variant": "#c6c6cd",
+                        "tertiary-fixed": "#6ffbbe",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-secondary-fixed-variant": "#783200",
+                        "tertiary": "#000000",
+                        "inverse-surface": "#213145",
+                        "on-surface-variant": "#45464d",
+                        "surface-variant": "#d3e4fe",
+                        "surface-container-low": "#eff4ff",
+                        "inverse-primary": "#bec6e0",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "primary-container": "#131b2e",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#009668",
+                        "secondary-container": "#fd761a",
+                        "on-secondary-container": "#5c2400",
+                        "primary": "#000000"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "base": "4px",
+                        "xl": "32px",
+                        "gutter": "16px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-sm": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .grid-pattern {
+            background-image: 
+                linear-gradient(to right, rgba(118, 119, 125, 0.1) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(118, 119, 125, 0.1) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+        input:focus {
+            outline: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body class="bg-surface-bright grid-pattern min-h-screen flex items-center justify-center p-margin-mobile md:p-margin-desktop text-on-surface font-body-md">
+<div class="w-full max-w-md bg-surface-container-lowest border border-outline-variant shadow-sm rounded-lg overflow-hidden flex flex-col">
+<!-- Header -->
+<div class="bg-primary-container p-xl flex flex-col items-center justify-center border-b border-outline-variant">
+<img class="w-16 h-16 mb-md object-contain" data-alt="A minimalist, high-contrast flat industrial logo for an engineering company named Ingenieria Sol. The logo features a geometric sun emblem combined with structural elements in deep slate blue and crisp white. Modern, precise, corporate identity design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfJNs9YQy5v1BR_dGtbqs04mg_TIctuPF4z-_PrnGSFYsLgZPFVDPU9vHIrX81f8tQeuocPkQpR7His1CTWTCADTs_WxfHOTyBFTFXoW_L2nliSASP4xtdJYXjXAVAC7bhaXgkWul2TF6A8JwnEZ_Tz3JM3oxvHQ84WtbwisJA9KTAURmH4j_fIIbtJlGoWtGUGQnMnz9kkZ14RaiGmaBkTnBUIPRQf_uxV7P-DUGEC51tQM-6YFlnapJ6b93atCB__sc3PXpUDzw"/>
+<h1 class="font-headline-md text-headline-md font-bold text-on-primary">Ingenieria Sol</h1>
+<p class="font-body-sm text-body-sm text-primary-fixed-dim mt-xs">Portal de Operaciones Empresariales</p>
+</div>
+<!-- Form -->
+<div class="p-xl flex flex-col gap-lg">
+<form action="#" class="flex flex-col gap-md" method="POST">
+<!-- Username -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs" for="username">
+<span class="material-symbols-outlined text-[16px]">person</span>
+                        Usuario
+                    </label>
+<div class="relative">
+<input class="w-full border border-outline rounded bg-surface-bright px-md py-sm font-body-md text-body-md text-on-surface focus:border-primary focus:border-2 transition-all" id="username" name="username" placeholder="operator_id" required="" type="text"/>
+</div>
+</div>
+<!-- Password -->
+<div class="flex flex-col gap-xs">
+<div class="flex justify-between items-center">
+<label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs" for="password">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+                            Contraseña
+                        </label>
+<a class="font-label-sm text-label-sm text-secondary hover:text-secondary-container transition-colors" href="#">¿Olvidó su contraseña?</a>
+</div>
+<div class="relative">
+<input class="w-full border border-outline rounded bg-surface-bright px-md py-sm font-body-md text-body-md text-on-surface focus:border-primary focus:border-2 transition-all" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+</div>
+</div>
+<!-- Remember Me -->
+<div class="flex items-center gap-sm mt-xs">
+<input class="w-4 h-4 rounded border-outline text-primary focus:ring-primary focus:ring-offset-surface-container-lowest" id="remember" name="remember" type="checkbox"/>
+<label class="font-body-sm text-body-sm text-on-surface-variant" for="remember">Sesión Segura</label>
+</div>
+<!-- Submit -->
+<button class="mt-md bg-secondary text-on-secondary font-label-md text-label-md py-md px-lg rounded flex items-center justify-center gap-sm hover:bg-secondary-container transition-colors shadow-sm" type="submit">
+                    Iniciar Sesión
+                    <span class="material-symbols-outlined text-[18px]">login</span>
+</button>
+</form>
+</div>
+<!-- Footer -->
+<div class="bg-surface-container-low p-md border-t border-outline-variant text-center">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Solo personal autorizado. Sistema monitoreado.</p>
+</div>
+</div>
+</body></html>

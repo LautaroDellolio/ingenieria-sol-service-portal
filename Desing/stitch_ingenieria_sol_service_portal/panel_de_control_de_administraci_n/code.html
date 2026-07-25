@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Panel de Control - Ingenieria Sol</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary": "#ffffff",
+                      "surface-tint": "#565e74",
+                      "surface-container": "#e5eeff",
+                      "primary-fixed": "#dae2fd",
+                      "on-error": "#ffffff",
+                      "on-background": "#0b1c30",
+                      "secondary-fixed": "#ffdbca",
+                      "on-tertiary-fixed": "#002113",
+                      "on-surface": "#0b1c30",
+                      "surface-dim": "#cbdbf5",
+                      "outline": "#76777d",
+                      "secondary-fixed-dim": "#ffb690",
+                      "on-primary-container": "#7c839b",
+                      "on-tertiary-fixed-variant": "#005236",
+                      "surface": "#f8f9ff",
+                      "error": "#ba1a1a",
+                      "on-secondary-fixed": "#341100",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed": "#131b2e",
+                      "surface-container-high": "#dce9ff",
+                      "surface-bright": "#f8f9ff",
+                      "tertiary-fixed-dim": "#4edea3",
+                      "background": "#f8f9ff",
+                      "secondary": "#9d4300",
+                      "tertiary-container": "#002113",
+                      "surface-container-highest": "#d3e4fe",
+                      "primary-fixed-dim": "#bec6e0",
+                      "outline-variant": "#c6c6cd",
+                      "tertiary-fixed": "#6ffbbe",
+                      "inverse-on-surface": "#eaf1ff",
+                      "on-secondary-fixed-variant": "#783200",
+                      "tertiary": "#000000",
+                      "inverse-surface": "#213145",
+                      "on-surface-variant": "#45464d",
+                      "surface-variant": "#d3e4fe",
+                      "surface-container-low": "#eff4ff",
+                      "inverse-primary": "#bec6e0",
+                      "on-primary-fixed-variant": "#3f465c",
+                      "primary-container": "#131b2e",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-container": "#009668",
+                      "secondary-container": "#fd761a",
+                      "on-secondary-container": "#5c2400",
+                      "primary": "#000000"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-desktop": "32px",
+                      "lg": "24px",
+                      "md": "16px",
+                      "base": "4px",
+                      "xl": "32px",
+                      "gutter": "16px",
+                      "sm": "8px",
+                      "xs": "4px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "label-md": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "JetBrains Mono"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        body {
+            background-color: #F8FAFC; /* Canvas Level 0 */
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="bg-primary-container dark:bg-primary-container text-secondary dark:text-secondary-fixed h-screen w-64 fixed left-0 top-0 border-r border-outline-variant dark:border-outline hidden md:flex flex-col py-md z-20">
+<!-- Brand Header -->
+<div class="px-lg pb-xl border-b border-outline-variant/20 mb-sm">
+<div class="flex items-center gap-sm mb-xs">
+<div class="w-8 h-8 rounded bg-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary" style="font-variation-settings: 'FILL' 1;">precision_manufacturing</span>
+</div>
+<span class="font-headline-md text-headline-md font-bold text-on-primary">Ingenieria Sol</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-primary-container">Operaciones Empresariales</span>
+</div>
+<!-- Navigation Links -->
+<ul class="flex-1 flex flex-col gap-xs font-label-md text-label-md mt-sm">
+<li>
+<a class="bg-secondary text-on-secondary rounded-lg mx-2 flex items-center gap-sm px-sm py-sm hover:opacity-90 transition-all opacity-90 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                    Panel de Control
+                </a>
+</li>
+<li>
+<a class="text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 flex items-center gap-sm px-sm py-sm rounded-lg hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+                    Planificación de Rutas
+                </a>
+</li>
+<li>
+<a class="text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 flex items-center gap-sm px-sm py-sm rounded-lg hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="precision_manufacturing">precision_manufacturing</span>
+                    Equipos
+                </a>
+</li>
+<li>
+<a class="text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 flex items-center gap-sm px-sm py-sm rounded-lg hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="engineering">engineering</span>
+                    Entrada de Servicio
+                </a>
+</li>
+<li>
+<a class="text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 flex items-center gap-sm px-sm py-sm rounded-lg hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
+                    Validación
+                </a>
+</li>
+<li>
+<a class="text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 flex items-center gap-sm px-sm py-sm rounded-lg hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                    Ajustes
+                </a>
+</li>
+</ul>
+<!-- CTA & Footer -->
+<div class="px-md mt-auto pt-lg">
+<button class="w-full bg-secondary text-on-secondary font-label-md text-label-md py-sm rounded-lg mb-lg hover:opacity-90 transition-opacity">
+                Nueva Entrada de Servicio
+            </button>
+<ul class="flex flex-col gap-xs font-label-md text-label-md">
+<li>
+<a class="text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 flex items-center gap-sm px-sm py-sm rounded-lg hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                        Soporte
+                    </a>
+</li>
+<li>
+<a class="text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 flex items-center gap-sm px-sm py-sm rounded-lg hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                        Cerrar Sesión
+                    </a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col md:ml-64 min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface-dim text-primary dark:text-primary-fixed font-body-md text-body-md fixed top-0 right-0 left-0 md:left-64 h-16 border-b border-outline-variant dark:border-outline flex justify-between items-center px-margin-desktop w-full z-10">
+<!-- Search -->
+<div class="flex items-center">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="pl-xl pr-sm py-xs border border-outline-variant rounded-lg bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none font-body-sm text-body-sm w-64 text-on-surface" placeholder="Buscar recursos..." type="text"/>
+</div>
+</div>
+<!-- Actions & Profile -->
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-secondary transition-colors p-xs rounded-full hover:bg-surface-variant/50">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-secondary transition-colors p-xs rounded-full hover:bg-surface-variant/50 hidden sm:block">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+</button>
+<button class="text-on-surface-variant hover:text-secondary transition-colors flex items-center gap-xs">
+<span class="material-symbols-outlined text-[32px]" data-icon="account_circle" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 pt-24 px-margin-mobile md:px-margin-desktop pb-xl overflow-y-auto">
+<div class="mb-lg">
+<h1 class="font-headline-lg text-headline-lg md:font-headline-lg-mobile md:text-headline-lg-mobile text-on-surface">Resumen de Operaciones</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs">Estado en tiempo real del equipo y cronogramas de mantenimiento.</p>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- KPI: Uptime (Span 4) -->
+<div class="col-span-1 md:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col justify-between min-h-[160px]">
+<div class="flex justify-between items-start mb-sm border-b border-outline-variant/50 pb-sm">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">Tiempo de Actividad</span>
+</div>
+<span class="px-2 py-1 bg-tertiary-fixed-dim/20 text-on-tertiary-fixed-variant rounded font-label-sm text-label-sm">Óptimo</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-on-surface">99.8%</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-xs">+0.2% vs mes anterior</div>
+</div>
+</div>
+<!-- KPI: Orders (Span 4) -->
+<div class="col-span-1 md:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col justify-between min-h-[160px]">
+<div class="flex justify-between items-start mb-sm border-b border-outline-variant/50 pb-sm">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">pending_actions</span>
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">Órdenes Pendientes</span>
+</div>
+<span class="px-2 py-1 bg-error-container/50 text-on-error-container rounded font-label-sm text-label-sm">Requiere Atención</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-on-surface">42</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-xs">12 de prioridad crítica</div>
+</div>
+</div>
+<!-- KPI: Efficiency (Span 4) -->
+<div class="col-span-1 md:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col justify-between min-h-[160px]">
+<div class="flex justify-between items-start mb-sm border-b border-outline-variant/50 pb-sm">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">speed</span>
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">Eficiencia Técnica</span>
+</div>
+<span class="px-2 py-1 bg-surface-variant text-on-surface-variant rounded font-label-sm text-label-sm">Estable</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-on-surface">92<span class="text-headline-md font-headline-md text-on-surface-variant ml-xs">pts</span></div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Tiempo prom. de resolución: 2.4h</div>
+</div>
+</div>
+<!-- Main Chart Area (Span 8) -->
+<div class="col-span-1 md:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-lg p-md min-h-[400px] flex flex-col">
+<div class="flex justify-between items-center mb-md border-b border-outline-variant/50 pb-sm">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant">insights</span>
+<h2 class="font-label-md text-label-md uppercase text-on-surface">Distribución de Carga de Mantenimiento</h2>
+</div>
+<button class="font-label-sm text-label-sm text-secondary hover:underline">Ver Reporte Detallado</button>
+</div>
+<!-- Placeholder for Chart -->
+<div class="flex-1 bg-surface-container-low rounded border border-outline-variant/30 flex items-center justify-center relative overflow-hidden">
+<!-- Abstract representation of a chart -->
+<div class="absolute bottom-0 left-0 right-0 h-48 flex items-end gap-2 px-md pb-md">
+<div class="w-1/6 bg-primary-fixed-dim/60 h-[40%] rounded-t-sm"></div>
+<div class="w-1/6 bg-primary-fixed-dim/80 h-[70%] rounded-t-sm"></div>
+<div class="w-1/6 bg-secondary h-[90%] rounded-t-sm"></div>
+<div class="w-1/6 bg-primary-fixed-dim/50 h-[30%] rounded-t-sm"></div>
+<div class="w-1/6 bg-primary-fixed-dim/70 h-[60%] rounded-t-sm"></div>
+<div class="w-1/6 bg-primary-fixed-dim/90 h-[85%] rounded-t-sm"></div>
+</div>
+</div>
+</div>
+<!-- Recent Activity Feed (Span 4) -->
+<div class="col-span-1 md:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-lg flex flex-col min-h-[400px]">
+<div class="p-md border-b border-outline-variant pb-sm">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant">list_alt</span>
+<h2 class="font-label-md text-label-md uppercase text-on-surface">Actividad Reciente</h2>
+</div>
+</div>
+<ul class="flex-1 overflow-y-auto">
+<!-- List Item 1 -->
+<li class="p-sm border-b border-outline-variant/30 hover:bg-surface-container-low transition-colors flex gap-sm">
+<div class="mt-xs">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface">Falla de Bomba Detectada - Unidad 4B</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1 mt-xs">Secuencia de apagado automático iniciada.</div>
+<div class="font-label-sm text-label-sm text-outline mt-xs">hace 10 mins</div>
+</div>
+</li>
+<!-- List Item 2 -->
+<li class="p-sm border-b border-outline-variant/30 hover:bg-surface-container-low transition-colors flex gap-sm">
+<div class="mt-xs">
+<span class="material-symbols-outlined text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface">Servicio de Rutina Completado</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1 mt-xs">Téc: J. Doe - Cinta Transportadora Alpha</div>
+<div class="font-label-sm text-label-sm text-outline mt-xs">hace 45 mins</div>
+</div>
+</li>
+<!-- List Item 3 -->
+<li class="p-sm border-b border-outline-variant/30 hover:bg-surface-container-low transition-colors flex gap-sm">
+<div class="mt-xs">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">build</span>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface">Nueva Orden de Trabajo #1920</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1 mt-xs">Calibración requerida para medidores de flujo.</div>
+<div class="font-label-sm text-label-sm text-outline mt-xs">hace 2 horas</div>
+</div>
+</li>
+<!-- List Item 4 -->
+<li class="p-sm hover:bg-surface-container-low transition-colors flex gap-sm">
+<div class="mt-xs">
+<span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">sync</span>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface">Sincronización de Datos del Sistema</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1 mt-xs">Parámetros globales actualizados con éxito.</div>
+<div class="font-label-sm text-label-sm text-outline mt-xs">hace 3 horas</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</main>
+</div>
+</body></html>

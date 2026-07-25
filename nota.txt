@@ -1,0 +1,1 @@
+El supervisor tambien debe poder ver todos los grupos activos, el inventario la hoja de ruta, historial todo.

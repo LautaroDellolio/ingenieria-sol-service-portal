@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Planificación de Rutas - Ingenieria Sol</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#565e74",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed": "#dae2fd",
+                        "on-error": "#ffffff",
+                        "on-background": "#0b1c30",
+                        "secondary-fixed": "#ffdbca",
+                        "on-tertiary-fixed": "#002113",
+                        "on-surface": "#0b1c30",
+                        "surface-dim": "#cbdbf5",
+                        "outline": "#76777d",
+                        "secondary-fixed-dim": "#ffb690",
+                        "on-primary-container": "#7c839b",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "surface": "#f8f9ff",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#341100",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#131b2e",
+                        "surface-container-high": "#dce9ff",
+                        "surface-bright": "#f8f9ff",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "background": "#f8f9ff",
+                        "secondary": "#9d4300",
+                        "tertiary-container": "#002113",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary-fixed-dim": "#bec6e0",
+                        "outline-variant": "#c6c6cd",
+                        "tertiary-fixed": "#6ffbbe",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-secondary-fixed-variant": "#783200",
+                        "tertiary": "#000000",
+                        "inverse-surface": "#213145",
+                        "on-surface-variant": "#45464d",
+                        "surface-variant": "#d3e4fe",
+                        "surface-container-low": "#eff4ff",
+                        "inverse-primary": "#bec6e0",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "primary-container": "#131b2e",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#009668",
+                        "secondary-container": "#fd761a",
+                        "on-secondary-container": "#5c2400",
+                        "primary": "#000000"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "base": "4px",
+                        "xl": "32px",
+                        "gutter": "16px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-sm": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .drag-active { opacity: 0.5; }
+        .drop-target { background-color: theme('colors.surface-container-high'); }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="bg-primary-container dark:bg-primary-container h-screen w-64 fixed left-0 top-0 border-r border-outline-variant dark:border-outline flex flex-col h-full py-md z-20 hidden md:flex">
+<div class="px-md mb-xl flex items-center gap-md">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A small, stylized logo for an industrial company named Ingenieria Sol, featuring a minimalist sun and gear motif in deep blues and bright orange, set against a pristine white background. Modern, technical, and precise aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs-e2VqRPtE7Gi0hFrym0uouz0ZlbTvxSg3bIpA6v__9JJwT25twWrqnY_kX_OzjtjqArhpBmguT4ZM2DQEWCKXzjoM5-ehAUmPgkzHO-6-THXiitBpSRiMEoAsgdiFsNMWADK46ChhSw030i5JHtdqSpLYKIOnBPa2z-VG0jiPRyX_zmbcIGNfAqMsoN9hIpJRPnKt30PGWUQE8N6opFBBpVqVFn4Nwog8YnADxgInA--ACISUI42f6eHI9zr03siO5WwIgh0DX8"/>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-on-primary">Ingenieria Sol</h1>
+<p class="font-label-sm text-label-sm text-on-primary-fixed-variant">Operaciones Empresariales</p>
+</div>
+</div>
+<div class="px-md mb-xl">
+<button class="w-full bg-secondary text-on-secondary font-label-md text-label-md py-sm rounded flex items-center justify-center gap-sm hover:bg-secondary-container hover:text-on-secondary-container transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+                Nueva Entrada de Servicio
+            </button>
+</div>
+<ul class="flex-1 space-y-sm">
+<li>
+<a class="flex items-center gap-md py-sm px-md font-label-md text-label-md text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                    Panel de Control
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-md py-sm px-md font-label-md text-label-md bg-secondary text-on-secondary rounded-lg mx-2 opacity-90 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calendar_month</span>
+                    Planificación de Rutas
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-md py-sm px-md font-label-md text-label-md text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined">precision_manufacturing</span>
+                    Equipos
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-md py-sm px-md font-label-md text-label-md text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined">engineering</span>
+                    Entrada de Servicio
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-md py-sm px-md font-label-md text-label-md text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined">fact_check</span>
+                    Validación
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-md py-sm px-md font-label-md text-label-md text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Configuración
+                </a>
+</li>
+</ul>
+<div class="mt-auto">
+<ul class="space-y-sm">
+<li>
+<a class="flex items-center gap-md py-sm px-md font-label-md text-label-md text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+                        Soporte
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-md py-sm px-md font-label-md text-label-md text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+                        Cerrar Sesión
+                    </a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 ml-0 md:ml-64 flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface-dim font-body-md text-body-md fixed top-0 right-0 left-0 md:left-64 h-16 border-b border-outline-variant dark:border-outline flex justify-between items-center px-margin-desktop w-full z-10 hidden md:flex">
+<div class="flex-1 flex items-center">
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded pl-xl py-sm font-body-sm text-body-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none text-on-surface" placeholder="Buscar rutas, técnicos..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-lg text-primary dark:text-primary-fixed">
+<button class="hover:text-secondary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="hover:text-secondary transition-colors">
+<span class="material-symbols-outlined">history</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden border border-outline-variant cursor-pointer hover:border-primary transition-colors">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a male operations supervisor wearing a hardhat and high-visibility vest, looking confident in an industrial setting. Clear, bright lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCDNQU2EX_hEa5hKlkGpZftmSireY5SU7Fh-zqFKvdr9lXdzw8duEOkh7s5RVzg26AlHMVPwSpwpTIPlaVnipIlZOuRvD0r6PBq3vVR4ZBgcD7fGw-TsgLkRW-YHrnjNIxedIULQOX5Vjsjz_d4g7kD3B7xtJsAu0rCrMQcWQHMIhZzV_WaAATH7fS2DtzFYx6QlQvm4c6XcnLS18nQWKYl38LnyM6UZYjiHyN5t_nKxN6g3CzyflLrzduiCkAIAjPIB8ziOngY6E"/>
+</div>
+</div>
+</header>
+<!-- Route Planning Canvas -->
+<main class="flex-1 mt-16 p-margin-desktop md:p-margin-desktop p-margin-mobile flex flex-col lg:flex-row gap-lg overflow-hidden bg-surface-container-lowest">
+<!-- Left Sidebar: Tasks & Techs -->
+<aside class="w-full lg:w-80 flex flex-col gap-lg h-full overflow-y-auto pr-sm hidden lg:flex">
+<!-- Unassigned Tasks -->
+<div class="bg-surface border border-outline-variant rounded-lg flex flex-col flex-1 min-h-[300px]">
+<div class="p-md border-b border-outline-variant flex justify-between items-center bg-surface-bright rounded-t-lg">
+<h2 class="font-label-md text-label-md font-bold text-on-surface flex items-center gap-sm uppercase">
+<span class="material-symbols-outlined text-outline">assignment_late</span>
+                            SIN ASIGNAR
+                        </h2>
+<span class="bg-error-container text-on-error-container text-xs px-2 py-1 rounded font-bold">4</span>
+</div>
+<div class="p-sm flex-1 overflow-y-auto space-y-sm" id="unassigned-list">
+<!-- Task Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded p-sm cursor-grab active:cursor-grabbing hover:border-primary transition-colors" draggable="true">
+<div class="flex justify-between items-start mb-xs">
+<span class="font-label-sm text-label-sm font-bold text-on-surface">TSK-892</span>
+<span class="text-[10px] uppercase font-bold text-secondary bg-secondary-fixed px-1 rounded">Alta</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface line-clamp-2 mb-xs">Reemplazo de compresor HVAC - Unidad B4</p>
+<div class="flex items-center gap-xs text-outline font-label-sm text-[10px]">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+                                4h est.
+                            </div>
+</div>
+<!-- Task Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded p-sm cursor-grab active:cursor-grabbing hover:border-primary transition-colors" draggable="true">
+<div class="flex justify-between items-start mb-xs">
+<span class="font-label-sm text-label-sm font-bold text-on-surface">TSK-895</span>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant bg-surface-variant px-1 rounded">Normal</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface line-clamp-2 mb-xs">Inspección de bomba de rutina - Subestación Alfa</p>
+<div class="flex items-center gap-xs text-outline font-label-sm text-[10px]">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+                                1.5h est.
+                            </div>
+</div>
+</div>
+</div>
+<!-- Available Techs -->
+<div class="bg-surface border border-outline-variant rounded-lg flex flex-col flex-1 min-h-[250px]">
+<div class="p-md border-b border-outline-variant flex justify-between items-center bg-surface-bright rounded-t-lg">
+<h2 class="font-label-md text-label-md font-bold text-on-surface flex items-center gap-sm uppercase">
+<span class="material-symbols-outlined text-outline">group</span>
+                            TÉCNICOS DISPONIBLES
+                        </h2>
+</div>
+<div class="p-sm flex-1 overflow-y-auto space-y-sm">
+<div class="flex items-center gap-sm p-sm rounded hover:bg-surface-container-low cursor-pointer transition-colors border border-transparent hover:border-outline-variant">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center font-bold text-on-primary-fixed text-xs">MR</div>
+<div class="flex-1">
+<p class="font-label-sm text-label-sm font-bold text-on-surface">Miguel R.</p>
+<p class="text-[10px] text-outline uppercase">Espec. HVAC</p>
+</div>
+<div class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></div>
+</div>
+<div class="flex items-center gap-sm p-sm rounded hover:bg-surface-container-low cursor-pointer transition-colors border border-transparent hover:border-outline-variant">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center font-bold text-on-secondary-fixed text-xs">AS</div>
+<div class="flex-1">
+<p class="font-label-sm text-label-sm font-bold text-on-surface">Ana S.</p>
+<p class="text-[10px] text-outline uppercase">Eléctrico</p>
+</div>
+<div class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Calendar Interface -->
+<div class="flex-1 bg-surface border border-outline-variant rounded-lg flex flex-col overflow-hidden">
+<!-- Calendar Toolbar -->
+<div class="p-md border-b border-outline-variant bg-surface-bright flex flex-wrap gap-md justify-between items-center">
+<div class="flex items-center gap-md">
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">Oct 24 - 30, 2023</h2>
+<div class="flex border border-outline-variant rounded overflow-hidden">
+<button class="px-sm py-xs bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-variant transition-colors border-r border-outline-variant">Hoy</button>
+<button class="px-xs py-xs text-on-surface-variant hover:bg-surface-container-low transition-colors border-r border-outline-variant flex items-center justify-center"><span class="material-symbols-outlined text-[18px]">chevron_left</span></button>
+<button class="px-xs py-xs text-on-surface-variant hover:bg-surface-container-low transition-colors flex items-center justify-center"><span class="material-symbols-outlined text-[18px]">chevron_right</span></button>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex border border-outline-variant rounded overflow-hidden">
+<button class="px-sm py-xs text-on-surface-variant font-label-sm text-label-sm hover:bg-surface-container-low transition-colors border-r border-outline-variant">Mes</button>
+<button class="px-sm py-xs bg-primary-container text-on-primary font-label-sm text-label-sm border-r border-outline-variant">Semana</button>
+<button class="px-sm py-xs text-on-surface-variant font-label-sm text-label-sm hover:bg-surface-container-low transition-colors">Día</button>
+</div>
+<button class="border border-outline-variant px-sm py-xs rounded text-on-surface font-label-sm text-label-sm hover:bg-surface-container-low transition-colors flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">filter_list</span>
+                            Filtrar
+                        </button>
+</div>
+</div>
+<!-- Calendar Grid (Weekly View) -->
+<div class="flex-1 overflow-auto relative">
+<div class="min-w-[800px] h-full flex flex-col">
+<!-- Header Row (Days) -->
+<div class="flex border-b border-outline-variant bg-surface-container-lowest sticky top-0 z-10">
+<div class="w-16 flex-shrink-0 border-r border-outline-variant bg-surface-bright"></div>
+<!-- Mon -->
+<div class="flex-1 border-r border-outline-variant p-xs text-center">
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Lun</div>
+<div class="font-body-lg text-body-lg font-bold text-on-surface">24</div>
+</div>
+<!-- Tue -->
+<div class="flex-1 border-r border-outline-variant p-xs text-center bg-surface-container-low">
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Mar</div>
+<div class="font-body-lg text-body-lg font-bold text-primary">25</div>
+</div>
+<!-- Wed -->
+<div class="flex-1 border-r border-outline-variant p-xs text-center">
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Mié</div>
+<div class="font-body-lg text-body-lg font-bold text-on-surface">26</div>
+</div>
+<!-- Thu -->
+<div class="flex-1 border-r border-outline-variant p-xs text-center">
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Jue</div>
+<div class="font-body-lg text-body-lg font-bold text-on-surface">27</div>
+</div>
+<!-- Fri -->
+<div class="flex-1 border-r border-outline-variant p-xs text-center">
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Vie</div>
+<div class="font-body-lg text-body-lg font-bold text-on-surface">28</div>
+</div>
+</div>
+<!-- Time Grid -->
+<div class="flex-1 flex relative">
+<!-- Time Column -->
+<div class="w-16 flex-shrink-0 border-r border-outline-variant bg-surface-bright relative">
+<div class="h-20 border-b border-outline-variant/30 flex items-start justify-end pr-xs pt-xs">
+<span class="text-[10px] text-outline font-label-sm">08:00</span>
+</div>
+<div class="h-20 border-b border-outline-variant/30 flex items-start justify-end pr-xs pt-xs">
+<span class="text-[10px] text-outline font-label-sm">09:00</span>
+</div>
+<div class="h-20 border-b border-outline-variant/30 flex items-start justify-end pr-xs pt-xs">
+<span class="text-[10px] text-outline font-label-sm">10:00</span>
+</div>
+<div class="h-20 border-b border-outline-variant/30 flex items-start justify-end pr-xs pt-xs">
+<span class="text-[10px] text-outline font-label-sm">11:00</span>
+</div>
+</div>
+<!-- Day Columns container -->
+<div class="flex-1 flex">
+<!-- Mon Col -->
+<div class="flex-1 border-r border-outline-variant relative dropzone">
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<!-- Scheduled Item (Completed) -->
+<div class="absolute top-2 left-1 right-1 h-16 bg-surface-container-lowest border-l-4 border-l-tertiary-fixed-dim border border-outline-variant rounded p-xs flex flex-col overflow-hidden opacity-70">
+<div class="flex justify-between items-center mb-0.5">
+<span class="text-[10px] font-bold text-on-surface">TSK-880</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary-fixed-dim">check_circle</span>
+</div>
+<span class="text-[10px] text-on-surface-variant truncate">Revisión de Rutina</span>
+</div>
+</div>
+<!-- Tue Col (Today) -->
+<div class="flex-1 border-r border-outline-variant relative bg-surface-container-low/30 dropzone">
+<!-- Current Time Indicator -->
+<div class="absolute top-24 left-0 right-0 h-px bg-error z-20 pointer-events-none">
+<div class="absolute -left-1 -top-1 w-2 h-2 rounded-full bg-error"></div>
+</div>
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<!-- Scheduled Item (In Progress) -->
+<div class="absolute top-10 left-1 right-1 h-24 bg-primary-fixed/20 border-l-4 border-l-secondary border border-primary-fixed-dim rounded p-xs flex flex-col overflow-hidden shadow-sm z-10 cursor-pointer hover:border-primary transition-colors">
+<div class="flex justify-between items-center mb-0.5">
+<span class="text-[10px] font-bold text-on-surface">TSK-890</span>
+<div class="w-4 h-4 rounded-full bg-primary-fixed flex items-center justify-center text-[8px] font-bold">MR</div>
+</div>
+<span class="text-[10px] text-on-surface font-bold truncate">Reparación de Generador</span>
+<span class="text-[9px] text-on-surface-variant truncate mt-auto"><span class="material-symbols-outlined text-[10px] align-middle">location_on</span> Sitio B</span>
+</div>
+</div>
+<!-- Wed Col -->
+<div class="flex-1 border-r border-outline-variant relative dropzone">
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<!-- Scheduled Item (Planned) -->
+<div class="absolute top-40 left-1 right-1 h-32 bg-surface border-l-4 border-l-outline border border-outline-variant rounded p-xs flex flex-col overflow-hidden cursor-grab hover:border-primary transition-colors" draggable="true">
+<div class="flex justify-between items-center mb-0.5">
+<span class="text-[10px] font-bold text-on-surface">TSK-891</span>
+<div class="w-4 h-4 rounded-full bg-secondary-fixed flex items-center justify-center text-[8px] font-bold">AS</div>
+</div>
+<span class="text-[10px] text-on-surface font-bold truncate">Actualización de Cableado</span>
+</div>
+</div>
+<!-- Thu Col -->
+<div class="flex-1 border-r border-outline-variant relative dropzone">
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+</div>
+<!-- Fri Col -->
+<div class="flex-1 border-r border-outline-variant relative dropzone">
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+<div class="h-20 border-b border-outline-variant/30 w-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Status Legend -->
+<div class="p-sm border-t border-outline-variant bg-surface-bright flex gap-md items-center justify-center text-[10px] uppercase font-label-sm font-bold text-outline">
+<div class="flex items-center gap-xs"><div class="w-2 h-2 bg-outline rounded-sm"></div> Planificado</div>
+<div class="flex items-center gap-xs"><div class="w-2 h-2 bg-secondary rounded-sm"></div> En Progreso</div>
+<div class="flex items-center gap-xs"><div class="w-2 h-2 bg-tertiary-fixed-dim rounded-sm"></div> Completado</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Mobile Bottom Navigation (Hidden on md+) -->
+<nav class="md:hidden fixed bottom-0 w-full bg-surface border-t border-outline-variant flex justify-around py-sm z-20">
+<a class="flex flex-col items-center text-on-surface-variant p-2" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] mt-1 font-label-sm">Inicio</span>
+</a>
+<a class="flex flex-col items-center text-primary font-bold p-2 border-t-2 border-secondary -mt-[1px]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calendar_month</span>
+<span class="text-[10px] mt-1 font-label-sm">Rutas</span>
+</a>
+<a class="flex flex-col items-center text-on-surface-variant p-2" href="#">
+<span class="material-symbols-outlined">engineering</span>
+<span class="text-[10px] mt-1 font-label-sm">Tareas</span>
+</a>
+</nav>
+</body></html>

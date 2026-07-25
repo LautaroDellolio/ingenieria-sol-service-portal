@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Entrada de Servicio - Ingenieria Sol</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#565e74",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed": "#dae2fd",
+                        "on-error": "#ffffff",
+                        "on-background": "#0b1c30",
+                        "secondary-fixed": "#ffdbca",
+                        "on-tertiary-fixed": "#002113",
+                        "on-surface": "#0b1c30",
+                        "surface-dim": "#cbdbf5",
+                        "outline": "#76777d",
+                        "secondary-fixed-dim": "#ffb690",
+                        "on-primary-container": "#7c839b",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "surface": "#f8f9ff",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#341100",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#131b2e",
+                        "surface-container-high": "#dce9ff",
+                        "surface-bright": "#f8f9ff",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "background": "#f8f9ff",
+                        "secondary": "#9d4300",
+                        "tertiary-container": "#002113",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary-fixed-dim": "#bec6e0",
+                        "outline-variant": "#c6c6cd",
+                        "tertiary-fixed": "#6ffbbe",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-secondary-fixed-variant": "#783200",
+                        "tertiary": "#000000",
+                        "inverse-surface": "#213145",
+                        "on-surface-variant": "#45464d",
+                        "surface-variant": "#d3e4fe",
+                        "surface-container-low": "#eff4ff",
+                        "inverse-primary": "#bec6e0",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "primary-container": "#131b2e",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#009668",
+                        "secondary-container": "#fd761a",
+                        "on-secondary-container": "#5c2400",
+                        "primary": "#000000"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "base": "4px",
+                        "xl": "32px",
+                        "gutter": "16px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-sm": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Custom scrollbar for a cleaner industrial look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f8f9ff;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #bec6e0;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #7c839b;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col md:flex-row antialiased">
+<!-- Desktop SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-primary-container border-r border-outline-variant py-md z-40">
+<div class="px-lg pb-xl flex flex-col">
+<span class="font-headline-md text-headline-md font-bold text-on-primary tracking-tight">Ingenieria Sol</span>
+<span class="font-label-sm text-label-sm text-on-primary-container uppercase mt-xs">Operaciones Empresariales</span>
+</div>
+<div class="px-md mb-lg">
+<button class="w-full bg-secondary text-on-secondary font-label-md text-label-md py-sm px-md rounded hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined fill text-[20px]">add</span>
+                Nueva Entrada de Servicio
+            </button>
+</div>
+<nav class="flex-1 flex flex-col gap-1 overflow-y-auto">
+<a class="flex items-center gap-3 px-lg py-sm font-label-md text-label-md text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/20 transition-colors mx-2 rounded" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+                Panel de Control
+            </a>
+<a class="flex items-center gap-3 px-lg py-sm font-label-md text-label-md text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/20 transition-colors mx-2 rounded" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="calendar_month">calendar_month</span>
+                Planificación de Rutas
+            </a>
+<a class="flex items-center gap-3 px-lg py-sm font-label-md text-label-md text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/20 transition-colors mx-2 rounded" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="precision_manufacturing">precision_manufacturing</span>
+                Equipo
+            </a>
+<a class="flex items-center gap-3 px-lg py-sm font-label-md text-label-md bg-secondary text-on-secondary rounded-lg mx-2 opacity-90 transition-all" href="#">
+<span class="material-symbols-outlined text-[20px] fill" data-icon="engineering">engineering</span>
+                Entrada de Servicio
+            </a>
+<a class="flex items-center gap-3 px-lg py-sm font-label-md text-label-md text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/20 transition-colors mx-2 rounded" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="fact_check">fact_check</span>
+                Validación
+            </a>
+<a class="flex items-center gap-3 px-lg py-sm font-label-md text-label-md text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/20 transition-colors mx-2 rounded" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+                Configuración
+            </a>
+</nav>
+<div class="mt-auto flex flex-col gap-1 border-t border-outline-variant/30 pt-md px-2">
+<a class="flex items-center gap-3 px-md py-sm font-label-md text-label-md text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/20 transition-colors rounded" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="help">help</span>
+                Soporte
+            </a>
+<a class="flex items-center gap-3 px-md py-sm font-label-md text-label-md text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/20 transition-colors rounded" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="logout">logout</span>
+                Cerrar Sesión
+            </a>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="hidden md:flex fixed top-0 right-0 left-64 h-16 bg-surface border-b border-outline-variant justify-between items-center px-margin-desktop z-30">
+<div class="flex items-center">
+<!-- Search removed as per prompt structure for a form view, or kept on left if needed. Keeping simple. -->
+<span class="font-headline-md text-headline-md font-extrabold text-on-surface">Entrada de Servicio</span>
+</div>
+<div class="flex items-center gap-md text-on-surface-variant">
+<button class="hover:text-secondary transition-colors p-sm rounded-full hover:bg-surface-variant/50">
+<span class="material-symbols-outlined text-[24px]" data-icon="notifications">notifications</span>
+</button>
+<button class="hover:text-secondary transition-colors p-sm rounded-full hover:bg-surface-variant/50">
+<span class="material-symbols-outlined text-[24px]" data-icon="history">history</span>
+</button>
+<div class="h-8 w-px bg-outline-variant mx-xs"></div>
+<button class="flex items-center gap-2 hover:text-secondary transition-colors pl-sm">
+<div class="w-8 h-8 rounded-full bg-primary-fixed-dim flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="Supervisor Profile" class="w-full h-full object-cover" data-alt="A small, professional headshot of an industrial engineering supervisor wearing safety gear, shot in a well-lit modern facility with a bright, light-mode aesthetic, high contrast." src="https://lh3.googleusercontent.com/aida-public/AB6AXuChqL4UwJFI-t3iuUwmZ0wPekTtUiuNdjXmRFDOZnW0uGvEYU93w4dofKLz-PHV-lLqHBhmUs3tAZODzANEJiLldkHQL8XOncoDsCna3AcuwyE0Ay1n8cw_Aw3CvviWTKRC0zClz908-BTRGxSOnFvgEwJfRslRHNEgTD2Gj_innGt8Julu35o-B_-CRgPc5Xy0G_8B5Pn0TPV9KFoFWAVYCNE0morItYHPktJ2StmuYrDLnyxSr5MpAv14T2rP03UdX_IE9gxpIbM"/>
+</div>
+</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 w-full md:pl-64 md:pt-16 min-h-screen bg-background">
+<div class="max-w-4xl mx-auto p-margin-mobile md:p-margin-desktop">
+<!-- Mobile Header (Visible only on mobile) -->
+<div class="md:hidden flex items-center justify-between mb-lg pb-md border-b border-outline-variant">
+<div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-extrabold text-on-surface">Ingenieria Sol</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mt-xs">Entrada de Servicio</p>
+</div>
+<button class="p-sm text-on-surface-variant bg-surface-container rounded border border-outline-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+<!-- Form Container -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden shadow-sm">
+<!-- Progress Header -->
+<div class="bg-surface-container p-md md:px-lg border-b border-outline-variant flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary fill">assignment</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Nueva Entrada</h2>
+</div>
+<div class="flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+<span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+</div>
+</div>
+<form class="p-md md:p-xl space-y-xl" onsubmit="event.preventDefault();">
+<!-- Section 1: Equipment Identification -->
+<section>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-md border-b border-outline-variant pb-xs">1. IDENTIFICACIÓN DEL EQUIPO</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="space-y-xs relative">
+<label class="font-label-sm text-label-sm text-on-surface block" for="equipment-id">ID del Equipo</label>
+<div class="relative">
+<input class="w-full bg-surface border border-outline text-on-surface text-body-md font-body-md rounded px-sm py-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary focus:border-2 transition-all pr-12" id="equipment-id" placeholder="Escanear o ingresar ID" type="text"/>
+<button class="absolute right-0 top-0 bottom-0 px-sm text-secondary hover:text-secondary-container transition-colors flex items-center justify-center border-l border-outline bg-surface-container-low rounded-r" type="button">
+<span class="material-symbols-outlined text-[20px]">qr_code_scanner</span>
+</button>
+</div>
+</div>
+<div class="space-y-xs">
+<label class="font-label-sm text-label-sm text-on-surface block" for="service-type">Tipo de Servicio</label>
+<select class="w-full bg-surface border border-outline text-on-surface text-body-md font-body-md rounded px-sm py-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary focus:border-2 transition-all appearance-none cursor-pointer" id="service-type">
+<option disabled="" selected="" value="">Seleccionar tipo de servicio</option>
+<option value="pm">Mantenimiento Preventivo</option>
+<option value="repair">Reparación Correctiva</option>
+<option value="install">Instalación/Puesta en marcha</option>
+<option value="inspect">Inspección de Rutina</option>
+</select>
+</div>
+</div>
+</section>
+<!-- Section 2: Technical Checklist -->
+<section>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-md border-b border-outline-variant pb-xs">2. VALIDACIÓN TÉCNICA</h3>
+<div class="space-y-sm bg-surface-container-low p-md rounded border border-outline-variant">
+<label class="flex items-start gap-md p-sm hover:bg-surface-variant/30 rounded transition-colors cursor-pointer">
+<div class="relative flex items-center pt-1">
+<input class="w-5 h-5 border-outline rounded text-primary focus:ring-primary focus:ring-offset-0 bg-surface cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex-1">
+<span class="font-label-md text-label-md text-on-surface block">Inspección Visual Completada</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Comprobar si hay daños físicos, corrosión o desgaste.</span>
+</div>
+</label>
+<div class="h-px w-full bg-outline-variant/50"></div>
+<label class="flex items-start gap-md p-sm hover:bg-surface-variant/30 rounded transition-colors cursor-pointer">
+<div class="relative flex items-center pt-1">
+<input class="w-5 h-5 border-outline rounded text-primary focus:ring-primary focus:ring-offset-0 bg-surface cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex-1">
+<span class="font-label-md text-label-md text-on-surface block">Ejecución de Diagnóstico Realizada</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Prueba de ciclo operativo estándar de 15 minutos.</span>
+</div>
+</label>
+</div>
+</section>
+<!-- Section 3: Documentation -->
+<section>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-md border-b border-outline-variant pb-xs">3. DOCUMENTACIÓN</h3>
+<div class="space-y-md">
+<div class="space-y-xs">
+<label class="font-label-sm text-label-sm text-on-surface block" for="notes">Notas y Observaciones</label>
+<textarea class="w-full bg-surface border border-outline text-on-surface text-body-md font-body-md rounded px-sm py-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary focus:border-2 transition-all resize-y" id="notes" placeholder="Detallar cualquier anomalía, piezas reemplazadas o acción adicional requerida..." rows="4"></textarea>
+</div>
+<div class="space-y-xs">
+<label class="font-label-sm text-label-sm text-on-surface block">Archivos Adjuntos</label>
+<div class="border-2 border-dashed border-outline-variant bg-surface-container-low rounded-lg p-xl flex flex-col items-center justify-center text-center cursor-pointer hover:bg-surface-variant/30 hover:border-secondary transition-all group">
+<span class="material-symbols-outlined text-[32px] text-on-surface-variant group-hover:text-secondary mb-sm">add_a_photo</span>
+<span class="font-label-md text-label-md text-on-surface block">Subir Fotos</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Arrastrar y soltar o tocar para seleccionar archivos</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Action Bar -->
+<div class="pt-lg border-t border-outline-variant flex flex-col-reverse md:flex-row justify-end gap-md">
+<button class="px-lg py-sm rounded border border-outline text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors text-center" type="button">
+                            Guardar Borrador
+                        </button>
+<button class="px-lg py-sm rounded bg-secondary text-on-secondary font-label-md text-label-md hover:bg-secondary/90 shadow-sm transition-colors flex items-center justify-center gap-2" type="submit">
+                            Proceder a Revisión
+                            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+<div class="mt-xl text-center pb-xl md:pb-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Ingenieria Sol Enterprise Systems v2.4</span>
+</div>
+</div>
+</main>
+</body></html>
