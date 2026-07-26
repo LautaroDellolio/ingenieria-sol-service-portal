@@ -2,22 +2,41 @@ import { supabase } from '../lib/supabaseClient'
 import { VISIT_STATUS, VISIT_PARAMETER_DEFINITIONS } from '../lib/constants'
 import { logVisitEvent } from './visitEvents'
 
-const VISIT_SELECT = '*, equipment(internal_code, brand, model, client_id, clients(name)), profiles!visits_technician_id_fkey(full_name), vehicles(plate)'
+const ROUTE_SHEET_EMBED = 'route_sheets(id, vehicle_id, scheduled_time_start, vehicles(plate), route_sheet_technicians(profiles(id, full_name)))'
+const VISIT_SELECT = `*, equipment(internal_code, brand, model, client_id, clients(name)), ${ROUTE_SHEET_EMBED}`
+
+// La asignacion de tecnicos/vehiculo vive en la hoja de ruta, no en la
+// visita. Esto aplana ese embed anidado a la misma forma plana que ya
+// usaba el resto del codigo (visit.technicians / visit.vehicles), para
+// no tener que tocar los componentes que solo leen esos dos campos.
+export function normalizeVisit(row) {
+  if (!row) return row
+  const { route_sheets, ...rest } = row
+  const technicians = (route_sheets?.route_sheet_technicians ?? []).map((rst) => rst.profiles).filter(Boolean)
+  return {
+    ...rest,
+    routeSheetId: rest.route_sheet_id,
+    technicians,
+    vehicles: route_sheets?.vehicles ?? null,
+  }
+}
 
 export async function getVisitById(visitId) {
   const { data, error } = await supabase.from('visits').select(VISIT_SELECT).eq('id', visitId).single()
   if (error) throw error
-  return data
+  return normalizeVisit(data)
 }
 
 export async function listVisitsForTechnician(technicianId) {
   const { data, error } = await supabase
     .from('visits')
-    .select(VISIT_SELECT)
-    .eq('technician_id', technicianId)
+    .select(
+      `*, equipment(internal_code, brand, model, client_id, clients(name)), route_sheets!inner(id, vehicle_id, scheduled_time_start, vehicles(plate), route_sheet_technicians!inner(profiles(id, full_name)))`
+    )
+    .eq('route_sheets.route_sheet_technicians.technician_id', technicianId)
     .order('scheduled_date', { ascending: true })
   if (error) throw error
-  return data
+  return data.map(normalizeVisit)
 }
 
 export async function listVisitsInRange(startDate, endDate) {
@@ -28,7 +47,7 @@ export async function listVisitsInRange(startDate, endDate) {
     .lte('scheduled_date', endDate)
     .order('scheduled_time_start', { ascending: true })
   if (error) throw error
-  return data
+  return data.map(normalizeVisit)
 }
 
 export async function listUnassignedVisits() {
@@ -38,7 +57,7 @@ export async function listUnassignedVisits() {
     .is('scheduled_date', null)
     .order('created_at', { ascending: true })
   if (error) throw error
-  return data
+  return data.map(normalizeVisit)
 }
 
 export async function listVisitsPendingReview() {
@@ -48,7 +67,7 @@ export async function listVisitsPendingReview() {
     .eq('status', VISIT_STATUS.ENVIADA)
     .order('submitted_at', { ascending: true })
   if (error) throw error
-  return data
+  return data.map(normalizeVisit)
 }
 
 export async function listVisitsThisMonth() {
@@ -56,40 +75,6 @@ export async function listVisitsThisMonth() {
   const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10)
   const end = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().slice(0, 10)
   return listVisitsInRange(start, end)
-}
-
-export async function createVisit({ equipmentId, serviceType, isAnnualService, createdBy }) {
-  const { data, error } = await supabase
-    .from('visits')
-    .insert({
-      equipment_id: equipmentId,
-      technician_id: null,
-      service_type: serviceType,
-      is_annual_service: isAnnualService ?? false,
-      status: VISIT_STATUS.PLANIFICADA,
-      created_by: createdBy,
-    })
-    .select()
-    .single()
-  if (error) throw error
-  await logVisitEvent(data.id, 'creada', createdBy)
-  return data
-}
-
-export async function updateVisitAssignment(visitId, { technicianId, vehicleId, scheduledDate, scheduledTimeStart }) {
-  const { data, error } = await supabase
-    .from('visits')
-    .update({
-      technician_id: technicianId,
-      vehicle_id: vehicleId,
-      scheduled_date: scheduledDate,
-      scheduled_time_start: scheduledTimeStart,
-    })
-    .eq('id', visitId)
-    .select()
-    .single()
-  if (error) throw error
-  return data
 }
 
 export async function saveVisitDraft(visitId, { serviceType, checklistData, notes, faultReported, faultDescription }, actorId) {

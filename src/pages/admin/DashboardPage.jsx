@@ -1,10 +1,12 @@
 import { useEquipment } from '../../hooks/useEquipment'
 import { useAnnualServiceAlerts } from '../../hooks/useAnnualServiceAlerts'
 import { useVisitsThisMonth } from '../../hooks/useVisits'
+import { useRouteSheetsInRange } from '../../hooks/useRouteSheets'
 import { useTechnicians } from '../../hooks/useTechnicians'
 import { useEffect, useState } from 'react'
 import { listRecentEvents } from '../../api/visitEvents'
 import { CONDITION_STATUS, VISIT_STATUS } from '../../lib/constants'
+import { startOfMonth, endOfMonth, toISODateString } from '../../lib/dateUtils'
 import KpiCard from '../../components/ui/KpiCard'
 import AnnualServiceAlerts from '../../features/dashboard/AnnualServiceAlerts'
 import RecentActivityFeed from '../../features/dashboard/RecentActivityFeed'
@@ -15,6 +17,11 @@ export default function DashboardPage() {
   const { equipment, loading: equipmentLoading } = useEquipment()
   const alerts = useAnnualServiceAlerts(equipment)
   const { data: visitsThisMonth, loading: visitsLoading } = useVisitsThisMonth()
+  const now = new Date()
+  const { data: routeSheetsThisMonth, loading: routeSheetsLoading } = useRouteSheetsInRange(
+    toISODateString(startOfMonth(now)),
+    toISODateString(endOfMonth(now))
+  )
   const { technicians, loading: techniciansLoading } = useTechnicians()
   const [recentEvents, setRecentEvents] = useState([])
 
@@ -22,7 +29,7 @@ export default function DashboardPage() {
     listRecentEvents(8).then(setRecentEvents)
   }, [])
 
-  if (equipmentLoading || visitsLoading || techniciansLoading) {
+  if (equipmentLoading || visitsLoading || routeSheetsLoading || techniciansLoading) {
     return <Spinner label="Cargando panel…" />
   }
 
@@ -85,7 +92,7 @@ export default function DashboardPage() {
           <h2 className="font-label-md text-label-md text-on-surface-variant uppercase p-md border-b border-outline-variant">
             Hojas de Ruta por Técnico
           </h2>
-          <TechnicianRouteSummaryList technicians={technicians} visits={visitsThisMonth} />
+          <TechnicianRouteSummaryList technicians={technicians} routeSheets={routeSheetsThisMonth ?? []} />
         </div>
 
         <div className="md:col-span-6 bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">

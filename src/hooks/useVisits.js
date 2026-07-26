@@ -10,7 +10,7 @@ import {
 import { listEventsForVisit } from '../api/visitEvents'
 import { supabase } from '../lib/supabaseClient'
 
-function useAsync(loader, deps) {
+export function useAsync(loader, deps) {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)

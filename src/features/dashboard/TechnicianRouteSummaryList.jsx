@@ -1,7 +1,7 @@
 import EmptyState from '../../components/ui/EmptyState'
-import { VISIT_STATUS } from '../../lib/constants'
+import { getRouteSheetColor } from '../../lib/visitColor'
 
-export default function TechnicianRouteSummaryList({ technicians, visits }) {
+export default function TechnicianRouteSummaryList({ technicians, routeSheets }) {
   if (technicians.length === 0) {
     return <EmptyState icon="group" title="Sin técnicos registrados" />
   }
@@ -9,8 +9,8 @@ export default function TechnicianRouteSummaryList({ technicians, visits }) {
   return (
     <ul className="divide-y divide-outline-variant/50">
       {technicians.map((technician) => {
-        const assigned = visits.filter((visit) => visit.technician_id === technician.id)
-        const completed = assigned.filter((visit) => visit.status === VISIT_STATUS.APROBADA).length
+        const assigned = routeSheets.filter((routeSheet) => routeSheet.technicians?.some((t) => t.id === technician.id))
+        const completed = assigned.filter((routeSheet) => getRouteSheetColor(routeSheet) === 'verde').length
 
         return (
           <li key={technician.id} className="flex items-center justify-between gap-sm p-md">
@@ -25,7 +25,7 @@ export default function TechnicianRouteSummaryList({ technicians, visits }) {
               <span className="font-label-md text-label-md text-on-surface">{technician.full_name}</span>
             </div>
             <span className="font-body-sm text-body-sm text-on-surface-variant">
-              {completed}/{assigned.length} visitas
+              {completed}/{assigned.length} hojas de ruta
             </span>
           </li>
         )

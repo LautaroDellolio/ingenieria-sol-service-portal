@@ -1,16 +1,18 @@
 import EmptyState from '../../components/ui/EmptyState'
 import TaskCard from './TaskCard'
 
-export default function UnassignedList({ visits, onSelectVisit }) {
+export default function UnassignedList({ routeSheets, onSelectRouteSheet }) {
   return (
     <div>
-      <h2 className="font-label-sm text-label-sm text-on-surface-variant uppercase mb-sm">Sin Asignar</h2>
-      {visits.length === 0 ? (
+      <h2 className="font-label-md text-label-md text-on-surface uppercase tracking-wider mb-sm pb-xs border-b border-outline-variant">
+        Hojas de Ruta Sin Asignar{routeSheets.length > 0 ? ` (${routeSheets.length})` : ''}
+      </h2>
+      {routeSheets.length === 0 ? (
         <EmptyState icon="task_alt" title="Todo planificado" />
       ) : (
         <div className="space-y-sm">
-          {visits.map((visit) => (
-            <TaskCard key={visit.id} visit={visit} onClick={onSelectVisit} />
+          {routeSheets.map((routeSheet) => (
+            <TaskCard key={routeSheet.id} routeSheet={routeSheet} onClick={onSelectRouteSheet} />
           ))}
         </div>
       )}

@@ -35,8 +35,10 @@ export default function VisitDetailPanel({ visit, parameters, events, actions })
             <dd className="text-on-surface">{visit.equipment?.brand} {visit.equipment?.model}</dd>
             <dt className="text-on-surface-variant">Tipo de servicio</dt>
             <dd className="text-on-surface">{SERVICE_TYPE_LABELS[visit.service_type] ?? '—'}</dd>
-            <dt className="text-on-surface-variant">Técnico</dt>
-            <dd className="text-on-surface">{visit.profiles?.full_name ?? '—'}</dd>
+            <dt className="text-on-surface-variant">Técnico(s)</dt>
+            <dd className="text-on-surface">
+              {visit.technicians?.length > 0 ? visit.technicians.map((t) => t.full_name).join(', ') : '—'}
+            </dd>
             <dt className="text-on-surface-variant">Vehículo</dt>
             <dd className="text-on-surface">{visit.vehicles?.plate ?? '—'}</dd>
             <dt className="text-on-surface-variant">Fecha</dt>

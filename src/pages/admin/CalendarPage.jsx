@@ -1,157 +1,223 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
-import { useUnassignedVisits, useVisitsInRange } from '../../hooks/useVisits'
+import { useUnassignedRouteSheets, useRouteSheetsInRange } from '../../hooks/useRouteSheets'
 import { useTechnicians } from '../../hooks/useTechnicians'
 import { useVehicles } from '../../hooks/useVehicles'
 import { useEquipment } from '../../hooks/useEquipment'
-import { createVisit, updateVisitAssignment } from '../../api/visits'
-import { addDays, startOfWeek, toISODateString, formatDate } from '../../lib/dateUtils'
-import { SERVICE_TYPE, SERVICE_TYPE_LABELS } from '../../lib/constants'
+import { useClients } from '../../hooks/useClients'
+import { rescheduleRouteSheet } from '../../api/routeSheets'
+import {
+  addDays,
+  addMonths,
+  startOfWeek,
+  startOfMonth,
+  getMonthGridWeeks,
+  toISODateString,
+  formatDate,
+} from '../../lib/dateUtils'
+import { VISIT_COLOR_CLASSES, VISIT_COLOR_LABELS } from '../../lib/visitColor'
 import Button from '../../components/ui/Button'
-import Modal from '../../components/ui/Modal'
 import Spinner from '../../components/ui/Spinner'
 import WeekCalendar from '../../features/calendar/WeekCalendar'
+import MonthCalendar from '../../features/calendar/MonthCalendar'
+import DayDetailModal from '../../features/calendar/DayDetailModal'
 import UnassignedList from '../../features/calendar/UnassignedList'
-import TechnicianAvailabilityList from '../../features/calendar/TechnicianAvailabilityList'
 import AssignmentPopover from '../../features/calendar/AssignmentPopover'
+import RouteSheetFormModal from '../../features/calendar/RouteSheetFormModal'
+import MonthYearPicker from '../../features/calendar/MonthYearPicker'
+import VisitSummaryModal from '../../features/calendar/VisitSummaryModal'
 
 export default function CalendarPage() {
   const { profile } = useAuth()
+  const [viewMode, setViewMode] = useState('mes') // 'semana' | 'mes'
   const [weekStart, setWeekStart] = useState(() => startOfWeek(new Date()))
+  const [monthAnchor, setMonthAnchor] = useState(() => startOfMonth(new Date()))
   const weekEnd = addDays(weekStart, 6)
+  const monthWeeks = useMemo(() => getMonthGridWeeks(monthAnchor), [monthAnchor])
+  const gridStart = monthWeeks[0][0]
+  const gridEnd = monthWeeks[monthWeeks.length - 1][6]
 
-  const { data: unassignedVisits, loading: unassignedLoading, reload: reloadUnassigned } = useUnassignedVisits()
-  const { data: weekVisits, loading: weekLoading, reload: reloadWeek } = useVisitsInRange(
-    toISODateString(weekStart),
-    toISODateString(weekEnd)
+  const rangeStart = viewMode === 'mes' ? gridStart : weekStart
+  const rangeEnd = viewMode === 'mes' ? gridEnd : weekEnd
+
+  const { data: unassignedRouteSheets, loading: unassignedLoading, reload: reloadUnassigned } = useUnassignedRouteSheets()
+  const { data: rangeRouteSheets, loading: rangeLoading, reload: reloadRange } = useRouteSheetsInRange(
+    toISODateString(rangeStart),
+    toISODateString(rangeEnd)
   )
   const { technicians } = useTechnicians()
   const { vehicles } = useVehicles()
   const { equipment } = useEquipment()
+  const { clients } = useClients()
 
-  const [selectedVisit, setSelectedVisit] = useState(null)
-  const [showNewVisit, setShowNewVisit] = useState(false)
-  const [newVisitForm, setNewVisitForm] = useState({ equipmentId: '', serviceType: SERVICE_TYPE.PREVENTIVO, isAnnualService: false })
+  const [selectedRouteSheet, setSelectedRouteSheet] = useState(null)
+  const [summaryRouteSheet, setSummaryRouteSheet] = useState(null)
+  const [selectedDate, setSelectedDate] = useState(null)
+  // null | { mode: 'create', initialDate } | { mode: 'edit', routeSheet }
+  const [formModal, setFormModal] = useState(null)
+
+  const selectedDateRouteSheets = useMemo(() => {
+    if (!selectedDate) return []
+    const dateStr = toISODateString(selectedDate)
+    return (rangeRouteSheets ?? []).filter((routeSheet) => routeSheet.scheduled_date === dateStr)
+  }, [selectedDate, rangeRouteSheets])
 
   function reloadAll() {
     reloadUnassigned()
-    reloadWeek()
+    reloadRange()
   }
 
-  async function handleDropVisit(visitId, dateStr) {
-    const visit = [...(unassignedVisits ?? []), ...(weekVisits ?? [])].find((item) => item.id === visitId)
-    await updateVisitAssignment(visitId, {
-      technicianId: visit?.technician_id ?? null,
-      vehicleId: visit?.vehicle_id ?? null,
-      scheduledDate: dateStr,
-      scheduledTimeStart: visit?.scheduled_time_start?.slice(0, 5) ?? '09:00',
-    })
+  function goToPrevious() {
+    if (viewMode === 'mes') setMonthAnchor((current) => addMonths(current, -1))
+    else setWeekStart((current) => addDays(current, -7))
+  }
+
+  function goToNext() {
+    if (viewMode === 'mes') setMonthAnchor((current) => addMonths(current, 1))
+    else setWeekStart((current) => addDays(current, 7))
+  }
+
+  function goToToday() {
+    const today = new Date()
+    if (viewMode === 'mes') setMonthAnchor(startOfMonth(today))
+    else setWeekStart(startOfWeek(today))
+    setSelectedDate(today)
+  }
+
+  async function handleDropRouteSheet(routeSheetId, dateStr) {
+    const routeSheet = [...(unassignedRouteSheets ?? []), ...(rangeRouteSheets ?? [])].find((item) => item.id === routeSheetId)
+    await rescheduleRouteSheet(routeSheetId, dateStr, routeSheet?.scheduled_time_start?.slice(0, 5) ?? '09:00')
     reloadAll()
   }
 
-  async function handleCreateVisit(event) {
-    event.preventDefault()
-    await createVisit({
-      equipmentId: newVisitForm.equipmentId,
-      serviceType: newVisitForm.serviceType,
-      isAnnualService: newVisitForm.isAnnualService,
-      createdBy: profile.id,
-    })
-    setNewVisitForm({ equipmentId: '', serviceType: SERVICE_TYPE.PREVENTIVO, isAnnualService: false })
-    setShowNewVisit(false)
-    reloadAll()
-  }
-
-  if (unassignedLoading || weekLoading) return <Spinner label="Cargando calendario…" />
+  if (unassignedLoading || rangeLoading) return <Spinner label="Cargando calendario…" />
 
   return (
     <div>
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-sm mb-lg">
+      <div className="flex flex-col gap-sm mb-sm">
         <div>
           <h1 className="font-headline-lg text-headline-lg text-on-surface mb-xs">Planificación de Rutas</h1>
-          <p className="font-body-md text-body-md text-on-surface-variant">
-            {formatDate(weekStart)} – {formatDate(weekEnd)}
-          </p>
+          {viewMode === 'semana' && (
+            <p className="font-body-md text-body-md text-on-surface-variant">
+              {formatDate(weekStart)} – {formatDate(weekEnd)}
+            </p>
+          )}
         </div>
-        <div className="flex items-center gap-sm">
-          <Button variant="secondary-outline" icon="chevron_left" onClick={() => setWeekStart(addDays(weekStart, -7))} />
-          <Button variant="secondary-outline" onClick={() => setWeekStart(startOfWeek(new Date()))}>Hoy</Button>
-          <Button variant="secondary-outline" icon="chevron_right" onClick={() => setWeekStart(addDays(weekStart, 7))} />
-          <Button variant="primary" icon="add" onClick={() => setShowNewVisit(true)}>Nueva Visita</Button>
+        <div className="flex flex-wrap items-center justify-between gap-sm">
+          <div className="flex flex-wrap items-center gap-sm">
+            <Button variant={viewMode === 'mes' ? 'primary' : 'secondary-outline'} onClick={() => setViewMode('mes')}>
+              Mes
+            </Button>
+            <Button variant={viewMode === 'semana' ? 'primary' : 'secondary-outline'} onClick={() => setViewMode('semana')}>
+              Semana
+            </Button>
+            <Button variant="secondary-outline" onClick={goToToday}>Hoy</Button>
+          </div>
+          <Button variant="primary" icon="add" onClick={() => setFormModal({ mode: 'create', initialDate: null })}>
+            Nueva Hoja de Ruta
+          </Button>
         </div>
+      </div>
+
+      <div className="flex flex-wrap gap-md mb-md">
+        {Object.entries(VISIT_COLOR_LABELS).map(([color, label]) => (
+          <div key={color} className="flex items-center gap-xs">
+            <span className={`w-sm h-sm rounded-full border ${VISIT_COLOR_CLASSES[color]}`} />
+            <span className="font-label-sm text-label-sm text-on-surface-variant">{label}</span>
+          </div>
+        ))}
       </div>
 
       <div className="flex flex-col lg:flex-row gap-md">
-        <aside className="lg:w-[28rem] space-y-lg shrink-0">
-          <UnassignedList visits={unassignedVisits ?? []} onSelectVisit={setSelectedVisit} />
-          <TechnicianAvailabilityList technicians={technicians} />
+        <aside className="order-2 lg:order-1 lg:w-[28rem] shrink-0 lg:sticky lg:top-[7.2rem] lg:max-h-[calc(100vh-9.6rem)] lg:overflow-y-auto lg:pr-xs">
+          <UnassignedList routeSheets={unassignedRouteSheets ?? []} onSelectRouteSheet={setSelectedRouteSheet} />
         </aside>
 
-        <div className="flex-1">
-          <WeekCalendar
-            weekStart={weekStart}
-            visits={weekVisits ?? []}
-            onSelectVisit={setSelectedVisit}
-            onDropVisit={handleDropVisit}
-          />
+        <div className="order-1 lg:order-2 flex-1 min-w-0">
+          {viewMode === 'mes' && (
+            <div className="mb-sm">
+              <MonthYearPicker monthAnchor={monthAnchor} onSelect={setMonthAnchor} />
+            </div>
+          )}
+          {viewMode === 'mes' ? (
+            <MonthCalendar
+              monthAnchor={monthAnchor}
+              weeks={monthWeeks}
+              routeSheets={rangeRouteSheets ?? []}
+              onSelectDay={setSelectedDate}
+            />
+          ) : (
+            <WeekCalendar
+              weekStart={weekStart}
+              routeSheets={rangeRouteSheets ?? []}
+              onSelectRouteSheet={setSelectedRouteSheet}
+              onDropRouteSheet={handleDropRouteSheet}
+            />
+          )}
+
+          <div className="flex items-center justify-center gap-sm mt-sm">
+            <Button variant="secondary-outline" icon="chevron_left" onClick={goToPrevious} aria-label="Anterior" />
+            <Button variant="secondary-outline" icon="chevron_right" onClick={goToNext} aria-label="Siguiente" />
+          </div>
         </div>
       </div>
 
+      <DayDetailModal
+        date={selectedDate}
+        routeSheets={selectedDateRouteSheets}
+        onClose={() => setSelectedDate(null)}
+        onSelectRouteSheet={(routeSheet) => {
+          setSelectedDate(null)
+          setSummaryRouteSheet(routeSheet)
+        }}
+        onNewRouteSheet={(date) => {
+          setSelectedDate(null)
+          setFormModal({ mode: 'create', initialDate: toISODateString(date) })
+        }}
+      />
+
+      <VisitSummaryModal
+        routeSheet={summaryRouteSheet}
+        onClose={() => setSummaryRouteSheet(null)}
+        onAssign={(routeSheet) => {
+          setSummaryRouteSheet(null)
+          setSelectedRouteSheet(routeSheet)
+        }}
+        onEdit={(routeSheet) => {
+          setSummaryRouteSheet(null)
+          setFormModal({ mode: 'edit', routeSheet })
+        }}
+      />
+
       <AssignmentPopover
-        visit={selectedVisit}
+        routeSheet={selectedRouteSheet}
         technicians={technicians}
         vehicles={vehicles}
-        onClose={() => setSelectedVisit(null)}
+        onClose={() => setSelectedRouteSheet(null)}
         onSaved={() => {
-          setSelectedVisit(null)
+          setSelectedRouteSheet(null)
           reloadAll()
         }}
       />
 
-      <Modal open={showNewVisit} title="Nueva Visita" onClose={() => setShowNewVisit(false)}>
-        <form onSubmit={handleCreateVisit} className="space-y-md">
-          <div className="space-y-xs">
-            <label className="font-label-sm text-label-sm text-on-surface block">Equipo</label>
-            <select
-              required
-              value={newVisitForm.equipmentId}
-              onChange={(event) => setNewVisitForm((f) => ({ ...f, equipmentId: event.target.value }))}
-              className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface"
-            >
-              <option value="" disabled>Seleccionar equipo</option>
-              {equipment.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.internal_code} — {item.clients?.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="space-y-xs">
-            <label className="font-label-sm text-label-sm text-on-surface block">Tipo de Servicio</label>
-            <select
-              value={newVisitForm.serviceType}
-              onChange={(event) => setNewVisitForm((f) => ({ ...f, serviceType: event.target.value }))}
-              className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface"
-            >
-              {Object.entries(SERVICE_TYPE_LABELS).map(([value, label]) => (
-                <option key={value} value={value}>{label}</option>
-              ))}
-            </select>
-          </div>
-          <label className="flex items-center gap-sm">
-            <input
-              type="checkbox"
-              checked={newVisitForm.isAnnualService}
-              onChange={(event) => setNewVisitForm((f) => ({ ...f, isAnnualService: event.target.checked }))}
-              className="w-[1.6rem] h-[1.6rem] rounded border-outline"
-            />
-            <span className="font-body-sm text-body-sm text-on-surface">Es un service anual</span>
-          </label>
-          <Button type="submit" variant="primary" fullWidth>
-            Crear Visita
-          </Button>
-        </form>
-      </Modal>
+      <RouteSheetFormModal
+        open={Boolean(formModal)}
+        mode={formModal?.mode ?? 'create'}
+        routeSheet={formModal?.mode === 'edit' ? formModal.routeSheet : null}
+        clients={clients}
+        equipment={equipment}
+        createdBy={profile.id}
+        initialDate={formModal?.mode === 'create' ? formModal.initialDate : null}
+        onClose={() => setFormModal(null)}
+        onSaved={() => {
+          setFormModal(null)
+          reloadAll()
+        }}
+        onDeleted={() => {
+          setFormModal(null)
+          reloadAll()
+        }}
+      />
     </div>
   )
 }

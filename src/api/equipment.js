@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabaseClient'
+import { normalizeVisit } from './visits'
 
 export async function listEquipmentWithClients() {
   const { data, error } = await supabase
@@ -29,9 +30,9 @@ export async function updateEquipment(equipmentId, changes) {
 export async function getEquipmentVisitHistory(equipmentId) {
   const { data, error } = await supabase
     .from('visits')
-    .select('*, profiles!visits_technician_id_fkey(full_name)')
+    .select('*, route_sheets(id, vehicle_id, scheduled_time_start, vehicles(plate), route_sheet_technicians(profiles(id, full_name)))')
     .eq('equipment_id', equipmentId)
     .order('scheduled_date', { ascending: false })
   if (error) throw error
-  return data
+  return data.map(normalizeVisit)
 }

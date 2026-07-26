@@ -108,6 +108,7 @@ export default function LoginPage() {
         open={showForgotPassword}
         title="Recuperar acceso"
         onClose={() => setShowForgotPassword(false)}
+        fullViewport
         actions={[{ label: 'Entendido', onClick: () => setShowForgotPassword(false) }]}
       >
         <p className="font-body-md text-body-md text-on-surface">

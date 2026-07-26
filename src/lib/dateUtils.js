@@ -66,3 +66,31 @@ export function toISODateString(date) {
   const day = String(date.getDate()).padStart(2, '0')
   return `${year}-${month}-${day}`
 }
+
+export function startOfMonth(date) {
+  return new Date(date.getFullYear(), date.getMonth(), 1)
+}
+
+export function endOfMonth(date) {
+  return new Date(date.getFullYear(), date.getMonth() + 1, 0)
+}
+
+export function addMonths(date, months) {
+  return new Date(date.getFullYear(), date.getMonth() + months, 1)
+}
+
+// Grilla de semanas completas (Lunes a Domingo) que cubre todo el mes,
+// incluyendo dias de los meses vecinos, para que la grilla sea siempre
+// rectangular (filas completas de 7 dias).
+export function getMonthGridWeeks(monthAnchor) {
+  const gridStart = startOfWeek(startOfMonth(monthAnchor))
+  const gridEnd = addDays(startOfWeek(endOfMonth(monthAnchor)), 6)
+  const totalDays = daysBetween(gridStart, gridEnd) + 1
+  const days = Array.from({ length: totalDays }, (_, index) => addDays(gridStart, index))
+
+  const weeks = []
+  for (let i = 0; i < days.length; i += 7) {
+    weeks.push(days.slice(i, i + 7))
+  }
+  return weeks
+}

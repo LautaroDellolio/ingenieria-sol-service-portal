@@ -1,7 +1,19 @@
 import { useEffect } from 'react'
 import Button from './Button'
 
-export default function Modal({ open, title, children, onClose, actions = [] }) {
+// Ojo: nunca usar las clases max-w-sm/md/lg/xl de Tailwind aca — colisionan
+// con los tokens de spacing custom del proyecto (ver tailwind.config.js) y
+// resuelven a anchos rotos. Por eso este mapa usa valores arbitrarios [Nrem]
+// o porcentuales, nunca los nombres cortos de la escala por defecto.
+const SIZE_CLASSES = {
+  md: 'w-full max-w-[28rem]',
+  lg: 'w-[90%]',
+}
+
+// El sidebar fijo de los layouts internos mide 25.6rem (ver Sidebar.jsx /
+// TopBar.jsx). Por defecto el modal deja esa franja libre para no taparlo;
+// las pantallas sin sidebar (ej. Login) pasan fullViewport para ocupar todo.
+export default function Modal({ open, title, children, onClose, actions = [], size = 'md', fullViewport = false }) {
   useEffect(() => {
     if (!open) return undefined
 
@@ -16,11 +28,11 @@ export default function Modal({ open, title, children, onClose, actions = [] }) 
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-on-surface/40 p-margin-mobile"
+      className={`fixed inset-0 ${fullViewport ? '' : 'md:left-[25.6rem]'} z-50 flex items-center justify-center bg-on-surface/40 p-margin-mobile`}
       onClick={onClose}
     >
       <div
-        className="w-full max-w-[28rem] bg-surface-container-lowest border border-outline-variant rounded-lg shadow-sm overflow-hidden"
+        className={`${SIZE_CLASSES[size]} bg-surface-container-lowest border border-outline-variant rounded-lg shadow-sm overflow-hidden`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
@@ -42,9 +54,9 @@ export default function Modal({ open, title, children, onClose, actions = [] }) 
         <div className="p-md">{children}</div>
         {actions.length > 0 && (
           <div className="flex flex-col-reverse md:flex-row justify-end gap-sm p-md border-t border-outline-variant">
-            {actions.map((action) => (
-              <Button key={action.label} variant={action.variant ?? 'secondary-outline'} onClick={action.onClick}>
-                {action.label}
+            {actions.map(({ label, variant, onClick, ...buttonProps }) => (
+              <Button key={label} variant={variant ?? 'secondary-outline'} onClick={onClick} {...buttonProps}>
+                {label}
               </Button>
             ))}
           </div>

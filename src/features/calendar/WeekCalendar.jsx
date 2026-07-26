@@ -4,7 +4,7 @@ import TaskCard from './TaskCard'
 
 const DAY_LABELS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
 
-export default function WeekCalendar({ weekStart, visits, onSelectVisit, onDropVisit }) {
+export default function WeekCalendar({ weekStart, routeSheets, onSelectRouteSheet, onDropRouteSheet }) {
   const [dragOverDate, setDragOverDate] = useState(null)
   const days = Array.from({ length: 7 }, (_, index) => addDays(weekStart, index))
   const todayIso = toISODateString(new Date())
@@ -12,16 +12,16 @@ export default function WeekCalendar({ weekStart, visits, onSelectVisit, onDropV
   function handleDrop(event, dateStr) {
     event.preventDefault()
     setDragOverDate(null)
-    const visitId = event.dataTransfer.getData('text/plain')
-    if (visitId) onDropVisit(visitId, dateStr)
+    const routeSheetId = event.dataTransfer.getData('text/plain')
+    if (routeSheetId) onDropRouteSheet(routeSheetId, dateStr)
   }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-7 gap-sm">
       {days.map((day) => {
         const dateStr = toISODateString(day)
-        const dayVisits = visits
-          .filter((visit) => visit.scheduled_date === dateStr)
+        const dayRouteSheets = routeSheets
+          .filter((routeSheet) => routeSheet.scheduled_date === dateStr)
           .sort((a, b) => (a.scheduled_time_start ?? '').localeCompare(b.scheduled_time_start ?? ''))
 
         return (
@@ -33,7 +33,7 @@ export default function WeekCalendar({ weekStart, visits, onSelectVisit, onDropV
             }}
             onDragLeave={() => setDragOverDate((current) => (current === dateStr ? null : current))}
             onDrop={(event) => handleDrop(event, dateStr)}
-            className={`min-h-[16rem] border border-outline-variant rounded p-xs flex flex-col gap-xs transition-colors ${
+            className={`min-h-[16rem] min-w-0 border border-outline-variant rounded p-xs flex flex-col gap-xs transition-colors ${
               dragOverDate === dateStr ? 'drop-target' : 'bg-surface-container-lowest'
             }`}
           >
@@ -42,14 +42,14 @@ export default function WeekCalendar({ weekStart, visits, onSelectVisit, onDropV
               <p className="font-label-md text-label-md">{day.getDate()}</p>
             </div>
             <div className="flex-1 space-y-xs overflow-y-auto">
-              {dayVisits.map((visit) => (
-                <div key={visit.id} className="relative">
-                  {visit.scheduled_time_start && (
+              {dayRouteSheets.map((routeSheet) => (
+                <div key={routeSheet.id} className="relative">
+                  {routeSheet.scheduled_time_start && (
                     <span className="font-label-sm text-label-sm text-on-surface-variant">
-                      {visit.scheduled_time_start.slice(0, 5)}
+                      {routeSheet.scheduled_time_start.slice(0, 5)}
                     </span>
                   )}
-                  <TaskCard visit={visit} onClick={onSelectVisit} />
+                  <TaskCard routeSheet={routeSheet} onClick={onSelectRouteSheet} />
                 </div>
               ))}
             </div>

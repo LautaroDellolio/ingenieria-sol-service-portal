@@ -1,26 +1,34 @@
 import { useEffect, useState } from 'react'
 import Modal from '../../components/ui/Modal'
-import Button from '../../components/ui/Button'
-import { updateVisitAssignment } from '../../api/visits'
+import { updateRouteSheetAssignment } from '../../api/routeSheets'
 
-export default function AssignmentPopover({ visit, technicians, vehicles, onClose, onSaved }) {
-  const [technicianId, setTechnicianId] = useState('')
+export default function AssignmentPopover({ routeSheet, technicians, vehicles, onClose, onSaved }) {
+  const [technicianIds, setTechnicianIds] = useState(new Set())
   const [vehicleId, setVehicleId] = useState('')
   const [scheduledDate, setScheduledDate] = useState('')
   const [scheduledTime, setScheduledTime] = useState('09:00')
 
   useEffect(() => {
-    if (!visit) return
-    setTechnicianId(visit.technician_id ?? '')
-    setVehicleId(visit.vehicle_id ?? '')
-    setScheduledDate(visit.scheduled_date ?? '')
-    setScheduledTime(visit.scheduled_time_start?.slice(0, 5) ?? '09:00')
-  }, [visit])
+    if (!routeSheet) return
+    setTechnicianIds(new Set((routeSheet.technicians ?? []).map((technician) => technician.id)))
+    setVehicleId(routeSheet.vehicle_id ?? '')
+    setScheduledDate(routeSheet.scheduled_date ?? '')
+    setScheduledTime(routeSheet.scheduled_time_start?.slice(0, 5) ?? '09:00')
+  }, [routeSheet])
+
+  function toggleTechnician(technicianId) {
+    setTechnicianIds((current) => {
+      const next = new Set(current)
+      if (next.has(technicianId)) next.delete(technicianId)
+      else next.add(technicianId)
+      return next
+    })
+  }
 
   async function handleSave(event) {
     event.preventDefault()
-    await updateVisitAssignment(visit.id, {
-      technicianId: technicianId || null,
+    await updateRouteSheetAssignment(routeSheet.id, {
+      technicianIds: Array.from(technicianIds),
       vehicleId: vehicleId || null,
       scheduledDate: scheduledDate || null,
       scheduledTimeStart: scheduledTime,
@@ -28,21 +36,39 @@ export default function AssignmentPopover({ visit, technicians, vehicles, onClos
     onSaved()
   }
 
+  const equipmentCodes = (routeSheet?.visits ?? []).map((visit) => visit.equipment?.internal_code).filter(Boolean)
+
   return (
-    <Modal open={Boolean(visit)} title={`Asignar visita · ${visit?.equipment?.internal_code ?? ''}`} onClose={onClose}>
-      <form onSubmit={handleSave} className="space-y-md">
+    <Modal
+      open={Boolean(routeSheet)}
+      title={`Asignar Hoja de Ruta · ${equipmentCodes.join(', ')}`}
+      onClose={onClose}
+      size="lg"
+      actions={[
+        { label: 'Cancelar', variant: 'secondary-outline', onClick: onClose },
+        { label: 'Guardar Asignación', variant: 'primary', type: 'submit', form: 'assignment-form' },
+      ]}
+    >
+      <form id="assignment-form" onSubmit={handleSave} className="space-y-md">
         <div className="space-y-xs">
-          <label className="font-label-sm text-label-sm text-on-surface block">Técnico</label>
-          <select
-            value={technicianId}
-            onChange={(event) => setTechnicianId(event.target.value)}
-            className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface"
-          >
-            <option value="">Sin asignar</option>
-            {technicians.map((technician) => (
-              <option key={technician.id} value={technician.id}>{technician.full_name}</option>
-            ))}
-          </select>
+          <label className="font-label-sm text-label-sm text-on-surface block">Técnicos</label>
+          {technicians.length === 0 ? (
+            <p className="font-body-sm text-body-sm text-on-surface-variant">No hay técnicos disponibles.</p>
+          ) : (
+            <div className="border border-outline-variant rounded divide-y divide-outline-variant/50 max-h-[16rem] overflow-y-auto">
+              {technicians.map((technician) => (
+                <label key={technician.id} className="flex items-center gap-sm p-sm cursor-pointer hover:bg-surface-container-low">
+                  <input
+                    type="checkbox"
+                    checked={technicianIds.has(technician.id)}
+                    onChange={() => toggleTechnician(technician.id)}
+                    className="w-[1.6rem] h-[1.6rem] rounded border-outline"
+                  />
+                  <span className="font-body-sm text-body-sm text-on-surface">{technician.full_name}</span>
+                </label>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="space-y-xs">
@@ -79,10 +105,6 @@ export default function AssignmentPopover({ visit, technicians, vehicles, onClos
             />
           </div>
         </div>
-
-        <Button type="submit" variant="primary" fullWidth>
-          Guardar Asignación
-        </Button>
       </form>
     </Modal>
   )
