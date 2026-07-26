@@ -24,7 +24,7 @@ export default function VisitReviewQueue({ visits, selectedId, onSelect }) {
                     selectedId === visit.id ? 'bg-surface-container-low border-l-4 border-secondary' : ''
                   }`}
                 >
-                  <p className="font-label-md text-label-md text-on-surface">{visit.equipment?.internal_code}</p>
+                  <p className="font-label-md text-label-md text-on-surface">{visit.equipment?.motor}</p>
                   <p className="font-body-sm text-body-sm text-on-surface-variant">{visit.equipment?.clients?.name}</p>
                   <div className="flex items-center justify-between mt-xs">
                     <StatusChip label={VISIT_STATUS_LABELS[visit.status]} tone="warning" variant="tag" />

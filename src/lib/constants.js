@@ -55,6 +55,18 @@ export const SERVICE_TYPE_LABELS = {
   [SERVICE_TYPE.INSPECCION]: 'Inspección de Rutina',
 }
 
+export const FUEL_TYPE = {
+  DIESEL: 'diesel',
+  NAFTA: 'nafta',
+  GAS: 'gas',
+}
+
+export const FUEL_TYPE_LABELS = {
+  [FUEL_TYPE.DIESEL]: 'Diésel',
+  [FUEL_TYPE.NAFTA]: 'Nafta',
+  [FUEL_TYPE.GAS]: 'Gas',
+}
+
 export const CONDITION_STATUS = {
   OPTIMO: 'optimo',
   ATENCION: 'atencion',

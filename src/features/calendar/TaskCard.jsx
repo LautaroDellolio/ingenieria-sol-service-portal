@@ -13,7 +13,7 @@ function getInitials(fullName) {
 export default function TaskCard({ routeSheet, onClick, onDragStart }) {
   const color = getRouteSheetColor(routeSheet)
   const visits = routeSheet.visits ?? []
-  const equipmentCodes = visits.map((visit) => visit.equipment?.internal_code).filter(Boolean)
+  const equipmentCodes = visits.map((visit) => visit.equipment?.motor).filter(Boolean)
   const clientNames = [...new Set(visits.map((visit) => visit.equipment?.clients?.name).filter(Boolean))]
 
   return (

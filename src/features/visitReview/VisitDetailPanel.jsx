@@ -19,7 +19,7 @@ export default function VisitDetailPanel({ visit, parameters, events, actions })
     <div className="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
       <div className="p-md border-b border-outline-variant flex items-center justify-between flex-wrap gap-sm">
         <div>
-          <h2 className="font-headline-md text-headline-md text-on-surface">{visit.equipment?.internal_code}</h2>
+          <h2 className="font-headline-md text-headline-md text-on-surface">{visit.equipment?.motor}</h2>
           <p className="font-body-sm text-body-sm text-on-surface-variant">{visit.equipment?.clients?.name}</p>
         </div>
         <StatusChip label={VISIT_STATUS_LABELS[visit.status]} tone="warning" />
@@ -31,8 +31,8 @@ export default function VisitDetailPanel({ visit, parameters, events, actions })
         <div className="border border-outline-variant rounded p-md">
           <h3 className="font-label-md text-label-md text-on-surface-variant uppercase mb-sm">Detalles del Equipo</h3>
           <dl className="grid grid-cols-2 gap-y-xs font-body-sm text-body-sm">
-            <dt className="text-on-surface-variant">Marca / Modelo</dt>
-            <dd className="text-on-surface">{visit.equipment?.brand} {visit.equipment?.model}</dd>
+            <dt className="text-on-surface-variant">Motor / Generador</dt>
+            <dd className="text-on-surface">{visit.equipment?.motor} {visit.equipment?.generador}</dd>
             <dt className="text-on-surface-variant">Tipo de servicio</dt>
             <dd className="text-on-surface">{SERVICE_TYPE_LABELS[visit.service_type] ?? '—'}</dd>
             <dt className="text-on-surface-variant">Técnico(s)</dt>

@@ -5,3 +5,9 @@ export async function listClients() {
   if (error) throw error
   return data
 }
+
+export async function createClient(client) {
+  const { data, error } = await supabase.from('clients').insert(client).select().single()
+  if (error) throw error
+  return data
+}

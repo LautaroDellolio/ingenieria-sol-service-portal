@@ -36,7 +36,7 @@ export default function AssignmentPopover({ routeSheet, technicians, vehicles, o
     onSaved()
   }
 
-  const equipmentCodes = (routeSheet?.visits ?? []).map((visit) => visit.equipment?.internal_code).filter(Boolean)
+  const equipmentCodes = (routeSheet?.visits ?? []).map((visit) => visit.equipment?.motor).filter(Boolean)
 
   return (
     <Modal

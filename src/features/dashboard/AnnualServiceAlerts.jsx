@@ -22,7 +22,7 @@ export default function AnnualServiceAlerts({ equipment, alerts }) {
       {items.map(({ item, alert }) => (
         <li key={item.id} className="flex items-center justify-between gap-sm p-md">
           <div>
-            <p className="font-label-md text-label-md text-on-surface">{item.internal_code}</p>
+            <p className="font-label-md text-label-md text-on-surface">{item.motor}</p>
             <p className="font-body-sm text-body-sm text-on-surface-variant">
               {item.clients?.name} · Vence {formatDate(alert.dueDate)}
             </p>

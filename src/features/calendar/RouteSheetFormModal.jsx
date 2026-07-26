@@ -51,7 +51,7 @@ export default function RouteSheetFormModal({
 
   function matchesSearch(item) {
     if (!normalizedSearch) return true
-    const haystack = [item.internal_code, item.brand, item.model].filter(Boolean).join(' ').toLowerCase()
+    const haystack = [item.motor, item.generador].filter(Boolean).join(' ').toLowerCase()
     return haystack.includes(normalizedSearch)
   }
 
@@ -156,7 +156,7 @@ export default function RouteSheetFormModal({
             ) : (
               <>
                 <Field
-                  label="Buscar por cliente, código, marca o modelo"
+                  label="Buscar por cliente, motor o generador"
                   value={searchTerm}
                   onChange={setSearchTerm}
                   className="mb-sm"
@@ -216,7 +216,7 @@ export default function RouteSheetFormModal({
                                     className="w-[1.6rem] h-[1.6rem] rounded border-outline"
                                   />
                                   <span className="font-body-sm text-body-sm text-on-surface">
-                                    {item.internal_code} — {item.brand} {item.model}
+                                    {item.motor} {item.generador}
                                   </span>
                                   {isLocked && (
                                     <span className="font-label-sm text-label-sm text-on-surface-variant">Ya tiene reporte</span>

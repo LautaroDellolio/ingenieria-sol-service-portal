@@ -57,7 +57,7 @@ export default function VisitSummaryModal({ routeSheet, onClose, onAssign, onEdi
             {visits.map((visit) => (
               <li key={visit.id} className="py-sm flex items-center justify-between gap-sm">
                 <div>
-                  <p className="font-label-md text-label-md text-on-surface">{visit.equipment?.internal_code}</p>
+                  <p className="font-label-md text-label-md text-on-surface">{visit.equipment?.motor}</p>
                   <p className="font-body-sm text-body-sm text-on-surface-variant">{visit.equipment?.clients?.name}</p>
                 </div>
                 <StatusChip label={VISIT_STATUS_LABELS[visit.status]} tone={STATUS_TONE[visit.status] ?? 'neutral'} variant="tag" />

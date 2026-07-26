@@ -57,7 +57,7 @@ export default function MonthCalendar({ monthAnchor, weeks, routeSheets, onSelec
                     const routeSheetVisits = routeSheet.visits ?? []
                     const label =
                       routeSheetVisits.length === 1
-                        ? routeSheetVisits[0].equipment?.internal_code ?? '—'
+                        ? routeSheetVisits[0].equipment?.motor ?? '—'
                         : `${routeSheetVisits.length} equipos`
                     return (
                       <span

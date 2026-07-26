@@ -20,7 +20,7 @@ export async function listEventsForVisit(visitId) {
 export async function listRecentEvents(limit = 10) {
   const { data, error } = await supabase
     .from('visit_events')
-    .select('*, profiles(full_name), visits(equipment_id, equipment(internal_code, clients(name)))')
+    .select('*, profiles(full_name), visits(equipment_id, equipment(motor, clients(name)))')
     .order('created_at', { ascending: false })
     .limit(limit)
   if (error) throw error

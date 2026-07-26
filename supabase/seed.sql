@@ -16,38 +16,33 @@ insert into public.clients (id, name, tax_id, address, contact_name, contact_pho
   ('33333333-3333-3333-3333-333333333333', 'Countryside Logistica S.R.L.', '30-33333333-3', 'Parque Industrial Pilar, Lote 8', 'Ruben Sosa', '011-4444-3333', 'ruben.sosa@countrysidelog.com');
 
 insert into public.equipment (
-  id, client_id, internal_code, brand, model, serial_number, power_kva, fuel_type,
-  install_date, site_location, condition_status, last_service_date, last_annual_service_date, notes
+  id, client_id, motor, generador, serial_number, power_kva, fuel_type,
+  condition_status, last_service_date, last_annual_service_date, notes
 ) values
   -- servicio anual vencido hace mas de un mes -> alerta "vencido"
   ('a1111111-0000-0000-0000-000000000001', '11111111-1111-1111-1111-111111111111',
-   'GE-0231', 'Cummins', 'C150D5', 'CUM150-88213', 150, 'diesel',
-   current_date - interval '4 years', 'Playa de camaras, sector B', 'atencion',
-   current_date - interval '2 months', current_date - interval '13 months', 'Ruido inusual en el ultimo arranque.'),
+   'Cummins', 'C150D5', 'CUM150-88213', 150, 'diesel',
+   'atencion', current_date - interval '2 months', current_date - interval '13 months', 'Ruido inusual en el ultimo arranque.'),
 
   -- servicio anual vence dentro de 15 dias -> alerta "proximo"
   ('a1111111-0000-0000-0000-000000000002', '22222222-2222-2222-2222-222222222222',
-   'GE-0455', 'Caterpillar', 'C9', 'CAT9-40217', 220, 'diesel',
-   current_date - interval '2 years', 'Subsuelo, sala de maquinas', 'optimo',
-   current_date - interval '1 months', current_date - interval '11 months' - interval '15 days', 'Equipo critico: quirofanos.'),
+   'Caterpillar', 'C9', 'CAT9-40217', 220, 'diesel',
+   'optimo', current_date - interval '1 months', current_date - interval '11 months' - interval '15 days', 'Equipo critico: quirofanos.'),
 
   -- al dia
   ('a1111111-0000-0000-0000-000000000003', '22222222-2222-2222-2222-222222222222',
-   'GE-0456', 'Caterpillar', 'C9', 'CAT9-40218', 220, 'diesel',
-   current_date - interval '2 years', 'Subsuelo, sala de maquinas', 'optimo',
-   current_date - interval '2 months', current_date - interval '2 months', 'Equipo de respaldo del GE-0455.'),
+   'Caterpillar', 'C9', 'CAT9-40218', 220, 'diesel',
+   'optimo', current_date - interval '2 months', current_date - interval '2 months', 'Equipo de respaldo del quirofano.'),
 
   -- fuera de servicio
   ('a1111111-0000-0000-0000-000000000004', '33333333-3333-3333-3333-333333333333',
-   'GE-0512', 'Perkins', '1104C-44', 'PRK-91027', 60, 'diesel',
-   current_date - interval '6 years', 'Deposito central', 'fuera_servicio',
-   current_date - interval '5 months', current_date - interval '18 months', 'A la espera de repuesto para el alternador.'),
+   'Perkins', '1104C-44', 'PRK-91027', 60, 'diesel',
+   'fuera_servicio', current_date - interval '5 months', current_date - interval '18 months', 'A la espera de repuesto para el alternador.'),
 
   -- servicio anual proximo a 25 dias -> alerta "proximo"
   ('a1111111-0000-0000-0000-000000000005', '33333333-3333-3333-3333-333333333333',
-   'GE-0513', 'Cummins', 'C220D5', 'CUM220-77531', 220, 'gas',
-   current_date - interval '1 years', 'Playa de carga, sector norte', 'optimo',
-   current_date - interval '20 days', current_date - interval '11 months' - interval '5 days', null);
+   'Cummins', 'C220D5', 'CUM220-77531', 220, 'gas',
+   'optimo', current_date - interval '20 days', current_date - interval '11 months' - interval '5 days', null);
 
 insert into public.vehicles (plate, description) values
   ('AC123XY', 'Toyota Hilux blanca - unidad 1'),

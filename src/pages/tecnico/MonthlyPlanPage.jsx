@@ -59,7 +59,7 @@ export default function MonthlyPlanPage() {
                     className="w-full text-left bg-surface-container-lowest border border-outline-variant rounded-lg p-md hover:border-secondary transition-colors flex items-center justify-between gap-sm"
                   >
                     <div>
-                      <p className="font-label-md text-label-md text-on-surface">{visit.equipment?.internal_code}</p>
+                      <p className="font-label-md text-label-md text-on-surface">{visit.equipment?.motor}</p>
                       <p className="font-body-sm text-body-sm text-on-surface-variant">
                         {visit.equipment?.clients?.name} · {SERVICE_TYPE_LABELS[visit.service_type] ?? 'Sin tipo'}
                       </p>

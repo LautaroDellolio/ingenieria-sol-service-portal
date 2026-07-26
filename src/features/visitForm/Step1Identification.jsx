@@ -11,7 +11,7 @@ export default function Step1Identification({ visit, serviceType, onChangeServic
             <input
               type="text"
               readOnly
-              value={visit.equipment?.internal_code ?? ''}
+              value={visit.equipment?.motor ?? ''}
               className="w-full bg-surface-container-low border border-outline text-on-surface text-body-md font-body-md rounded px-sm py-sm pr-12"
             />
             <button
@@ -24,7 +24,7 @@ export default function Step1Identification({ visit, serviceType, onChangeServic
             </button>
           </div>
           <p className="font-body-sm text-body-sm text-on-surface-variant">
-            {visit.equipment?.clients?.name} · {visit.equipment?.brand} {visit.equipment?.model}
+            {visit.equipment?.clients?.name} · {visit.equipment?.motor} {visit.equipment?.generador}
           </p>
         </div>
         <div className="space-y-xs">

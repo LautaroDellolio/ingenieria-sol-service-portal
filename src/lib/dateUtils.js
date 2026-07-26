@@ -15,7 +15,7 @@ export function daysBetween(from, to) {
 }
 
 export function getNextAnnualServiceDue(equipment) {
-  const base = equipment.last_annual_service_date ?? equipment.install_date
+  const base = equipment.last_annual_service_date
   return base ? addYears(new Date(base), 1) : null
 }
 

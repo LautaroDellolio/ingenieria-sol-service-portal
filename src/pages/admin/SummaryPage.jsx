@@ -103,7 +103,7 @@ export default function SummaryPage() {
               {upcomingAnnualServices.map(({ item, dueDate }) => (
                 <li key={item.id} className="flex items-center justify-between p-md">
                   <div>
-                    <p className="font-label-md text-label-md text-on-surface">{item.internal_code}</p>
+                    <p className="font-label-md text-label-md text-on-surface">{item.motor}</p>
                     <p className="font-body-sm text-body-sm text-on-surface-variant">{item.clients?.name}</p>
                   </div>
                   <span className="font-label-sm text-label-sm text-on-surface-variant">{formatDate(dueDate)}</span>

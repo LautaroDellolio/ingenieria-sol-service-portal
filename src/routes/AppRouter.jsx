@@ -13,6 +13,7 @@ import EquipmentPage from '../pages/admin/EquipmentPage'
 import CalendarPage from '../pages/admin/CalendarPage'
 import ReceptionPage from '../pages/admin/ReceptionPage'
 import SummaryPage from '../pages/admin/SummaryPage'
+import VisitDetailPage from '../pages/admin/VisitDetailPage'
 
 import TecnicoLayout from '../components/layout/TecnicoLayout'
 import MonthlyPlanPage from '../pages/tecnico/MonthlyPlanPage'
@@ -50,6 +51,7 @@ export default function AppRouter() {
             <Route path="calendario" element={<CalendarPage />} />
             <Route path="recepcion" element={<ReceptionPage />} />
             <Route path="resumen" element={<SummaryPage />} />
+            <Route path="visita/:visitId" element={<VisitDetailPage />} />
           </Route>
         </Route>
 
@@ -67,6 +69,7 @@ export default function AppRouter() {
             <Route path="calendario" element={<CalendarPage />} />
             <Route path="personal" element={<StaffListPage />} />
             <Route path="personal/nuevo" element={<StaffNewPage />} />
+            <Route path="visita/:visitId" element={<VisitDetailPage />} />
           </Route>
         </Route>
       </Route>

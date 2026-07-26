@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import EquipmentRow from './EquipmentRow'
 
-export default function ClientGroupRow({ client, equipmentList, alertsByEquipmentId, onOpenHistory }) {
+export default function ClientGroupRow({ client, equipmentList, onOpenHistory }) {
   const [expanded, setExpanded] = useState(true)
 
   return (
@@ -20,12 +20,7 @@ export default function ClientGroupRow({ client, equipmentList, alertsByEquipmen
       {expanded && (
         <div>
           {equipmentList.map((equipment) => (
-            <EquipmentRow
-              key={equipment.id}
-              equipment={equipment}
-              alert={alertsByEquipmentId.get(equipment.id)}
-              onOpenHistory={onOpenHistory}
-            />
+            <EquipmentRow key={equipment.id} equipment={equipment} onOpenHistory={onOpenHistory} />
           ))}
         </div>
       )}
