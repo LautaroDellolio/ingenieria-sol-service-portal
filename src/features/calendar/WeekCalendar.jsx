@@ -4,7 +4,7 @@ import TaskCard from './TaskCard'
 
 const DAY_LABELS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
 
-export default function WeekCalendar({ weekStart, routeSheets, onSelectRouteSheet, onDropRouteSheet }) {
+export default function WeekCalendar({ weekStart, routeSheets, onSelectRouteSheet, onDropRouteSheet, onSelectDay }) {
   const [dragOverDate, setDragOverDate] = useState(null)
   const days = Array.from({ length: 7 }, (_, index) => addDays(weekStart, index))
   const todayIso = toISODateString(new Date())
@@ -17,7 +17,7 @@ export default function WeekCalendar({ weekStart, routeSheets, onSelectRouteShee
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-7 gap-sm">
+    <div className="grid grid-cols-1 md:grid-cols-7 lg:grid-rows-[1fr] gap-sm lg:h-full">
       {days.map((day) => {
         const dateStr = toISODateString(day)
         const dayRouteSheets = routeSheets
@@ -33,15 +33,19 @@ export default function WeekCalendar({ weekStart, routeSheets, onSelectRouteShee
             }}
             onDragLeave={() => setDragOverDate((current) => (current === dateStr ? null : current))}
             onDrop={(event) => handleDrop(event, dateStr)}
-            className={`min-h-[16rem] min-w-0 border border-outline-variant rounded p-xs flex flex-col gap-xs transition-colors ${
+            className={`min-h-[16rem] lg:h-full lg:min-h-0 min-w-0 overflow-hidden border border-outline-variant rounded p-xs flex flex-col gap-xs transition-colors ${
               dragOverDate === dateStr ? 'drop-target' : 'bg-surface-container-lowest'
             }`}
           >
-            <div className={`text-center pb-xs border-b border-outline-variant ${dateStr === todayIso ? 'text-secondary' : 'text-on-surface-variant'}`}>
+            <button
+              type="button"
+              onClick={() => onSelectDay(day)}
+              className={`shrink-0 text-center pb-xs border-b border-outline-variant hover:text-secondary transition-colors ${dateStr === todayIso ? 'text-secondary' : 'text-on-surface-variant'}`}
+            >
               <p className="font-label-sm text-label-sm uppercase">{DAY_LABELS[day.getDay() === 0 ? 6 : day.getDay() - 1]}</p>
               <p className="font-label-md text-label-md">{day.getDate()}</p>
-            </div>
-            <div className="flex-1 space-y-xs overflow-y-auto">
+            </button>
+            <div className="flex-1 min-w-0 min-h-0 space-y-xs overflow-y-auto overflow-x-hidden scrollbar-hidden">
               {dayRouteSheets.map((routeSheet) => (
                 <div key={routeSheet.id} className="relative">
                   {routeSheet.scheduled_time_start && (

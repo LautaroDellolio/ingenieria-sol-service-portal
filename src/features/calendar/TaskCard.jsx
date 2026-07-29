@@ -24,7 +24,7 @@ export default function TaskCard({ routeSheet, onClick, onDragStart }) {
         onDragStart?.()
       }}
       onClick={() => onClick(routeSheet)}
-      className={`border-2 rounded p-sm cursor-grab hover:border-secondary transition-colors ${VISIT_COLOR_CLASSES[color]}`}
+      className={`w-full min-w-0 border-2 rounded p-sm cursor-grab hover:border-secondary transition-colors ${VISIT_COLOR_CLASSES[color]}`}
     >
       <p className="font-label-md text-label-md text-on-surface truncate">
         {equipmentCodes.length > 0 ? equipmentCodes.join(', ') : 'Sin equipos'}

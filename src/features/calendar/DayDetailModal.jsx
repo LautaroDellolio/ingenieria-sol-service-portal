@@ -9,13 +9,13 @@ export default function DayDetailModal({ date, routeSheets, onClose, onSelectRou
       open={Boolean(date)}
       title={date ? formatDate(date) : ''}
       onClose={onClose}
-      size="lg"
+      size="lg-auto"
       actions={[{ label: 'Nueva Hoja de Ruta', variant: 'primary', icon: 'add', onClick: () => onNewRouteSheet(date) }]}
     >
       {routeSheets.length === 0 ? (
         <EmptyState icon="event_available" title="Sin hojas de ruta" description="Este día no tiene hojas de ruta programadas." />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-sm">
+        <div className="flex flex-col gap-sm">
           {routeSheets.map((routeSheet) => (
             <TaskCard key={routeSheet.id} routeSheet={routeSheet} onClick={onSelectRouteSheet} />
           ))}

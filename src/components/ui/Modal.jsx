@@ -7,7 +7,11 @@ import Button from './Button'
 // o porcentuales, nunca los nombres cortos de la escala por defecto.
 const SIZE_CLASSES = {
   md: 'w-full max-w-[28rem]',
-  lg: 'w-[90%]',
+  lg: 'w-[92%] md:w-[70vw] h-[85vh]',
+  // Igual de ancho que "lg" pero sin alto fijo: se ajusta al contenido, sin
+  // scroll interno forzado. Para pop-ups cortos (ej. detalle del dia) donde
+  // el alto de 85vh dejaba una caja vacia con una barra de scroll de mas.
+  'lg-auto': 'w-[92%] md:w-[70vw] max-h-[85vh]',
 }
 
 // El sidebar fijo de los layouts internos mide 25.6rem (ver Sidebar.jsx /
@@ -32,7 +36,7 @@ export default function Modal({ open, title, children, onClose, actions = [], si
       onClick={onClose}
     >
       <div
-        className={`${SIZE_CLASSES[size]} bg-surface-container-lowest border border-outline-variant rounded-lg shadow-sm overflow-hidden`}
+        className={`${SIZE_CLASSES[size]} bg-surface-container-lowest border border-outline-variant rounded-lg shadow-sm overflow-hidden flex flex-col`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
@@ -51,7 +55,7 @@ export default function Modal({ open, title, children, onClose, actions = [], si
             <span className="material-symbols-outlined">close</span>
           </button>
         </div>
-        <div className="p-md">{children}</div>
+        <div className="p-md flex-1 overflow-y-auto min-h-0">{children}</div>
         {actions.length > 0 && (
           <div className="flex flex-col-reverse md:flex-row justify-end gap-sm p-md border-t border-outline-variant">
             {actions.map(({ label, variant, onClick, ...buttonProps }) => (

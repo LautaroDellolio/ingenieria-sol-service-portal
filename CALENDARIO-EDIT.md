@@ -2,7 +2,7 @@ Trabajemos en la vista del Calendario.
 	(CORREGIDO)1-Por default quiero que la vista inicie en el mes
 	(CORREGIDO)2-Corregir los estilos de la visitas en el calendario(esos puntitos pasan desapercividos) haz un diseño esteticamente armonico, claro y distiguible de forma rapida
 	(CORREGIDO)3-Mueve el mes y el año en caracter de titulo justo sobre el calendario pero que al mismos tiempo sean un select y poder navergar por las distintas fechas (el año que sea una cuadricula 4 x4 con su paginacion) 
-	4-Corrige el pop up del detalle del día, ajusta el ancho, haz que tenga mas precencia y  ocupe mayor protagonismo tambien agrega un boton de "nueva visita" y que me lleve al formulario de nueva visita pero ya con la fecha precargada. Y al mismo tiempo cuando yo hago click en en una visita me muestre un resumen de la misma. Recordemos una visita puede contener muchos cliente y cada cliente puede contener muchos equipo. y un boton que me permita editar dicha visita
+	(CORREGIDO)4-Corrige el pop up del detalle del día, ajusta el ancho, haz que tenga mas precencia y  ocupe mayor protagonismo tambien agrega un boton de "nueva visita" y que me lleve al formulario de nueva visita pero ya con la fecha precargada. Y al mismo tiempo cuando yo hago click en en una visita me muestre un resumen de la misma. Recordemos una visita puede contener muchos cliente y cada cliente puede contener muchos equipo. y un boton que me permita editar dicha visita
 	(CORREGIDO)5-Ajusta el scrol horizontal y recuerda que la pagina debe ser 100% responsive
 	(CORREGIDO)6-Elimina la lista de tecnicos disponibles
 	(CORREGIDO)7-Pon un titulo al listado de visitas sin tecnico asignado y en una vista responsive que el calendario tenga prioridad y el listado aprezca por debajo
@@ -16,5 +16,18 @@ Trabajemos en la vista del Calendario.
 
     9-Tambien elimina el scrol vertical. La section de Hojas de ruta sin asignar que quede dentro una caja que de ser muy larga la lista tenga su propio scrol vertical interno
     10- Corrige la vista semanal para que no tenga scroll horizontal cada columna
-    11-el boton "hoy" debe llevar a vista detalle del día
-    12-Al pop up de resumen de hoja del ruta agrega un boton "Asignar Técnico". El boton editar que me permita editar la hoja de ruta e incluso poder eliminarla 
+    (CORREGIDO)11-el boton "hoy" debe llevar a vista detalle del día
+   	(CORREGIDO) 12-Al pop up de resumen de hoja del ruta agrega un boton "Asignar Técnico". El boton editar que me permita editar la hoja de ruta e incluso poder eliminarla 
+
+	Nuevas modificaciones Calendario:
+		-En la vista del mes:
+			(CORREGIDO)-En la seccion Hojas de ruta sin asignar dice todo planificado pero en el calendario tengo varias visitas sin asignar
+			(CORREGIDO)-Mover los botones de navegación izquierda - derecha a la mis linea del Titulo del mes y año con la siguiente distribucion space-between
+			-Haz de que el asaide de "Rutas sin asiganar" tenaga el mismo alto que el calendario y una barra de scroll vertical
+		-En el detalle del día:
+			(Verificar)-El pop-up se ve feo. Unifica todos los pop-up de la app tengan el mismo tamaño por default no que se ajusten al tamaño de su contenido y que tengan un tamaño grande y legible
+			(CORREGIDO)-Las hojas de rutas quiero que se vean en lista una debajo de la otro
+		En el datalle de la semana:
+			(CORREGIDO)-Debe tener la misma barra del Titulo de mes año y los botones de navegacion exactamente igual que la vista del mes.
+			(CORREGIDO)-La vista del calendario del día que ocupe todo el alto de Vh
+			-Elimina el scrol vertica dentro del cuadro de cada  detalle dia

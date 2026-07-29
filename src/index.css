@@ -33,6 +33,33 @@ body {
   background-color: theme('colors.surface-container-high');
 }
 
+.scrollbar-hidden {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Edge viejo */
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge nuevo */
+}
+
+.scrollbar-styled {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: theme('colors.outline') transparent;
+}
+
+.scrollbar-styled::-webkit-scrollbar {
+  width: 0.8rem;
+}
+
+.scrollbar-styled::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-styled::-webkit-scrollbar-thumb {
+  background-color: theme('colors.outline');
+  border-radius: 9999px;
+}
+
 .grid-pattern {
   background-image:
     linear-gradient(to right, rgba(118, 119, 125, 0.1) 1px, transparent 1px),

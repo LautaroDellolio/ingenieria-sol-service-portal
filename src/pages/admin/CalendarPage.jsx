@@ -15,7 +15,7 @@ import {
   toISODateString,
   formatDate,
 } from '../../lib/dateUtils'
-import { VISIT_COLOR_CLASSES, VISIT_COLOR_LABELS } from '../../lib/visitColor'
+import { VISIT_COLOR_CLASSES, VISIT_COLOR_LABELS, getRouteSheetColor } from '../../lib/visitColor'
 import Button from '../../components/ui/Button'
 import Spinner from '../../components/ui/Spinner'
 import WeekCalendar from '../../features/calendar/WeekCalendar'
@@ -62,6 +62,17 @@ export default function CalendarPage() {
     return (rangeRouteSheets ?? []).filter((routeSheet) => routeSheet.scheduled_date === dateStr)
   }, [selectedDate, rangeRouteSheets])
 
+  // "Sin asignar" incluye tanto las hojas sin fecha como las que ya tienen
+  // fecha pero siguen en blanco (sin tecnico) dentro del rango visible, para
+  // que coincida con lo que el calendario muestra en blanco/"Sin tecnico
+  // asignado" (ver lib/visitColor.js) y no contradiga al usuario.
+  const sidebarRouteSheets = useMemo(() => {
+    const noDate = unassignedRouteSheets ?? []
+    const noTechnicianInRange = (rangeRouteSheets ?? []).filter((routeSheet) => getRouteSheetColor(routeSheet) === 'blanco')
+    const seen = new Set(noDate.map((routeSheet) => routeSheet.id))
+    return [...noDate, ...noTechnicianInRange.filter((routeSheet) => !seen.has(routeSheet.id))]
+  }, [unassignedRouteSheets, rangeRouteSheets])
+
   function reloadAll() {
     reloadUnassigned()
     reloadRange()
@@ -92,9 +103,17 @@ export default function CalendarPage() {
 
   if (unassignedLoading || rangeLoading) return <Spinner label="Cargando calendario…" />
 
+  // Tanto Mes como Semana ajustan su alto al espacio real disponible: en
+  // meses de 5 semanas el calendario llena el 100% sin scroll de pagina, en
+  // meses de 6 semanas el propio calendario scrollea internamente un poco
+  // (ver MonthCalendar.jsx). Al ser ambas vistas de alto acotado, el aside
+  // de "Hojas de Ruta Sin Asignar" puede usar el "stretch" por defecto de
+  // flexbox para igualar siempre el alto del calendario, sin JS.
+  // 12.8rem = 6.4rem del TopBar + 3.2rem+3.2rem del padding del <main> (ver
+  // RoleLayoutShell.jsx), no un numero adivinado.
   return (
-    <div>
-      <div className="flex flex-col gap-sm mb-sm">
+    <div className="flex flex-col lg:h-[calc(100vh-12.8rem)] lg:overflow-hidden">
+      <div className="shrink-0 flex flex-col gap-sm mb-sm">
         <div>
           <h1 className="font-headline-lg text-headline-lg text-on-surface mb-xs">Planificación de Rutas</h1>
           {viewMode === 'semana' && (
@@ -119,7 +138,7 @@ export default function CalendarPage() {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-md mb-md">
+      <div className="shrink-0 flex flex-wrap gap-md mb-md">
         {Object.entries(VISIT_COLOR_LABELS).map(([color, label]) => (
           <div key={color} className="flex items-center gap-xs">
             <span className={`w-sm h-sm rounded-full border ${VISIT_COLOR_CLASSES[color]}`} />
@@ -128,36 +147,37 @@ export default function CalendarPage() {
         ))}
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-md">
-        <aside className="order-2 lg:order-1 lg:w-[28rem] shrink-0 lg:sticky lg:top-[7.2rem] lg:max-h-[calc(100vh-9.6rem)] lg:overflow-y-auto lg:pr-xs">
-          <UnassignedList routeSheets={unassignedRouteSheets ?? []} onSelectRouteSheet={setSelectedRouteSheet} />
+      <div className="flex flex-col lg:flex-row gap-md flex-1 lg:min-h-0">
+        <aside className="order-2 lg:order-1 lg:w-[28rem] shrink-0 max-h-[24rem] lg:max-h-none min-h-0 overflow-hidden lg:pr-xs">
+          <UnassignedList routeSheets={sidebarRouteSheets} onSelectRouteSheet={setSelectedRouteSheet} />
         </aside>
 
-        <div className="order-1 lg:order-2 flex-1 min-w-0">
-          {viewMode === 'mes' && (
-            <div className="mb-sm">
-              <MonthYearPicker monthAnchor={monthAnchor} onSelect={setMonthAnchor} />
-            </div>
-          )}
-          {viewMode === 'mes' ? (
-            <MonthCalendar
-              monthAnchor={monthAnchor}
-              weeks={monthWeeks}
-              routeSheets={rangeRouteSheets ?? []}
-              onSelectDay={setSelectedDate}
-            />
-          ) : (
-            <WeekCalendar
-              weekStart={weekStart}
-              routeSheets={rangeRouteSheets ?? []}
-              onSelectRouteSheet={setSelectedRouteSheet}
-              onDropRouteSheet={handleDropRouteSheet}
-            />
-          )}
-
-          <div className="flex items-center justify-center gap-sm mt-sm">
+        <div className="order-1 lg:order-2 flex-1 min-w-0 flex flex-col lg:min-h-0">
+          <div className="shrink-0 flex items-center justify-between mb-sm">
             <Button variant="secondary-outline" icon="chevron_left" onClick={goToPrevious} aria-label="Anterior" />
+            <MonthYearPicker
+              monthAnchor={viewMode === 'mes' ? monthAnchor : weekStart}
+              onSelect={(date) => (viewMode === 'mes' ? setMonthAnchor(date) : setWeekStart(startOfWeek(date)))}
+            />
             <Button variant="secondary-outline" icon="chevron_right" onClick={goToNext} aria-label="Siguiente" />
+          </div>
+          <div className="lg:flex-1 lg:min-h-0">
+            {viewMode === 'mes' ? (
+              <MonthCalendar
+                monthAnchor={monthAnchor}
+                weeks={monthWeeks}
+                routeSheets={rangeRouteSheets ?? []}
+                onSelectDay={setSelectedDate}
+              />
+            ) : (
+              <WeekCalendar
+                weekStart={weekStart}
+                routeSheets={rangeRouteSheets ?? []}
+                onSelectRouteSheet={setSelectedRouteSheet}
+                onDropRouteSheet={handleDropRouteSheet}
+                onSelectDay={setSelectedDate}
+              />
+            )}
           </div>
         </div>
       </div>
