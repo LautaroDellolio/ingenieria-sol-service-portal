@@ -2,15 +2,26 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { createStaffMember } from '../../api/staff'
 import { ROLES, ROLE_LABELS } from '../../lib/constants'
+import { toISODateString } from '../../lib/dateUtils'
 import Button from '../../components/ui/Button'
 import Field from '../../components/ui/Field'
 import FormSection from '../../components/ui/FormSection'
 
-const EMPTY_FORM = { username: '', fullName: '', role: ROLES.TECNICO, password: '' }
+function emptyForm() {
+  return {
+    username: '',
+    fullName: '',
+    role: ROLES.TECNICO,
+    password: '',
+    phone: '',
+    address: '',
+    registeredAt: toISODateString(new Date()),
+  }
+}
 
 export default function StaffNewPage() {
   const navigate = useNavigate()
-  const [form, setForm] = useState(EMPTY_FORM)
+  const [form, setForm] = useState(emptyForm)
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -68,6 +79,23 @@ export default function StaffNewPage() {
                 type="password"
                 value={form.password}
                 onChange={(value) => setForm((f) => ({ ...f, password: value }))}
+                required
+              />
+              <Field
+                label="Teléfono"
+                value={form.phone}
+                onChange={(value) => setForm((f) => ({ ...f, phone: value }))}
+              />
+              <Field
+                label="Dirección"
+                value={form.address}
+                onChange={(value) => setForm((f) => ({ ...f, address: value }))}
+              />
+              <Field
+                label="Fecha de Registro"
+                type="date"
+                value={form.registeredAt}
+                onChange={(value) => setForm((f) => ({ ...f, registeredAt: value }))}
                 required
               />
             </div>

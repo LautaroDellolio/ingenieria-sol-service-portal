@@ -27,3 +27,9 @@ export async function setProfileActive(profileId, active) {
   const { error } = await supabase.from('profiles').update({ active }).eq('id', profileId)
   if (error) throw error
 }
+
+export async function updateProfile(profileId, changes) {
+  const { data, error } = await supabase.from('profiles').update(changes).eq('id', profileId).select().single()
+  if (error) throw error
+  return data
+}

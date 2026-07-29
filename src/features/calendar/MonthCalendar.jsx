@@ -16,7 +16,7 @@ export default function MonthCalendar({ monthAnchor, weeks, routeSheets, onSelec
   }
 
   return (
-    <div className="h-full flex flex-col border border-outline-variant rounded-lg overflow-hidden">
+    <div className="min-h-full flex flex-col border border-outline-variant rounded-lg overflow-hidden">
       <div className="shrink-0 grid grid-cols-7 bg-surface-container">
         {DAY_LABELS.map((label) => (
           <div key={label} className="py-xs text-center font-label-sm text-label-sm text-on-surface-variant uppercase">
@@ -25,7 +25,7 @@ export default function MonthCalendar({ monthAnchor, weeks, routeSheets, onSelec
         ))}
       </div>
       <div
-        className="flex-1 min-h-0 overflow-y-auto grid grid-cols-7 gap-px bg-outline-variant"
+        className="flex-1 grid grid-cols-7 gap-px bg-outline-variant"
         style={{ gridTemplateRows: `repeat(${weekCount}, minmax(11.2rem, 1fr))` }}
       >
         {weeks.flat().map((day) => {

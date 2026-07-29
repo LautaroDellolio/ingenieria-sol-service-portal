@@ -44,7 +44,7 @@ insert into public.equipment (
    'Cummins', 'C220D5', 'CUM220-77531', 220, 'gas',
    'optimo', current_date - interval '20 days', current_date - interval '11 months' - interval '5 days', null);
 
-insert into public.vehicles (plate, description) values
+insert into public.vehicles (plate, name) values
   ('AC123XY', 'Toyota Hilux blanca - unidad 1'),
   ('AD456ZT', 'Renault Kangoo blanca - unidad 2'),
   ('AE789WQ', 'Ford Ranger gris - unidad 3');

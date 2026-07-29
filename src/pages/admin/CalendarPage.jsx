@@ -104,15 +104,17 @@ export default function CalendarPage() {
   if (unassignedLoading || rangeLoading) return <Spinner label="Cargando calendario…" />
 
   // Tanto Mes como Semana ajustan su alto al espacio real disponible: en
-  // meses de 5 semanas el calendario llena el 100% sin scroll de pagina, en
-  // meses de 6 semanas el propio calendario scrollea internamente un poco
-  // (ver MonthCalendar.jsx). Al ser ambas vistas de alto acotado, el aside
-  // de "Hojas de Ruta Sin Asignar" puede usar el "stretch" por defecto de
-  // flexbox para igualar siempre el alto del calendario, sin JS.
+  // meses de 5 semanas el calendario llena el 100% sin scroll, en meses de
+  // 6 semanas el calendario crece por encima de ese alto (sin recortarse ni
+  // scrollear internamente, ver MonthCalendar.jsx) y es la PAGINA la que
+  // scrollea para verlo completo — por eso aca NO hay overflow-hidden. Al
+  // ser ambas vistas de alto acotado, el aside de "Hojas de Ruta Sin
+  // Asignar" puede usar el "stretch" por defecto de flexbox para igualar
+  // siempre el alto del calendario, sin JS.
   // 12.8rem = 6.4rem del TopBar + 3.2rem+3.2rem del padding del <main> (ver
   // RoleLayoutShell.jsx), no un numero adivinado.
   return (
-    <div className="flex flex-col lg:h-[calc(100vh-12.8rem)] lg:overflow-hidden">
+    <div className="flex flex-col lg:h-[calc(100vh-12.8rem)]">
       <div className="shrink-0 flex flex-col gap-sm mb-sm">
         <div>
           <h1 className="font-headline-lg text-headline-lg text-on-surface mb-xs">Planificación de Rutas</h1>

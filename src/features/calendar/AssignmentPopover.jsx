@@ -80,7 +80,7 @@ export default function AssignmentPopover({ routeSheet, technicians, vehicles, o
           >
             <option value="">Sin asignar</option>
             {vehicles.map((vehicle) => (
-              <option key={vehicle.id} value={vehicle.id}>{vehicle.plate} — {vehicle.description}</option>
+              <option key={vehicle.id} value={vehicle.id}>{vehicle.plate} — {vehicle.name}</option>
             ))}
           </select>
         </div>

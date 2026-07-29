@@ -69,7 +69,7 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: 'Cuerpo de la solicitud invalido' }, 400)
   }
 
-  const { username, fullName, role, password } = body
+  const { username, fullName, role, password, phone, address, registeredAt } = body
 
   if (!username || !fullName || !role || !password) {
     return jsonResponse({ error: 'Faltan campos obligatorios' }, 400)
@@ -99,6 +99,9 @@ Deno.serve(async (req) => {
     username: normalizedUsername,
     full_name: fullName,
     role,
+    phone: phone || null,
+    address: address || null,
+    ...(registeredAt ? { registered_at: registeredAt } : {}),
   })
 
   if (profileError) {
