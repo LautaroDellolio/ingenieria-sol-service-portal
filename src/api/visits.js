@@ -70,6 +70,16 @@ export async function listVisitsPendingReview() {
   return data.map(normalizeVisit)
 }
 
+export async function listReceivedVisits() {
+  const { data, error } = await supabase
+    .from('visits')
+    .select(VISIT_SELECT)
+    .not('received_at', 'is', null)
+    .order('received_at', { ascending: false })
+  if (error) throw error
+  return data.map(normalizeVisit)
+}
+
 export async function listVisitsThisMonth() {
   const now = new Date()
   const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10)

@@ -10,8 +10,14 @@ const STATUS_TONE = {
   [VISIT_STATUS.REVISION_SOLICITADA]: 'warning',
 }
 
-export default function VisitSummaryModal({ routeSheet, onClose, onAssign, onEdit }) {
+export default function VisitSummaryModal({ routeSheet, onClose, onAssign = null, onEdit = null }) {
   const visits = routeSheet?.visits ?? []
+
+  const actions = [
+    { label: 'Cerrar', variant: 'secondary-outline', onClick: onClose },
+    ...(onAssign ? [{ label: 'Asignar Técnico', variant: 'secondary-outline', icon: 'engineering', onClick: () => onAssign(routeSheet) }] : []),
+    ...(onEdit ? [{ label: 'Editar', variant: 'primary', icon: 'edit', onClick: () => onEdit(routeSheet) }] : []),
+  ]
 
   return (
     <Modal
@@ -19,11 +25,7 @@ export default function VisitSummaryModal({ routeSheet, onClose, onAssign, onEdi
       title="Resumen de la Hoja de Ruta"
       onClose={onClose}
       size="lg"
-      actions={[
-        { label: 'Cerrar', variant: 'secondary-outline', onClick: onClose },
-        { label: 'Asignar Técnico', variant: 'secondary-outline', icon: 'engineering', onClick: () => onAssign(routeSheet) },
-        { label: 'Editar', variant: 'primary', icon: 'edit', onClick: () => onEdit(routeSheet) },
-      ]}
+      actions={actions}
     >
       {routeSheet && (
         <>

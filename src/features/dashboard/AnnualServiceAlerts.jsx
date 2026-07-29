@@ -5,7 +5,7 @@ import { formatDate } from '../../lib/dateUtils'
 const ALERT_TONE = { vencido: 'error', proximo: 'warning' }
 const ALERT_LABEL = { vencido: 'Vencido', proximo: 'Próximo a Vencer' }
 
-export default function AnnualServiceAlerts({ equipment, alerts }) {
+export default function AnnualServiceAlerts({ equipment, alerts, onSelectEquipment }) {
   const alertsByEquipmentId = new Map(alerts.map((alert) => [alert.equipmentId, alert]))
 
   const items = equipment
@@ -20,14 +20,20 @@ export default function AnnualServiceAlerts({ equipment, alerts }) {
   return (
     <ul className="divide-y divide-outline-variant/50">
       {items.map(({ item, alert }) => (
-        <li key={item.id} className="flex items-center justify-between gap-sm p-md">
-          <div>
-            <p className="font-label-md text-label-md text-on-surface">{item.motor}</p>
-            <p className="font-body-sm text-body-sm text-on-surface-variant">
-              {item.clients?.name} · Vence {formatDate(alert.dueDate)}
-            </p>
-          </div>
-          <StatusChip label={ALERT_LABEL[alert.alertLevel]} tone={ALERT_TONE[alert.alertLevel]} variant="tag" />
+        <li key={item.id}>
+          <button
+            type="button"
+            onClick={() => onSelectEquipment(item)}
+            className="w-full flex items-center justify-between gap-sm p-md text-left hover:bg-surface-container-low transition-colors"
+          >
+            <div>
+              <p className="font-label-md text-label-md text-on-surface">{item.motor}</p>
+              <p className="font-body-sm text-body-sm text-on-surface-variant">
+                {item.clients?.name} · Vence {formatDate(alert.dueDate)}
+              </p>
+            </div>
+            <StatusChip label={ALERT_LABEL[alert.alertLevel]} tone={ALERT_TONE[alert.alertLevel]} variant="tag" />
+          </button>
         </li>
       ))}
     </ul>

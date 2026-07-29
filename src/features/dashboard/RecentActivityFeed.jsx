@@ -21,14 +21,15 @@ const EVENT_LABEL = {
   rechazada: 'Rechazada',
 }
 
-export default function RecentActivityFeed({ events }) {
+export default function RecentActivityFeed({ events, onSelectEvent }) {
   const items = events.map((event) => ({
     id: event.id,
+    visitId: event.visit_id,
     icon: EVENT_ICON[event.event_type] ?? 'radio_button_checked',
     title: `${EVENT_LABEL[event.event_type] ?? event.event_type} · ${event.visits?.equipment?.motor ?? ''}`,
     subtitle: `${event.visits?.equipment?.clients?.name ?? ''} · ${event.profiles?.full_name ?? 'Sistema'}`,
     timestamp: formatDateTime(event.created_at),
   }))
 
-  return <ActivityList items={items} />
+  return <ActivityList items={items} onSelect={onSelectEvent ? (item) => onSelectEvent(item.visitId) : null} />
 }

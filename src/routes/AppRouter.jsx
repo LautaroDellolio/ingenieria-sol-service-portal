@@ -64,7 +64,8 @@ export default function AppRouter() {
 
         <Route element={<RoleRoute allow={['supervisor']} />}>
           <Route path="/supervisor" element={<SupervisorLayout />}>
-            <Route index element={<ValidationPage />} />
+            <Route index element={<DashboardPage />} />
+            <Route path="validacion" element={<ValidationPage />} />
             <Route path="equipos" element={<EquipmentPage />} />
             <Route path="calendario" element={<CalendarPage />} />
             <Route path="personal" element={<StaffListPage />} />

@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
-import { useVisitsPendingReview, useVisitParameters, useVisitEvents } from '../../hooks/useVisits'
+import { useVisitsPendingReview, useReceivedVisits, useVisitParameters, useVisitEvents } from '../../hooks/useVisits'
 import { markVisitReceived } from '../../api/visits'
 import VisitReviewQueue from '../../features/visitReview/VisitReviewQueue'
+import ReceivedVisitsByClient from '../../features/visitReview/ReceivedVisitsByClient'
 import VisitDetailPanel from '../../features/visitReview/VisitDetailPanel'
 import Button from '../../components/ui/Button'
 import EmptyState from '../../components/ui/EmptyState'
@@ -11,9 +12,11 @@ import Spinner from '../../components/ui/Spinner'
 export default function ReceptionPage() {
   const { profile } = useAuth()
   const { data: visits, loading, reload } = useVisitsPendingReview()
+  const { data: receivedVisits, loading: receivedLoading, reload: reloadReceived } = useReceivedVisits()
   const [selectedId, setSelectedId] = useState(null)
 
-  const selectedVisit = visits?.find((visit) => visit.id === selectedId) ?? null
+  const selectedVisit =
+    visits?.find((visit) => visit.id === selectedId) ?? receivedVisits?.find((visit) => visit.id === selectedId) ?? null
   const { data: parameters } = useVisitParameters(selectedId)
   const { data: events } = useVisitEvents(selectedId)
 
@@ -21,9 +24,10 @@ export default function ReceptionPage() {
     await markVisitReceived(selectedId, profile.id)
     setSelectedId(null)
     reload()
+    reloadReceived()
   }
 
-  if (loading) return <Spinner label="Cargando visitas…" />
+  if (loading || receivedLoading) return <Spinner label="Cargando visitas…" />
 
   return (
     <div>
@@ -33,8 +37,9 @@ export default function ReceptionPage() {
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-md">
-        <div className="lg:col-span-4">
+        <div className="lg:col-span-4 flex flex-col gap-md">
           <VisitReviewQueue visits={visits ?? []} selectedId={selectedId} onSelect={setSelectedId} />
+          <ReceivedVisitsByClient visits={receivedVisits ?? []} selectedId={selectedId} onSelect={setSelectedId} />
         </div>
         <div className="lg:col-span-8">
           {selectedVisit ? (
