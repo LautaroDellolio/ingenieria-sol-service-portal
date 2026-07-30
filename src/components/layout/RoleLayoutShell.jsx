@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import TopBar from './TopBar'
+import UserMenu from './UserMenu'
 import MobileTabBar from './MobileTabBar'
 
 export default function RoleLayoutShell({ navItems, title }) {
@@ -18,6 +19,7 @@ export default function RoleLayoutShell({ navItems, title }) {
             {title}
           </p>
         </div>
+        <UserMenu compact />
       </header>
 
       <main className="md:pl-[25.6rem] md:pt-[6.4rem] pb-[6.4rem] md:pb-0">

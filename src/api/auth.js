@@ -17,3 +17,8 @@ export async function getSession() {
   if (error) throw error
   return data.session
 }
+
+export async function updatePassword(newPassword) {
+  const { error } = await supabase.auth.updateUser({ password: newPassword })
+  if (error) throw error
+}

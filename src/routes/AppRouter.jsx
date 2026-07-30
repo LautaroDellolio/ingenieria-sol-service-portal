@@ -6,6 +6,7 @@ import RoleRoute from './RoleRoute'
 import Spinner from '../components/ui/Spinner'
 
 import LoginPage from '../pages/LoginPage'
+import ProfilePage from '../pages/ProfilePage'
 
 import AdminLayout from '../components/layout/AdminLayout'
 import DashboardPage from '../pages/admin/DashboardPage'
@@ -53,6 +54,7 @@ export default function AppRouter() {
             <Route path="recepcion" element={<ReceptionPage />} />
             <Route path="resumen" element={<SummaryPage />} />
             <Route path="visita/:visitId" element={<VisitDetailPage />} />
+            <Route path="perfil" element={<ProfilePage />} />
           </Route>
         </Route>
 
@@ -61,6 +63,7 @@ export default function AppRouter() {
             <Route index element={<MonthlyPlanPage />} />
             <Route path="historial" element={<HistoryPage />} />
             <Route path="visita/:visitId" element={<VisitFormPage />} />
+            <Route path="perfil" element={<ProfilePage />} />
           </Route>
         </Route>
 
@@ -73,6 +76,7 @@ export default function AppRouter() {
             <Route path="personal" element={<StaffListPage />} />
             <Route path="personal/nuevo" element={<StaffNewPage />} />
             <Route path="visita/:visitId" element={<VisitDetailPage />} />
+            <Route path="perfil" element={<ProfilePage />} />
           </Route>
         </Route>
       </Route>

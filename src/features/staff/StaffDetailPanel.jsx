@@ -6,6 +6,7 @@ import Field from '../../components/ui/Field'
 import { ROLE_LABELS } from '../../lib/constants'
 import { formatDate } from '../../lib/dateUtils'
 import { updateProfile } from '../../api/profiles'
+import { renameStaffUsername } from '../../api/staff'
 
 const ROLE_TONE = { administrativo: 'neutral', tecnico: 'success', supervisor: 'warning' }
 
@@ -20,6 +21,7 @@ function DetailField({ label, value }) {
 
 function toFormValues(staff) {
   return {
+    username: staff.username ?? '',
     full_name: staff.full_name ?? '',
     role: staff.role,
     phone: staff.phone ?? '',
@@ -48,7 +50,12 @@ export default function StaffDetailPanel({ staff, onClose, onUpdated }) {
 
   async function handleSubmit(event) {
     event.preventDefault()
-    const updated = await updateProfile(staff.id, form)
+    const { username, ...profileFields } = form
+    const normalizedUsername = username.trim().toLowerCase()
+    if (normalizedUsername !== staff.username) {
+      await renameStaffUsername(staff.id, normalizedUsername)
+    }
+    const updated = await updateProfile(staff.id, profileFields)
     stopEditing()
     onUpdated({ ...staff, ...updated })
   }
@@ -69,6 +76,7 @@ export default function StaffDetailPanel({ staff, onClose, onUpdated }) {
         <form id="edit-staff-form" onSubmit={handleSubmit} className="space-y-md">
           <FormSection title="Datos de la Persona">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
+              <Field label="Usuario" value={form.username} onChange={(v) => setForm((f) => ({ ...f, username: v }))} required />
               <Field label="Nombre Completo" value={form.full_name} onChange={(v) => setForm((f) => ({ ...f, full_name: v }))} required />
               <div className="space-y-xs">
                 <label className="font-label-sm text-label-sm text-on-surface block">Rol</label>
