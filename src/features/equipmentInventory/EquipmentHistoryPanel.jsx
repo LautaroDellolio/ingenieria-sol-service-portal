@@ -17,6 +17,7 @@ import {
   CONDITION_STATUS_LABELS,
   FUEL_TYPE,
   FUEL_TYPE_LABELS,
+  ROLE_HOME_PATH,
 } from '../../lib/constants'
 import { formatDate } from '../../lib/dateUtils'
 
@@ -227,7 +228,7 @@ export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated })
                 type="button"
                 onClick={() => {
                   handleClose()
-                  navigate(`/${profile.role}/visita/${visit.id}`)
+                  navigate(`${ROLE_HOME_PATH[profile.role]}/visita/${visit.id}`)
                 }}
                 className="w-full py-sm flex items-center justify-between gap-sm text-left hover:bg-surface-container-low transition-colors"
               >

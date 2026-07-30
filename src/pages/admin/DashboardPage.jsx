@@ -7,7 +7,7 @@ import { useVisitsThisMonth } from '../../hooks/useVisits'
 import { useRouteSheetsInRange } from '../../hooks/useRouteSheets'
 import { useTechnicians } from '../../hooks/useTechnicians'
 import { listRecentEvents } from '../../api/visitEvents'
-import { CONDITION_STATUS, VISIT_STATUS } from '../../lib/constants'
+import { CONDITION_STATUS, ROLE_HOME_PATH, VISIT_STATUS } from '../../lib/constants'
 import { startOfMonth, endOfMonth, toISODateString } from '../../lib/dateUtils'
 import KpiCard from '../../components/ui/KpiCard'
 import AnnualServiceAlerts from '../../features/dashboard/AnnualServiceAlerts'
@@ -73,9 +73,9 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-md">
         <div className="md:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
           <h2 className="font-label-md text-label-md text-on-surface-variant uppercase p-md border-b border-outline-variant">
-            Alertas de Service Anual
+            Actividad Reciente
           </h2>
-          <AnnualServiceAlerts equipment={equipment} alerts={alerts} onSelectEquipment={setHistoryEquipment} />
+          <RecentActivityFeed events={recentEvents} onSelectEvent={(visitId) => navigate(`${ROLE_HOME_PATH[profile.role]}/visita/${visitId}`)} />
         </div>
 
         <div className="md:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
@@ -91,9 +91,9 @@ export default function DashboardPage() {
 
         <div className="md:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
           <h2 className="font-label-md text-label-md text-on-surface-variant uppercase p-md border-b border-outline-variant">
-            Actividad Reciente
+            Alertas de Service Anual
           </h2>
-          <RecentActivityFeed events={recentEvents} onSelectEvent={(visitId) => navigate(`/${profile.role}/visita/${visitId}`)} />
+          <AnnualServiceAlerts equipment={equipment} alerts={alerts} onSelectEquipment={setHistoryEquipment} />
         </div>
       </div>
 
