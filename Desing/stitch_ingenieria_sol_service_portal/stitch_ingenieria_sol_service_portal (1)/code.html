@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Informe de Visita de Servicio - Ingenieria Sol</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#cbdbf5",
+                        "on-secondary-container": "#5c2400",
+                        "on-tertiary-container": "#009668",
+                        "secondary": "#9d4300",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-secondary-fixed-variant": "#783200",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#fd761a",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#ffdbca",
+                        "on-background": "#0b1c30",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "on-primary-container": "#7c839b",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "on-primary-fixed": "#131b2e",
+                        "on-surface-variant": "#45464d",
+                        "tertiary-fixed": "#6ffbbe",
+                        "surface-container-high": "#dce9ff",
+                        "surface-tint": "#565e74",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#341100",
+                        "primary-fixed-dim": "#bec6e0",
+                        "primary-container": "#131b2e",
+                        "surface": "#f8f9ff",
+                        "tertiary-container": "#002113",
+                        "on-tertiary-fixed": "#002113",
+                        "surface-variant": "#d3e4fe",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#f8f9ff",
+                        "inverse-surface": "#213145",
+                        "inverse-primary": "#bec6e0",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "outline-variant": "#c6c6cd",
+                        "on-surface": "#0b1c30",
+                        "on-error": "#ffffff",
+                        "surface-container": "#e5eeff",
+                        "primary": "#000000",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-container-low": "#eff4ff",
+                        "outline": "#76777d",
+                        "background": "#f8f9ff",
+                        "tertiary": "#000000",
+                        "primary-fixed": "#dae2fd",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#ffb690"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "lg": "24px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "gutter": "16px",
+                        "margin-desktop": "32px",
+                        "md": "16px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["JetBrains Mono"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-md": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- SideNavBar -->
+<aside class="hidden md:flex bg-primary-container dark:bg-primary-container h-screen w-64 fixed left-0 top-0 border-r border-outline-variant dark:border-outline flex-col py-md z-20">
+<div class="px-lg pb-lg mb-md border-b border-outline-variant/30">
+<h1 class="font-headline-md text-headline-md font-bold text-on-primary">Ingenieria Sol</h1>
+<p class="font-label-sm text-label-sm text-on-primary-container mt-1">Enterprise Operations</p>
+</div>
+<nav class="flex-1 flex flex-col gap-sm overflow-y-auto px-xs">
+<a class="text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 flex items-center gap-md px-md py-sm rounded-lg hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 flex items-center gap-md px-md py-sm rounded-lg hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">calendar_month</span>
+<span class="font-label-md text-label-md">Route Planning</span>
+</a>
+<a class="text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 flex items-center gap-md px-md py-sm rounded-lg hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">precision_manufacturing</span>
+<span class="font-label-md text-label-md">Equipment</span>
+</a>
+<a class="bg-secondary text-on-secondary rounded-lg mx-2 flex items-center gap-md px-md py-sm opacity-90 transition-all" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">engineering</span>
+<span class="font-label-md text-label-md">Service Entry</span>
+</a>
+<a class="text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 flex items-center gap-md px-md py-sm rounded-lg hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">fact_check</span>
+<span class="font-label-md text-label-md">Validation</span>
+</a>
+<a class="text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 flex items-center gap-md px-md py-sm rounded-lg hover:bg-primary/20 transition-colors" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="px-md mt-auto pt-md border-t border-outline-variant/30">
+<button class="w-full bg-secondary text-on-secondary font-label-md text-label-md py-sm rounded-DEFAULT flex items-center justify-center gap-sm hover:bg-secondary/90 transition-colors mb-md">
+<span class="material-symbols-outlined">add</span>
+                New Service Entry
+            </button>
+<div class="flex flex-col gap-sm">
+<a class="text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 flex items-center gap-md px-md py-xs rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined font-label-sm text-label-sm">help</span>
+<span class="font-label-sm text-label-sm">Support</span>
+</a>
+<a class="text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary/10 mx-2 flex items-center gap-md px-md py-xs rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined font-label-sm text-label-sm">logout</span>
+<span class="font-label-sm text-label-sm">Logout</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="hidden md:flex bg-surface dark:bg-surface-dim fixed top-0 right-0 left-64 h-16 border-b border-outline-variant dark:border-outline justify-between items-center px-margin-desktop w-[calc(100%-16rem)] z-10">
+<div class="flex items-center gap-lg">
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant font-label-md">search</span>
+<input class="w-full pl-lg pr-sm py-xs border border-outline-variant rounded-DEFAULT focus:border-primary focus:ring-1 focus:ring-primary bg-surface-container-lowest text-on-surface font-body-sm" placeholder="Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-secondary transition-colors p-sm">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-secondary transition-colors p-sm">
+<span class="material-symbols-outlined">history</span>
+</button>
+<button class="text-on-surface-variant hover:text-secondary transition-colors p-sm">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+<img alt="Supervisor Profile" class="w-8 h-8 rounded-full border border-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBChnN6d1aPAgkx5Zcz7In9zjTG8TvlQ4nXdmPnTzzYPokISW8o0RB3B2RhAwwxJ_pEouQZywc-P_q_9VYPzqpBvwq53x--xC4P3Yo1Hm2jQjAIBEPzxLprxt1vfzR7kckdLXf0Bvi7L7OReGMZ8_5z4Tfda-lpc8D_kMvOCrJD6_ZaIQQ5l08KGqPg5KiQN7dJLF_n0wMI_bKUIiA9jQ0WmGO7agWTrc3ZghdUnJQA9-jXTO_3Vj99"/>
+</div>
+</header>
+<!-- Main Content -->
+<main class="md:ml-64 pt-16 p-margin-mobile md:p-margin-desktop bg-surface min-h-screen">
+<div class="max-w-6xl mx-auto space-y-lg">
+<!-- Header Section -->
+<div class="flex justify-between items-end mb-xl">
+<div>
+<h2 class="font-headline-lg text-headline-lg font-bold text-primary mb-sm">Informe de Visita de Servicio</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">ESPECIFICACIÓN MANTE-001—09</p>
+</div>
+<div class="flex gap-md">
+<button class="bg-surface-container border border-outline-variant text-on-surface font-label-md px-lg py-sm rounded-DEFAULT hover:bg-surface-container-high transition-colors">Guardar Borrador</button>
+<button class="bg-secondary text-on-secondary font-label-md px-lg py-sm rounded-DEFAULT hover:bg-secondary/90 transition-colors shadow-sm">Finalizar Reporte</button>
+</div>
+</div>
+<!-- Metadata Card -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-lg p-lg shadow-sm">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<div class="space-y-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Empresa / Cliente</label>
+<input class="w-full border-b border-outline-variant bg-transparent pb-xs font-body-md text-primary focus:outline-none focus:border-primary" readonly="" type="text" value="HOSPITAL EVA PERON"/>
+</div>
+<div class="space-y-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Fecha</label>
+<input class="w-full border border-outline-variant rounded-sm px-sm py-xs font-body-md text-primary focus:border-primary focus:ring-1 focus:ring-primary" type="date" value="2023-10-25"/>
+</div>
+<div class="space-y-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Orden de Reparación Nº</label>
+<input class="w-full border-b border-outline-variant bg-transparent pb-xs font-body-md text-primary focus:outline-none focus:border-primary" readonly="" type="text" value="ORD-2023-892"/>
+</div>
+<div class="space-y-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Equipo / Motor</label>
+<input class="w-full border border-outline-variant rounded-sm px-sm py-xs font-body-md text-primary focus:border-primary focus:ring-1 focus:ring-primary" type="text" value="SCANIA CD13"/>
+</div>
+<div class="space-y-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Generador</label>
+<input class="w-full border border-outline-variant rounded-sm px-sm py-xs font-body-md text-primary focus:border-primary focus:ring-1 focus:ring-primary" type="text" value="STAMFORD"/>
+</div>
+<div class="space-y-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Serie Nº</label>
+<input class="w-full border border-outline-variant rounded-sm px-sm py-xs font-body-md text-primary focus:border-primary focus:ring-1 focus:ring-primary" type="text" value="Scania 1518512"/>
+</div>
+</div>
+</section>
+<!-- Technical Checklist Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-lg">
+<!-- Operaciones: Equipo Parado -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-lg flex flex-col shadow-sm">
+<div class="border-b border-outline-variant p-md bg-surface-container-low rounded-t-lg flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">power_settings_new</span>
+<h3 class="font-headline-sm text-headline-sm font-semibold text-primary">Operaciones: Equipo Parado</h3>
+</div>
+<div class="p-0 overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container border-b border-outline-variant">
+<th class="p-sm font-label-sm text-label-sm text-on-surface-variant uppercase font-medium">Verificación</th>
+<th class="p-sm font-label-sm text-label-sm text-on-surface-variant uppercase font-medium w-32 text-center">Estado</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-on-surface divide-y divide-outline-variant/50">
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="p-sm">Nivel de aceite y perdidas</td>
+<td class="p-sm text-center">
+<select class="border border-outline-variant rounded-sm text-sm p-1 w-full focus:border-primary">
+<option>OK</option>
+<option>A Revisar</option>
+<option>Falla</option>
+</select>
+</td>
+</tr>
+<tr class="bg-surface-container-lowest hover:bg-surface-container-lowest transition-colors">
+<td class="p-sm">Nivel de agua y perdidas en radiador</td>
+<td class="p-sm text-center">
+<select class="border border-outline-variant rounded-sm text-sm p-1 w-full focus:border-primary">
+<option>OK</option>
+<option>A Revisar</option>
+<option>Falla</option>
+</select>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="p-sm">Estado de las baterías</td>
+<td class="p-sm text-center">
+<select class="border border-outline-variant rounded-sm text-sm p-1 w-full focus:border-primary">
+<option>OK</option>
+<option>A Revisar</option>
+<option>Falla</option>
+</select>
+</td>
+</tr>
+<tr class="bg-surface-container-lowest hover:bg-surface-container-lowest transition-colors">
+<td class="p-sm">Revisión y limpieza de filtros de aire</td>
+<td class="p-sm text-center">
+<select class="border border-outline-variant rounded-sm text-sm p-1 w-full focus:border-primary">
+<option>OK</option>
+<option>A Revisar</option>
+<option>Falla</option>
+</select>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="p-sm">Revisión de las conexiones eléctricas</td>
+<td class="p-sm text-center">
+<select class="border border-outline-variant rounded-sm text-sm p-1 w-full focus:border-primary">
+<option>OK</option>
+<option>A Revisar</option>
+<option>Falla</option>
+</select>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Operaciones: Equipo En Marcha -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-lg flex flex-col shadow-sm">
+<div class="border-b border-outline-variant p-md bg-surface-container-low rounded-t-lg flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary-fixed-dim">bolt</span>
+<h3 class="font-headline-sm text-headline-sm font-semibold text-primary">Operaciones: Equipo en Marcha</h3>
+</div>
+<div class="p-0 overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container border-b border-outline-variant">
+<th class="p-sm font-label-sm text-label-sm text-on-surface-variant uppercase font-medium">Verificación</th>
+<th class="p-sm font-label-sm text-label-sm text-on-surface-variant uppercase font-medium w-32 text-center">Estado</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-on-surface divide-y divide-outline-variant/50">
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="p-sm">Comprobar presión de aceite</td>
+<td class="p-sm text-center">
+<select class="border border-outline-variant rounded-sm text-sm p-1 w-full focus:border-primary">
+<option>OK</option>
+<option>A Revisar</option>
+<option>Falla</option>
+</select>
+</td>
+</tr>
+<tr class="bg-surface-container-lowest hover:bg-surface-container-lowest transition-colors">
+<td class="p-sm">Verificar perdidas de agua</td>
+<td class="p-sm text-center">
+<select class="border border-outline-variant rounded-sm text-sm p-1 w-full focus:border-primary">
+<option>OK</option>
+<option>A Revisar</option>
+<option>Falla</option>
+</select>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="p-sm">Comprobar carga de baterías</td>
+<td class="p-sm text-center">
+<select class="border border-outline-variant rounded-sm text-sm p-1 w-full focus:border-primary">
+<option>OK</option>
+<option>A Revisar</option>
+<option>Falla</option>
+</select>
+</td>
+</tr>
+<tr class="bg-surface-container-lowest hover:bg-surface-container-lowest transition-colors">
+<td class="p-sm">Comprobar temperatura del agua</td>
+<td class="p-sm text-center">
+<select class="border border-outline-variant rounded-sm text-sm p-1 w-full focus:border-primary">
+<option>OK</option>
+<option>A Revisar</option>
+<option>Falla</option>
+</select>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="p-sm">Comprobar tensión de generación y frecuencia</td>
+<td class="p-sm text-center">
+<select class="border border-outline-variant rounded-sm text-sm p-1 w-full focus:border-primary">
+<option>OK</option>
+<option>A Revisar</option>
+<option>Falla</option>
+</select>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+<!-- Parameters Table -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-lg shadow-sm">
+<div class="border-b border-outline-variant p-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">speed</span>
+<h3 class="font-headline-sm text-headline-sm font-semibold text-primary">Verificación de Parámetros</h3>
+</div>
+<div class="p-0 overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container border-b border-outline-variant">
+<th class="p-sm font-label-sm text-label-sm text-on-surface-variant uppercase font-medium">Parámetro</th>
+<th class="p-sm font-label-sm text-label-sm text-on-surface-variant uppercase font-medium w-48">Valor Medido</th>
+<th class="p-sm font-label-sm text-label-sm text-on-surface-variant uppercase font-medium w-24 text-center">Unidad</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-on-surface divide-y divide-outline-variant/50">
+<tr>
+<td class="p-sm font-medium">Presión de aceite</td>
+<td class="p-sm"><input class="w-full border border-outline-variant rounded-sm px-2 py-1 text-sm focus:border-primary focus:ring-1" type="number"/></td>
+<td class="p-sm text-center text-on-surface-variant">bar</td>
+</tr>
+<tr class="bg-surface-container-lowest">
+<td class="p-sm font-medium">Tensión de generación V L1 - L2 / L2-L3 / L3-L1</td>
+<td class="p-sm"><input class="w-full border border-outline-variant rounded-sm px-2 py-1 text-sm focus:border-primary focus:ring-1" type="number"/></td>
+<td class="p-sm text-center text-on-surface-variant">Vn</td>
+</tr>
+<tr>
+<td class="p-sm font-medium">Frecuencia</td>
+<td class="p-sm"><input class="w-full border border-outline-variant rounded-sm px-2 py-1 text-sm focus:border-primary focus:ring-1" type="number"/></td>
+<td class="p-sm text-center text-on-surface-variant">Hz</td>
+</tr>
+<tr class="bg-surface-container-lowest">
+<td class="p-sm font-medium">Temperatura del agua</td>
+<td class="p-sm"><input class="w-full border border-outline-variant rounded-sm px-2 py-1 text-sm focus:border-primary focus:ring-1" type="number"/></td>
+<td class="p-sm text-center text-on-surface-variant">°C</td>
+</tr>
+<tr>
+<td class="p-sm font-medium">Tensión de alternador de carga de baterías</td>
+<td class="p-sm"><input class="w-full border border-outline-variant rounded-sm px-2 py-1 text-sm focus:border-primary focus:ring-1" type="number"/></td>
+<td class="p-sm text-center text-on-surface-variant">V</td>
+</tr>
+<tr class="bg-surface-container-lowest">
+<td class="p-sm font-medium">Horas de operación</td>
+<td class="p-sm"><input class="w-full border border-outline-variant rounded-sm px-2 py-1 text-sm focus:border-primary focus:ring-1" type="number"/></td>
+<td class="p-sm text-center text-on-surface-variant">Hs</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Signatures & Observations -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+<div class="lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-lg p-md shadow-sm flex flex-col">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-sm">Observaciones / Comentarios</label>
+<textarea class="w-full flex-1 border border-outline-variant rounded-sm p-sm font-body-sm text-primary focus:border-primary focus:ring-1 focus:ring-primary min-h-[150px] resize-none" placeholder="Ingrese notas adicionales de la visita..."></textarea>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md shadow-sm space-y-md">
+<div>
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-sm block">Firma Técnico Responsable</label>
+<div class="border-2 border-dashed border-outline-variant rounded-DEFAULT h-24 bg-surface flex items-center justify-center cursor-pointer hover:bg-surface-container-low transition-colors">
+<span class="text-on-surface-variant font-label-sm">Click para firmar</span>
+</div>
+<input class="w-full mt-sm border-b border-outline-variant bg-transparent pb-xs font-body-sm text-primary focus:outline-none focus:border-primary text-center" placeholder="Aclaración" type="text"/>
+</div>
+<div>
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-sm block">Firma Conformidad Cliente</label>
+<div class="border-2 border-dashed border-outline-variant rounded-DEFAULT h-24 bg-surface flex items-center justify-center cursor-pointer hover:bg-surface-container-low transition-colors">
+<span class="text-on-surface-variant font-label-sm">Click para firmar</span>
+</div>
+<input class="w-full mt-sm border-b border-outline-variant bg-transparent pb-xs font-body-sm text-primary focus:outline-none focus:border-primary text-center" placeholder="Aclaración" type="text"/>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>

@@ -1,8 +1,33 @@
-import { SERVICE_TYPE_LABELS, VISIT_CHECKLIST_ITEMS, VISIT_STATUS_LABELS } from '../../lib/constants'
+import { CHECKLIST_ITEM_STATUS, SERVICE_TYPE_LABELS, VISIT_CHECKLIST_ITEMS, VISIT_STATUS_LABELS } from '../../lib/constants'
 import { formatDate, formatDateTime } from '../../lib/dateUtils'
 import StatusChip from '../../components/ui/StatusChip'
 import Timeline from '../../components/ui/Timeline'
 import ParametersTable from './ParametersTable'
+
+const CHECKLIST_STATUS_ICON = {
+  [CHECKLIST_ITEM_STATUS.OK]: { icon: 'check_circle', className: 'text-tertiary-fixed-dim' },
+  [CHECKLIST_ITEM_STATUS.A_REVISAR]: { icon: 'warning', className: 'text-secondary' },
+  [CHECKLIST_ITEM_STATUS.FALLA]: { icon: 'cancel', className: 'text-error' },
+}
+
+function SignatureDisplay({ label, signature, signatureName, signatureAt }) {
+  return (
+    <div>
+      <h4 className="font-label-md text-label-md text-on-surface-variant uppercase mb-sm">{label}</h4>
+      {signature ? (
+        <>
+          <img src={signature} alt={label} className="w-full h-[15rem] object-contain border border-outline-variant rounded bg-white" />
+          <p className="font-body-sm text-body-sm text-on-surface text-center mt-xs">{signatureName || 'Sin aclaración'}</p>
+          {signatureAt && (
+            <p className="font-label-sm text-label-sm text-on-surface-variant text-center">{formatDateTime(signatureAt)}</p>
+          )}
+        </>
+      ) : (
+        <p className="font-body-sm text-body-sm text-on-surface-variant">Sin firma registrada.</p>
+      )}
+    </div>
+  )
+}
 
 export default function VisitDetailPanel({ visit, parameters, events, actions }) {
   const timelineEvents = events.map((event) => ({
@@ -12,8 +37,6 @@ export default function VisitDetailPanel({ visit, parameters, events, actions })
     timestamp: formatDateTime(event.created_at),
     notes: event.notes,
   }))
-
-  const checkedItems = VISIT_CHECKLIST_ITEMS.filter((item) => visit.checklist_data?.[item.key])
 
   return (
     <div className="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
@@ -48,18 +71,27 @@ export default function VisitDetailPanel({ visit, parameters, events, actions })
 
         <div className="border border-outline-variant rounded p-md">
           <h3 className="font-label-md text-label-md text-on-surface-variant uppercase mb-sm">Validación Técnica</h3>
-          {checkedItems.length === 0 ? (
-            <p className="font-body-sm text-body-sm text-on-surface-variant">Sin ítems marcados.</p>
-          ) : (
-            <ul className="space-y-xs">
-              {checkedItems.map((item) => (
+          <ul className="space-y-xs">
+            {VISIT_CHECKLIST_ITEMS.map((item) => {
+              const status = visit.checklist_data?.[item.key]
+              const display = CHECKLIST_STATUS_ICON[status]
+              const measurementValue = item.measurement ? visit.checklist_data?.[item.measurement.key] : null
+              return (
                 <li key={item.key} className="flex items-center gap-xs font-body-sm text-body-sm text-on-surface">
-                  <span className="material-symbols-outlined text-[1.6rem] text-tertiary-fixed-dim">check_circle</span>
-                  {item.label}
+                  <span className={`material-symbols-outlined text-[1.6rem] ${display?.className ?? 'text-on-surface-variant'}`}>
+                    {display?.icon ?? 'help'}
+                  </span>
+                  <span>{item.label}</span>
+                  {measurementValue != null && measurementValue !== '' && (
+                    <span className="font-label-sm text-label-sm text-on-surface-variant">
+                      ({measurementValue} {item.measurement.unit})
+                    </span>
+                  )}
+                  {!display && <span className="font-label-sm text-label-sm text-on-surface-variant">(sin registrar)</span>}
                 </li>
-              ))}
-            </ul>
-          )}
+              )
+            })}
+          </ul>
         </div>
 
         <div className="border border-outline-variant rounded p-md md:col-span-2">
@@ -80,6 +112,24 @@ export default function VisitDetailPanel({ visit, parameters, events, actions })
         <div className="border border-outline-variant rounded p-md md:col-span-2">
           <h3 className="font-label-md text-label-md text-on-surface-variant uppercase mb-sm">Notas del Técnico</h3>
           <p className="font-body-sm text-body-sm text-on-surface whitespace-pre-wrap">{visit.notes || 'Sin notas.'}</p>
+        </div>
+
+        <div className="border border-outline-variant rounded p-md md:col-span-2">
+          <h3 className="font-label-md text-label-md text-on-surface-variant uppercase mb-sm">Firmas</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
+            <SignatureDisplay
+              label="Firma Técnico Responsable"
+              signature={visit.technician_signature}
+              signatureName={visit.technician_signature_name}
+              signatureAt={visit.technician_signature_at}
+            />
+            <SignatureDisplay
+              label="Firma Conformidad Cliente"
+              signature={visit.client_signature}
+              signatureName={visit.client_signature_name}
+              signatureAt={visit.client_signature_at}
+            />
+          </div>
         </div>
 
         <div className="border border-outline-variant rounded p-md md:col-span-2">

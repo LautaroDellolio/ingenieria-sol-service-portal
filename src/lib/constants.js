@@ -82,52 +82,70 @@ export const CONDITION_STATUS_LABELS = {
 // Cantidad de dias antes del vencimiento del service anual para mostrar la alerta.
 export const ANNUAL_SERVICE_ALERT_WINDOW_DAYS = 30
 
-// PLACEHOLDER: checklist de la visita tecnica, pendiente de la especificacion
-// detallada del usuario (CLAUDE.md: "luego te dare mas detalles").
+// Categorias del checklist tecnico, segun el diseno de "Informe de Visita de
+// Servicio" (Desing/stitch_ingenieria_sol_service_portal/stitch_ingenieria_sol_service_portal (1)).
+export const CHECKLIST_CATEGORY = {
+  EQUIPO_PARADO: 'equipo_parado',
+  EQUIPO_MARCHA: 'equipo_marcha',
+}
+
+export const CHECKLIST_CATEGORY_LABELS = {
+  [CHECKLIST_CATEGORY.EQUIPO_PARADO]: 'Operaciones: Equipo Parado',
+  [CHECKLIST_CATEGORY.EQUIPO_MARCHA]: 'Operaciones: Equipo en Marcha',
+}
+
+export const CHECKLIST_ITEM_STATUS = {
+  OK: 'ok',
+  A_REVISAR: 'a_revisar',
+  FALLA: 'falla',
+}
+
+export const CHECKLIST_ITEM_STATUS_LABELS = {
+  [CHECKLIST_ITEM_STATUS.OK]: 'OK',
+  [CHECKLIST_ITEM_STATUS.A_REVISAR]: 'A Revisar',
+  [CHECKLIST_ITEM_STATUS.FALLA]: 'Falla',
+}
+
 export const VISIT_CHECKLIST_ITEMS = [
+  { key: 'revision_general_equipo', category: CHECKLIST_CATEGORY.EQUIPO_PARADO, label: 'Revisión general del equipo' },
+  { key: 'mangueras_agua_radiador', category: CHECKLIST_CATEGORY.EQUIPO_PARADO, label: 'Control de estado de mangueras de agua de radiador' },
+  { key: 'control_correas', category: CHECKLIST_CATEGORY.EQUIPO_PARADO, label: 'Control de correas' },
+  { key: 'perdidas_agua_parado', category: CHECKLIST_CATEGORY.EQUIPO_PARADO, label: 'Pérdidas de agua' },
+  { key: 'ajuste_abrazaderas', category: CHECKLIST_CATEGORY.EQUIPO_PARADO, label: 'Ajuste de abrazaderas' },
+  { key: 'estado_baterias', category: CHECKLIST_CATEGORY.EQUIPO_PARADO, label: 'Estado de las baterías' },
+  { key: 'control_nivel_aceite', category: CHECKLIST_CATEGORY.EQUIPO_PARADO, label: 'Control de nivel de aceite' },
   {
-    key: 'inspeccion_visual',
-    label: 'Inspección Visual Completada',
-    description: 'Comprobar si hay daños físicos, corrosión o desgaste.',
+    key: 'funcionamiento_precalentador',
+    category: CHECKLIST_CATEGORY.EQUIPO_PARADO,
+    label: 'Funcionamiento de precalentador',
+    measurement: { key: 'funcionamiento_precalentador_temp', unit: '°C' },
   },
   {
-    key: 'diagnostico',
-    label: 'Ejecución de Diagnóstico Realizada',
-    description: 'Prueba de ciclo operativo estándar de 15 minutos.',
+    key: 'cargador_flote',
+    category: CHECKLIST_CATEGORY.EQUIPO_PARADO,
+    label: 'Cargador de flote Vcc',
+    measurement: { key: 'cargador_flote_tension', unit: 'Vcc' },
   },
-  {
-    key: 'nivel_aceite',
-    label: 'Nivel de Aceite Verificado',
-    description: 'Comprobar que el nivel esté dentro del rango recomendado.',
-  },
-  {
-    key: 'estado_bateria',
-    label: 'Estado de Batería Verificado',
-    description: 'Medir tensión y comprobar bornes y terminales.',
-  },
-  {
-    key: 'filtros',
-    label: 'Filtros Inspeccionados',
-    description: 'Revisar estado de filtros de aire, aceite y combustible.',
-  },
-  {
-    key: 'fugas_corrosion',
-    label: 'Fugas o Corrosión Detectadas',
-    description: 'Marcar si se detectaron fugas de fluidos o corrosión visible.',
-  },
+  { key: 'limpieza_general_sala', category: CHECKLIST_CATEGORY.EQUIPO_PARADO, label: 'Limpieza general de la sala (o de la cabina)' },
+  { key: 'comprobar_presion_aceite', category: CHECKLIST_CATEGORY.EQUIPO_MARCHA, label: 'Comprobar presión de aceite' },
+  { key: 'verificar_perdidas_agua', category: CHECKLIST_CATEGORY.EQUIPO_MARCHA, label: 'Verificar pérdidas de agua' },
+  { key: 'verificar_perdidas_aceite', category: CHECKLIST_CATEGORY.EQUIPO_MARCHA, label: 'Verificar pérdidas de aceite' },
+  { key: 'verificar_perdidas_combustible', category: CHECKLIST_CATEGORY.EQUIPO_MARCHA, label: 'Verificar pérdidas de combustible' },
+  { key: 'comprobar_carga_baterias', category: CHECKLIST_CATEGORY.EQUIPO_MARCHA, label: 'Comprobar carga de baterías' },
+  { key: 'comprobar_temperatura_agua', category: CHECKLIST_CATEGORY.EQUIPO_MARCHA, label: 'Comprobar temperatura del agua' },
+  { key: 'comprobar_tension_frecuencia', category: CHECKLIST_CATEGORY.EQUIPO_MARCHA, label: 'Comprobar tensión de generación y frecuencia' },
 ]
 
-// PLACEHOLDER: parametros cuantitativos medidos durante la visita, pendiente
-// de la especificacion detallada del usuario.
+// Parametros cuantitativos medidos durante la visita.
 export const VISIT_PARAMETER_DEFINITIONS = [
-  { key: 'horas_uso', label: 'Horas de Uso', unit: 'h' },
-  { key: 'tension_r', label: 'Tensión Fase R', unit: 'V', specMin: 210, specMax: 230 },
-  { key: 'tension_s', label: 'Tensión Fase S', unit: 'V', specMin: 210, specMax: 230 },
-  { key: 'tension_t', label: 'Tensión Fase T', unit: 'V', specMin: 210, specMax: 230 },
+  { key: 'presion_aceite_frio', label: 'Presión de Aceite (en frío)', unit: 'bar', specMin: 2, specMax: 6 },
+  { key: 'tension_generacion_l_n', label: 'Tensión de Generación L-N', unit: 'V', specMin: 210, specMax: 230 },
+  { key: 'tension_generacion_l1_l2', label: 'Tensión de Generación L1-L2', unit: 'V' },
   { key: 'frecuencia', label: 'Frecuencia', unit: 'Hz', specMin: 49, specMax: 51 },
-  { key: 'presion_aceite', label: 'Presión de Aceite', unit: 'bar', specMin: 2, specMax: 6 },
-  { key: 'temperatura_motor', label: 'Temperatura del Motor', unit: '°C', specMin: 70, specMax: 95 },
+  { key: 'tension_alternador', label: 'Tensión de Alternador de Carga de Baterías', unit: 'V', specMin: 12, specMax: 14.5 },
+  { key: 'numero_arranques', label: 'Número de Arranques' },
+  { key: 'horas_operacion', label: 'Horas de Operación', unit: 'Hs' },
+  { key: 'presion_aceite_caliente', label: 'Presión de Aceite en Caliente', unit: 'bar', specMin: 2, specMax: 6 },
+  { key: 'temperatura_agua', label: 'Temperatura del Agua', unit: '°C', specMin: 70, specMax: 95 },
   { key: 'nivel_combustible', label: 'Nivel de Combustible', unit: '%', specMin: 20, specMax: 100 },
-  { key: 'tension_bateria', label: 'Tensión de Batería', unit: 'V', specMin: 12, specMax: 14.5 },
-  { key: 'resistencia_aislacion', label: 'Resistencia de Aislación', unit: 'MΩ', specMin: 1, specMax: null },
 ]

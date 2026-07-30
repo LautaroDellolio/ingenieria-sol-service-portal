@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import { useVisitDetail, useVisitParameters } from '../../hooks/useVisits'
+import { useVisitDetail, useVisitParameters, useVisitEvents } from '../../hooks/useVisits'
 import { saveVisitDraft, submitVisitForReview, saveVisitParameters } from '../../api/visits'
-import { SERVICE_TYPE } from '../../lib/constants'
+import { CHECKLIST_CATEGORY, SERVICE_TYPE, TECHNICIAN_EDITABLE_STATUSES } from '../../lib/constants'
 import Button from '../../components/ui/Button'
 import Spinner from '../../components/ui/Spinner'
-import StepProgress from '../../components/ui/StepProgress'
-import Step1Identification from '../../features/visitForm/Step1Identification'
-import Step2Checklist from '../../features/visitForm/Step2Checklist'
-import Step3Documentation from '../../features/visitForm/Step3Documentation'
-
-const TOTAL_STEPS = 3
+import VisitDetailPanel from '../../features/visitReview/VisitDetailPanel'
+import VisitMetadataCard from '../../features/visitForm/VisitMetadataCard'
+import VisitChecklistSection from '../../features/visitForm/VisitChecklistSection'
+import VisitParametersForm from '../../features/visitForm/VisitParametersForm'
+import VisitObservationsSection from '../../features/visitForm/VisitObservationsSection'
 
 export default function VisitFormPage() {
   const { visitId } = useParams()
@@ -20,14 +19,20 @@ export default function VisitFormPage() {
 
   const { data: visit, loading: visitLoading } = useVisitDetail(visitId)
   const { data: existingParameters } = useVisitParameters(visitId)
+  const { data: events } = useVisitEvents(visitId)
 
-  const [currentStep, setCurrentStep] = useState(1)
   const [serviceType, setServiceType] = useState(SERVICE_TYPE.PREVENTIVO)
   const [checklistData, setChecklistData] = useState({})
   const [parameterValues, setParameterValues] = useState({})
   const [notes, setNotes] = useState('')
   const [faultReported, setFaultReported] = useState(false)
   const [faultDescription, setFaultDescription] = useState('')
+  const [technicianSignature, setTechnicianSignature] = useState(null)
+  const [technicianSignatureAt, setTechnicianSignatureAt] = useState(null)
+  const [technicianSignatureName, setTechnicianSignatureName] = useState('')
+  const [clientSignature, setClientSignature] = useState(null)
+  const [clientSignatureAt, setClientSignatureAt] = useState(null)
+  const [clientSignatureName, setClientSignatureName] = useState('')
   const [saving, setSaving] = useState(false)
   const [initialized, setInitialized] = useState(false)
 
@@ -38,8 +43,24 @@ export default function VisitFormPage() {
     setNotes(visit.notes ?? '')
     setFaultReported(visit.fault_reported ?? false)
     setFaultDescription(visit.fault_description ?? '')
+    setTechnicianSignature(visit.technician_signature ?? null)
+    setTechnicianSignatureAt(visit.technician_signature_at ?? null)
+    setTechnicianSignatureName(visit.technician_signature_name ?? '')
+    setClientSignature(visit.client_signature ?? null)
+    setClientSignatureAt(visit.client_signature_at ?? null)
+    setClientSignatureName(visit.client_signature_name ?? '')
     setInitialized(true)
   }, [visit, initialized])
+
+  function handleChangeTechnicianSignature(dataUrl) {
+    setTechnicianSignature(dataUrl)
+    setTechnicianSignatureAt(dataUrl ? new Date().toISOString() : null)
+  }
+
+  function handleChangeClientSignature(dataUrl) {
+    setClientSignature(dataUrl)
+    setClientSignatureAt(dataUrl ? new Date().toISOString() : null)
+  }
 
   useEffect(() => {
     if (!existingParameters) return
@@ -50,7 +71,33 @@ export default function VisitFormPage() {
 
   if (visitLoading || !visit) return <Spinner label="Cargando visita…" />
 
-  const formSnapshot = { serviceType, checklistData, notes, faultReported, faultDescription }
+  if (!TECHNICIAN_EDITABLE_STATUSES.includes(visit.status)) {
+    return (
+      <div>
+        <div className="flex items-center justify-between gap-sm mb-lg">
+          <h1 className="font-headline-lg text-headline-lg text-on-surface">Detalle de Visita</h1>
+          <Button variant="secondary-outline" icon="arrow_back" onClick={() => navigate(-1)}>
+            Volver
+          </Button>
+        </div>
+        <VisitDetailPanel visit={visit} parameters={existingParameters ?? []} events={events ?? []} />
+      </div>
+    )
+  }
+
+  const formSnapshot = {
+    serviceType,
+    checklistData,
+    notes,
+    faultReported,
+    faultDescription,
+    technicianSignature,
+    technicianSignatureAt,
+    technicianSignatureName,
+    clientSignature,
+    clientSignatureAt,
+    clientSignatureName,
+  }
 
   async function handleSaveDraft() {
     setSaving(true)
@@ -75,66 +122,61 @@ export default function VisitFormPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden shadow-sm">
-        <div className="bg-surface-container p-md md:px-lg border-b border-outline-variant flex justify-between items-center">
-          <div className="flex items-center gap-sm">
-            <span className="material-symbols-outlined text-secondary fill">assignment</span>
-            <h2 className="font-headline-md text-headline-md text-on-surface">Entrada de Servicio</h2>
+    <div className="w-full">
+      <form onSubmit={handleSubmit} className="space-y-lg">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-md">
+          <div>
+            <h1 className="font-headline-lg text-headline-lg text-on-surface mb-xs">Informe de Visita de Servicio</h1>
+            <p className="font-body-md text-body-md text-on-surface-variant">
+              {visit.equipment?.motor} · {visit.equipment?.clients?.name}
+            </p>
           </div>
-          <StepProgress currentStep={currentStep} totalSteps={TOTAL_STEPS} />
+          <div className="flex gap-sm">
+            <Button type="button" variant="secondary-outline" disabled={saving} onClick={handleSaveDraft}>
+              Guardar Borrador
+            </Button>
+            <Button type="submit" variant="primary" disabled={saving}>
+              Finalizar Reporte
+            </Button>
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-md md:p-xl space-y-xl">
-          {currentStep === 1 && (
-            <Step1Identification visit={visit} serviceType={serviceType} onChangeServiceType={setServiceType} />
-          )}
+        <VisitMetadataCard visit={visit} serviceType={serviceType} onChangeServiceType={setServiceType} />
 
-          {currentStep === 2 && (
-            <Step2Checklist
-              checklistData={checklistData}
-              onToggleChecklistItem={(key, checked) => setChecklistData((data) => ({ ...data, [key]: checked }))}
-              parameterValues={parameterValues}
-              onChangeParameter={(key, value) => setParameterValues((values) => ({ ...values, [key]: value }))}
-            />
-          )}
+        <VisitChecklistSection
+          category={CHECKLIST_CATEGORY.EQUIPO_PARADO}
+          checklistData={checklistData}
+          onChangeItem={(key, value) => setChecklistData((data) => ({ ...data, [key]: value }))}
+        />
 
-          {currentStep === 3 && (
-            <Step3Documentation
-              notes={notes}
-              onChangeNotes={setNotes}
-              faultReported={faultReported}
-              onToggleFaultReported={setFaultReported}
-              faultDescription={faultDescription}
-              onChangeFaultDescription={setFaultDescription}
-            />
-          )}
+        <VisitParametersForm
+          parameterValues={parameterValues}
+          onChangeParameter={(key, value) => setParameterValues((values) => ({ ...values, [key]: value }))}
+        />
 
-          <div className="pt-lg border-t border-outline-variant flex flex-col-reverse md:flex-row justify-between gap-md">
-            <div className="flex gap-sm">
-              {currentStep > 1 && (
-                <Button type="button" variant="secondary-outline" onClick={() => setCurrentStep((step) => step - 1)}>
-                  Atrás
-                </Button>
-              )}
-            </div>
-            <div className="flex flex-col-reverse md:flex-row gap-md">
-              <Button type="button" variant="secondary-outline" disabled={saving} onClick={handleSaveDraft}>
-                Guardar Borrador
-              </Button>
-              {currentStep < TOTAL_STEPS ? (
-                <Button type="button" variant="primary" icon="arrow_forward" onClick={() => setCurrentStep((step) => step + 1)}>
-                  Siguiente
-                </Button>
-              ) : (
-                <Button type="submit" variant="primary" icon="arrow_forward" disabled={saving}>
-                  Proceder a Revisión
-                </Button>
-              )}
-            </div>
-          </div>
-        </form>
-      </div>
+        <VisitChecklistSection
+          category={CHECKLIST_CATEGORY.EQUIPO_MARCHA}
+          checklistData={checklistData}
+          onChangeItem={(key, value) => setChecklistData((data) => ({ ...data, [key]: value }))}
+        />
+
+        <VisitObservationsSection
+          notes={notes}
+          onChangeNotes={setNotes}
+          faultReported={faultReported}
+          onToggleFaultReported={setFaultReported}
+          faultDescription={faultDescription}
+          onChangeFaultDescription={setFaultDescription}
+          technicianSignature={technicianSignature}
+          onChangeTechnicianSignature={handleChangeTechnicianSignature}
+          technicianSignatureName={technicianSignatureName}
+          onChangeTechnicianSignatureName={setTechnicianSignatureName}
+          clientSignature={clientSignature}
+          onChangeClientSignature={handleChangeClientSignature}
+          clientSignatureName={clientSignatureName}
+          onChangeClientSignatureName={setClientSignatureName}
+        />
+      </form>
     </div>
   )
 }

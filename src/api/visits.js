@@ -87,7 +87,26 @@ export async function listVisitsThisMonth() {
   return listVisitsInRange(start, end)
 }
 
-export async function saveVisitDraft(visitId, { serviceType, checklistData, notes, faultReported, faultDescription }, actorId) {
+function signatureColumns({
+  technicianSignature,
+  technicianSignatureAt,
+  technicianSignatureName,
+  clientSignature,
+  clientSignatureAt,
+  clientSignatureName,
+}) {
+  return {
+    technician_signature: technicianSignature,
+    technician_signature_at: technicianSignatureAt,
+    technician_signature_name: technicianSignatureName,
+    client_signature: clientSignature,
+    client_signature_at: clientSignatureAt,
+    client_signature_name: clientSignatureName,
+  }
+}
+
+export async function saveVisitDraft(visitId, formSnapshot, actorId) {
+  const { serviceType, checklistData, notes, faultReported, faultDescription } = formSnapshot
   const { error } = await supabase
     .from('visits')
     .update({
@@ -96,6 +115,7 @@ export async function saveVisitDraft(visitId, { serviceType, checklistData, note
       notes,
       fault_reported: faultReported,
       fault_description: faultDescription,
+      ...signatureColumns(formSnapshot),
       status: VISIT_STATUS.BORRADOR,
       draft_saved_at: new Date().toISOString(),
     })
@@ -104,7 +124,8 @@ export async function saveVisitDraft(visitId, { serviceType, checklistData, note
   await logVisitEvent(visitId, 'borrador_guardado', actorId)
 }
 
-export async function submitVisitForReview(visitId, { serviceType, checklistData, notes, faultReported, faultDescription }, actorId) {
+export async function submitVisitForReview(visitId, formSnapshot, actorId) {
+  const { serviceType, checklistData, notes, faultReported, faultDescription } = formSnapshot
   const { error } = await supabase
     .from('visits')
     .update({
@@ -113,6 +134,7 @@ export async function submitVisitForReview(visitId, { serviceType, checklistData
       notes,
       fault_reported: faultReported,
       fault_description: faultDescription,
+      ...signatureColumns(formSnapshot),
       status: VISIT_STATUS.ENVIADA,
       submitted_at: new Date().toISOString(),
     })

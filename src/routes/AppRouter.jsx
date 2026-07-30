@@ -17,6 +17,7 @@ import VisitDetailPage from '../pages/admin/VisitDetailPage'
 
 import TecnicoLayout from '../components/layout/TecnicoLayout'
 import MonthlyPlanPage from '../pages/tecnico/MonthlyPlanPage'
+import HistoryPage from '../pages/tecnico/HistoryPage'
 import VisitFormPage from '../pages/tecnico/VisitFormPage'
 
 import SupervisorLayout from '../components/layout/SupervisorLayout'
@@ -58,6 +59,7 @@ export default function AppRouter() {
         <Route element={<RoleRoute allow={['tecnico']} />}>
           <Route path="/tecnico" element={<TecnicoLayout />}>
             <Route index element={<MonthlyPlanPage />} />
+            <Route path="historial" element={<HistoryPage />} />
             <Route path="visita/:visitId" element={<VisitFormPage />} />
           </Route>
         </Route>
