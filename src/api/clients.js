@@ -11,3 +11,8 @@ export async function createClient(client) {
   if (error) throw error
   return data
 }
+
+export async function deleteClient(clientId) {
+  const { error } = await supabase.from('clients').delete().eq('id', clientId)
+  if (error) throw error
+}

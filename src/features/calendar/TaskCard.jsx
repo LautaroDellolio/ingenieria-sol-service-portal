@@ -27,7 +27,7 @@ export default function TaskCard({ routeSheet, onClick, onDragStart }) {
       className={`w-full min-w-0 border-2 rounded p-sm cursor-grab hover:border-secondary transition-colors ${VISIT_COLOR_CLASSES[color]}`}
     >
       <p className="font-label-md text-label-md text-on-surface truncate">
-        {equipmentCodes.length > 0 ? equipmentCodes.join(', ') : 'Sin equipos'}
+        {routeSheet.descripcion?.trim() || (equipmentCodes.length > 0 ? equipmentCodes.join(', ') : 'Sin equipos')}
       </p>
       <p className="font-body-sm text-body-sm text-on-surface-variant truncate">
         {clientNames.join(', ') || 'Sin cliente'} · {visits.length} equipo{visits.length === 1 ? '' : 's'}

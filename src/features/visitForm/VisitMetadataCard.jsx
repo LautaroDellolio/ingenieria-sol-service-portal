@@ -4,7 +4,7 @@ import { formatDate } from '../../lib/dateUtils'
 function ReadOnlyField({ label, value }) {
   return (
     <div className="space-y-xs">
-      <label className="font-label-md text-label-md text-on-surface-variant uppercase">{label}</label>
+      <label className="font-label-md text-[1.6rem] text-on-surface-variant uppercase">{label}</label>
       <p className="w-full border-b border-outline-variant pb-xs font-body-lg text-body-lg text-on-surface">{value ?? '—'}</p>
     </div>
   )
@@ -25,6 +25,7 @@ export default function VisitMetadataCard({ visit, serviceType, onChangeServiceT
         <div className="space-y-xs">
           <label className="font-label-md text-label-md text-on-surface-variant uppercase">Tipo de Servicio</label>
           <select
+            required
             value={serviceType}
             onChange={(event) => onChangeServiceType(event.target.value)}
             className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-lg text-body-lg text-on-surface"

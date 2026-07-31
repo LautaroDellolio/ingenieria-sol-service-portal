@@ -4,13 +4,18 @@ import { useAuth } from '../../context/AuthContext'
 import { useEquipment } from '../../hooks/useEquipment'
 import { useVisitsThisMonth } from '../../hooks/useVisits'
 import { getNextAnnualServiceDue, daysBetween, formatDate } from '../../lib/dateUtils'
-import { ROLE_HOME_PATH, VISIT_STATUS } from '../../lib/constants'
+import { ROLE_HOME_PATH, VISIT_STATUS, VISIT_STATUS_LABELS } from '../../lib/constants'
 import KpiCard from '../../components/ui/KpiCard'
 import EmptyState from '../../components/ui/EmptyState'
 import Spinner from '../../components/ui/Spinner'
+import StatusChip from '../../components/ui/StatusChip'
 import EquipmentHistoryPanel from '../../features/equipmentInventory/EquipmentHistoryPanel'
 
 const FUTURE_WINDOW_DAYS = 90
+const STATUS_TONE = {
+  [VISIT_STATUS.APROBADA]: 'success',
+  [VISIT_STATUS.ENVIADA]: 'warning',
+}
 
 export default function SummaryPage() {
   const { profile } = useAuth()
@@ -24,6 +29,9 @@ export default function SummaryPage() {
   const completedVisits = visitsThisMonth.filter((visit) => visit.status === VISIT_STATUS.APROBADA)
   const completionPercentage =
     visitsThisMonth.length > 0 ? Math.round((completedVisits.length / visitsThisMonth.length) * 100) : 0
+  const visibleCompletedVisits = visitsThisMonth.filter((visit) =>
+    [VISIT_STATUS.APROBADA, VISIT_STATUS.ENVIADA].includes(visit.status)
+  )
 
   const today = new Date()
   const upcomingAnnualServices = equipment
@@ -54,11 +62,11 @@ export default function SummaryPage() {
         <h2 className="font-label-md text-label-md text-on-surface-variant uppercase p-md border-b border-outline-variant">
           Visitas Realizadas
         </h2>
-        {completedVisits.length === 0 ? (
+        {visibleCompletedVisits.length === 0 ? (
           <EmptyState icon="task_alt" title="Sin visitas realizadas este mes" />
         ) : (
           <ul className="divide-y divide-outline-variant/50">
-            {completedVisits.map((visit) => (
+            {visibleCompletedVisits.map((visit) => (
               <li key={visit.id}>
                 <button
                   type="button"
@@ -69,7 +77,10 @@ export default function SummaryPage() {
                     <p className="font-label-md text-label-md text-on-surface">{visit.equipment?.motor}</p>
                     <p className="font-body-sm text-body-sm text-on-surface-variant">{visit.equipment?.clients?.name}</p>
                   </div>
-                  <span className="font-label-sm text-label-sm text-on-surface-variant">{formatDate(visit.scheduled_date)}</span>
+                  <div className="flex items-center gap-sm">
+                    <StatusChip label={VISIT_STATUS_LABELS[visit.status]} tone={STATUS_TONE[visit.status] ?? 'neutral'} variant="tag" />
+                    <span className="font-label-sm text-label-sm text-on-surface-variant">{formatDate(visit.scheduled_date)}</span>
+                  </div>
                 </button>
               </li>
             ))}

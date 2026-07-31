@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import {
   getVisitById,
-  listReceivedVisits,
+  listAllSubmittedVisits,
   listUnassignedVisits,
   listVisitsForTechnician,
   listVisitsInRange,
@@ -41,8 +41,8 @@ export function useVisitsPendingReview() {
   return useAsync(listVisitsPendingReview, [])
 }
 
-export function useReceivedVisits() {
-  return useAsync(listReceivedVisits, [])
+export function useAllSubmittedVisits() {
+  return useAsync(listAllSubmittedVisits, [])
 }
 
 export function useTechnicianVisits(technicianId) {

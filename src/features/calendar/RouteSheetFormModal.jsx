@@ -4,9 +4,9 @@ import ConfirmModal from '../../components/ui/ConfirmModal'
 import Field from '../../components/ui/Field'
 import { createRouteSheetWithVisits, updateRouteSheetDetails, deleteRouteSheet } from '../../api/routeSheets'
 import { isVisitLocked, hasLockedVisits } from '../../lib/visitColor'
-import { SERVICE_TYPE, SERVICE_TYPE_LABELS } from '../../lib/constants'
+import { SERVICE_TYPE, SERVICE_TYPE_LABELS, VISIT_OCCURRENCE_LABELS } from '../../lib/constants'
 
-const EMPTY_FORM = { serviceType: SERVICE_TYPE.PREVENTIVO, scheduledDate: '' }
+const EMPTY_FORM = { serviceType: SERVICE_TYPE.PREVENTIVO, scheduledDate: '', descripcion: '', visitOccurrence: '' }
 
 export default function RouteSheetFormModal({
   open,
@@ -32,7 +32,12 @@ export default function RouteSheetFormModal({
     if (!open) return
     if (isEdit && routeSheet) {
       const visits = routeSheet.visits ?? []
-      setForm({ serviceType: routeSheet.service_type ?? SERVICE_TYPE.PREVENTIVO, scheduledDate: routeSheet.scheduled_date ?? '' })
+      setForm({
+        serviceType: routeSheet.service_type ?? SERVICE_TYPE.PREVENTIVO,
+        scheduledDate: routeSheet.scheduled_date ?? '',
+        descripcion: routeSheet.descripcion ?? '',
+        visitOccurrence: routeSheet.visit_occurrence ?? '',
+      })
       setSelectedEquipmentIds(new Set(visits.map((visit) => visit.equipment_id)))
       setLockedEquipmentIds(new Set(visits.filter(isVisitLocked).map((visit) => visit.equipment_id)))
       setSelectedClientIds(new Set(visits.map((visit) => visit.equipment?.client_id).filter(Boolean)))
@@ -96,20 +101,19 @@ export default function RouteSheetFormModal({
   async function handleSubmit(event) {
     event.preventDefault()
     if (selectedEquipmentIds.size === 0) return
+    const isPreventivo = form.serviceType === SERVICE_TYPE.PREVENTIVO
+    const payload = {
+      equipmentIds: Array.from(selectedEquipmentIds),
+      serviceType: form.serviceType,
+      scheduledDate: form.scheduledDate,
+      descripcion: form.descripcion,
+      visitOccurrence: isPreventivo ? form.visitOccurrence : null,
+      createdBy,
+    }
     if (isEdit) {
-      await updateRouteSheetDetails(routeSheet.id, {
-        equipmentIds: Array.from(selectedEquipmentIds),
-        serviceType: form.serviceType,
-        scheduledDate: form.scheduledDate,
-        createdBy,
-      })
+      await updateRouteSheetDetails(routeSheet.id, payload)
     } else {
-      await createRouteSheetWithVisits({
-        equipmentIds: Array.from(selectedEquipmentIds),
-        serviceType: form.serviceType,
-        scheduledDate: form.scheduledDate,
-        createdBy,
-      })
+      await createRouteSheetWithVisits(payload)
     }
     onSaved()
   }
@@ -245,7 +249,9 @@ export default function RouteSheetFormModal({
               <label className="font-label-sm text-label-sm text-on-surface block">Tipo de Servicio</label>
               <select
                 value={form.serviceType}
-                onChange={(event) => setForm((f) => ({ ...f, serviceType: event.target.value }))}
+                onChange={(event) =>
+                  setForm((f) => ({ ...f, serviceType: event.target.value, visitOccurrence: '' }))
+                }
                 className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface"
               >
                 {Object.entries(SERVICE_TYPE_LABELS).map(([value, label]) => (
@@ -253,12 +259,33 @@ export default function RouteSheetFormModal({
                 ))}
               </select>
             </div>
+            {form.serviceType === SERVICE_TYPE.PREVENTIVO && (
+              <div className="space-y-xs">
+                <label className="font-label-sm text-label-sm text-on-surface block">Ocurrencia del Mes</label>
+                <select
+                  required
+                  value={form.visitOccurrence}
+                  onChange={(event) => setForm((f) => ({ ...f, visitOccurrence: event.target.value }))}
+                  className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface"
+                >
+                  <option value="" disabled>Seleccionar…</option>
+                  {Object.entries(VISIT_OCCURRENCE_LABELS).map(([value, label]) => (
+                    <option key={value} value={value}>{label}</option>
+                  ))}
+                </select>
+              </div>
+            )}
             <Field
               label="Fecha del Service"
               type="date"
               value={form.scheduledDate}
               onChange={(value) => setForm((f) => ({ ...f, scheduledDate: value }))}
               required
+            />
+            <Field
+              label="Descripción"
+              value={form.descripcion}
+              onChange={(value) => setForm((f) => ({ ...f, descripcion: value }))}
             />
           </div>
 

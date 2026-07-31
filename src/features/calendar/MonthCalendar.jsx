@@ -59,8 +59,9 @@ export default function MonthCalendar({ monthAnchor, weeks, routeSheets, onSelec
                 <div className="min-w-0 flex flex-col gap-[0.2rem]">
                   {dayRouteSheets.slice(0, MAX_VISIBLE_ROUTE_SHEETS).map((routeSheet) => {
                     const routeSheetVisits = routeSheet.visits ?? []
-                    const label =
-                      routeSheetVisits.length === 1
+                    const label = routeSheet.descripcion?.trim()
+                      ? routeSheet.descripcion
+                      : routeSheetVisits.length === 1
                         ? routeSheetVisits[0].equipment?.motor ?? '—'
                         : `${routeSheetVisits.length} equipos`
                     return (

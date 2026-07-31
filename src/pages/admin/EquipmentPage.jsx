@@ -26,6 +26,7 @@ const EMPTY_EQUIPMENT_FORM = {
   air_filter_spec: '',
   coolant_capacity: '',
   fuel_capacity: '',
+  oil_capacity: '',
   battery_quantity: '',
   battery_size: '',
   condition_status: CONDITION_STATUS.OPTIMO,
@@ -130,6 +131,7 @@ export default function EquipmentPage() {
               client={group.client}
               equipmentList={group.equipmentList}
               onOpenHistory={setHistoryEquipment}
+              onClientDeleted={reloadClients}
             />
           ))
         )}
@@ -233,6 +235,7 @@ export default function EquipmentPage() {
               <Field label="Filtro de Aire" value={equipmentForm.air_filter_spec} onChange={(v) => setEquipmentForm((f) => ({ ...f, air_filter_spec: v }))} />
               <Field label="Cantidad de Agua" value={equipmentForm.coolant_capacity} onChange={(v) => setEquipmentForm((f) => ({ ...f, coolant_capacity: v }))} />
               <Field label="Cantidad de Combustible" value={equipmentForm.fuel_capacity} onChange={(v) => setEquipmentForm((f) => ({ ...f, fuel_capacity: v }))} />
+              <Field label="Cantidad de Aceite" value={equipmentForm.oil_capacity} onChange={(v) => setEquipmentForm((f) => ({ ...f, oil_capacity: v }))} />
               <Field label="Cantidad de Baterías" value={equipmentForm.battery_quantity} onChange={(v) => setEquipmentForm((f) => ({ ...f, battery_quantity: v }))} />
               <Field label="Medida de Batería" value={equipmentForm.battery_size} onChange={(v) => setEquipmentForm((f) => ({ ...f, battery_size: v }))} />
             </div>

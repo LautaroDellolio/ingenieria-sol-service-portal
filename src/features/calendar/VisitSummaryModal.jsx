@@ -30,6 +30,12 @@ export default function VisitSummaryModal({ routeSheet, onClose, onAssign = null
       {routeSheet && (
         <>
           <dl className="grid grid-cols-2 md:grid-cols-4 gap-md mb-md">
+            {routeSheet.descripcion?.trim() && (
+              <div className="col-span-2 md:col-span-4">
+                <dt className="font-label-sm text-label-sm text-on-surface-variant uppercase">Descripción</dt>
+                <dd className="font-body-md text-body-md text-on-surface">{routeSheet.descripcion}</dd>
+              </div>
+            )}
             <div>
               <dt className="font-label-sm text-label-sm text-on-surface-variant uppercase">Fecha</dt>
               <dd className="font-body-md text-body-md text-on-surface">

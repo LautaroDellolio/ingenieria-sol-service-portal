@@ -37,11 +37,12 @@ export default function AssignmentPopover({ routeSheet, technicians, vehicles, o
   }
 
   const equipmentCodes = (routeSheet?.visits ?? []).map((visit) => visit.equipment?.motor).filter(Boolean)
+  const popoverLabel = routeSheet?.descripcion?.trim() || equipmentCodes.join(', ')
 
   return (
     <Modal
       open={Boolean(routeSheet)}
-      title={`Asignar Hoja de Ruta · ${equipmentCodes.join(', ')}`}
+      title={`Asignar Hoja de Ruta · ${popoverLabel}`}
       onClose={onClose}
       size="lg"
       actions={[

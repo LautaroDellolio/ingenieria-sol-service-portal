@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
-import { useVisitsPendingReview, useReceivedVisits, useVisitParameters, useVisitEvents } from '../../hooks/useVisits'
+import { useVisitsPendingReview, useAllSubmittedVisits, useVisitParameters, useVisitEvents } from '../../hooks/useVisits'
 import { markVisitReceived } from '../../api/visits'
 import VisitReviewQueue from '../../features/visitReview/VisitReviewQueue'
 import ReceivedVisitsByClient from '../../features/visitReview/ReceivedVisitsByClient'
@@ -12,7 +12,7 @@ import Spinner from '../../components/ui/Spinner'
 export default function ReceptionPage() {
   const { profile } = useAuth()
   const { data: visits, loading, reload } = useVisitsPendingReview()
-  const { data: receivedVisits, loading: receivedLoading, reload: reloadReceived } = useReceivedVisits()
+  const { data: receivedVisits, loading: receivedLoading, reload: reloadReceived } = useAllSubmittedVisits()
   const [selectedId, setSelectedId] = useState(null)
 
   const selectedVisit =

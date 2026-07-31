@@ -55,6 +55,7 @@ function toFormValues(equipment) {
     air_filter_spec: equipment.air_filter_spec ?? '',
     coolant_capacity: equipment.coolant_capacity ?? '',
     fuel_capacity: equipment.fuel_capacity ?? '',
+    oil_capacity: equipment.oil_capacity ?? '',
     battery_quantity: equipment.battery_quantity ?? '',
     battery_size: equipment.battery_size ?? '',
     fuel_filter_changed_at: equipment.fuel_filter_changed_at ?? '',
@@ -145,6 +146,7 @@ export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated })
               <Field label="Filtro de Aire" value={form.air_filter_spec} onChange={(v) => setForm((f) => ({ ...f, air_filter_spec: v }))} />
               <Field label="Cantidad de Agua" value={form.coolant_capacity} onChange={(v) => setForm((f) => ({ ...f, coolant_capacity: v }))} />
               <Field label="Cantidad de Combustible" value={form.fuel_capacity} onChange={(v) => setForm((f) => ({ ...f, fuel_capacity: v }))} />
+              <Field label="Cantidad de Aceite" value={form.oil_capacity} onChange={(v) => setForm((f) => ({ ...f, oil_capacity: v }))} />
               <Field label="Cantidad de Baterías" value={form.battery_quantity} onChange={(v) => setForm((f) => ({ ...f, battery_quantity: v }))} />
               <Field label="Medida de Batería" value={form.battery_size} onChange={(v) => setForm((f) => ({ ...f, battery_size: v }))} />
             </div>
@@ -196,6 +198,7 @@ export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated })
             <DetailField label="Filtro de Aire" value={equipment.air_filter_spec} />
             <DetailField label="Cantidad de Agua" value={equipment.coolant_capacity} />
             <DetailField label="Cantidad de Combustible" value={equipment.fuel_capacity} />
+            <DetailField label="Cantidad de Aceite" value={equipment.oil_capacity} />
             <DetailField label="Cantidad de Baterías" value={equipment.battery_quantity} />
             <DetailField label="Medida de Batería" value={equipment.battery_size} />
             <DetailField label="Cambio Filtro de Combustible" value={equipment.fuel_filter_changed_at ? formatDate(equipment.fuel_filter_changed_at) : null} />

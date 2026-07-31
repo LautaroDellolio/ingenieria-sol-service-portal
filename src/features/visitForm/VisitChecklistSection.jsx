@@ -24,14 +24,14 @@ export default function VisitChecklistSection({ category, checklistData, onChang
       <table className="w-full text-left border-collapse">
         <thead>
           <tr className="bg-surface-container border-b border-outline-variant">
-            <th className="p-sm font-label-md text-label-md text-on-surface-variant uppercase font-medium">Verificación</th>
+            <th className="p-sm font-label-md text-[1.6rem] text-on-surface-variant uppercase font-medium">Verificación</th>
             {hasMeasurementColumn && (
-              <th className="p-sm font-label-md text-label-md text-on-surface-variant uppercase font-medium w-40">Medición</th>
+              <th className="p-sm font-label-md text-[1.6rem] text-on-surface-variant uppercase font-medium w-40">Medición</th>
             )}
-            <th className="p-sm font-label-md text-label-md text-on-surface-variant uppercase font-medium w-32 text-center">Estado</th>
+            <th className="p-sm font-label-md text-[1.6rem] text-on-surface-variant uppercase font-medium w-32 text-center">Estado</th>
           </tr>
         </thead>
-        <tbody className="font-body-md text-on-surface divide-y divide-outline-variant/50">
+        <tbody className="font-body-lg text-body-lg text-on-surface divide-y divide-outline-variant/50">
           {items.map((item) => (
             <tr key={item.key}>
               <td className="p-sm">{item.label}</td>
@@ -41,9 +41,10 @@ export default function VisitChecklistSection({ category, checklistData, onChang
                     <div className="flex items-center gap-xs">
                       <input
                         type="number"
+                        required
                         value={checklistData[item.measurement.key] ?? ''}
                         onChange={(event) => onChangeItem(item.measurement.key, event.target.value)}
-                        className="w-full border border-outline-variant rounded-sm px-sm py-xs font-body-md text-body-md focus:border-primary"
+                        className="w-full border border-outline-variant rounded-sm px-sm py-xs font-body-lg text-body-lg focus:border-primary"
                       />
                       <span className="font-label-sm text-label-sm text-on-surface-variant">{item.measurement.unit}</span>
                     </div>
@@ -54,9 +55,10 @@ export default function VisitChecklistSection({ category, checklistData, onChang
               )}
               <td className="p-sm text-center">
                 <select
+                  required
                   value={checklistData[item.key] ?? CHECKLIST_ITEM_STATUS.OK}
                   onChange={(event) => onChangeItem(item.key, event.target.value)}
-                  className="w-full border border-outline-variant rounded-sm font-body-md text-body-md px-sm py-xs focus:border-primary"
+                  className="w-full border border-outline-variant rounded-sm font-body-lg text-body-lg px-sm py-xs focus:border-primary"
                 >
                   {Object.entries(CHECKLIST_ITEM_STATUS_LABELS).map(([value, label]) => (
                     <option key={value} value={value}>{label}</option>

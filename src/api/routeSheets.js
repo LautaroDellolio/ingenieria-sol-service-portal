@@ -43,10 +43,16 @@ async function syncVisitDates(routeSheetId, scheduledDate) {
   if (error) throw error
 }
 
-export async function createRouteSheetWithVisits({ equipmentIds, serviceType, scheduledDate, createdBy }) {
+export async function createRouteSheetWithVisits({ equipmentIds, serviceType, scheduledDate, descripcion, visitOccurrence, createdBy }) {
   const { data: routeSheet, error: routeSheetError } = await supabase
     .from('route_sheets')
-    .insert({ service_type: serviceType, scheduled_date: scheduledDate, created_by: createdBy })
+    .insert({
+      service_type: serviceType,
+      scheduled_date: scheduledDate,
+      descripcion: descripcion || null,
+      visit_occurrence: visitOccurrence || null,
+      created_by: createdBy,
+    })
     .select()
     .single()
   if (routeSheetError) throw routeSheetError
@@ -112,10 +118,15 @@ export async function rescheduleRouteSheet(routeSheetId, scheduledDate, schedule
 // tipo de servicio y fecha. Los equipos que se agregan generan una visita
 // nueva; los que se quitan borran su visita (la UI ya impide destildar un
 // equipo cuyo tecnico ya envio su reporte, para no perder ese historial).
-export async function updateRouteSheetDetails(routeSheetId, { equipmentIds, serviceType, scheduledDate, createdBy }) {
+export async function updateRouteSheetDetails(routeSheetId, { equipmentIds, serviceType, scheduledDate, descripcion, visitOccurrence, createdBy }) {
   const { data: routeSheet, error: routeSheetError } = await supabase
     .from('route_sheets')
-    .update({ service_type: serviceType, scheduled_date: scheduledDate })
+    .update({
+      service_type: serviceType,
+      scheduled_date: scheduledDate,
+      descripcion: descripcion || null,
+      visit_occurrence: visitOccurrence || null,
+    })
     .eq('id', routeSheetId)
     .select()
     .single()

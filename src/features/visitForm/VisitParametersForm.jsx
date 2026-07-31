@@ -10,22 +10,23 @@ export default function VisitParametersForm({ parameterValues, onChangeParameter
       <table className="w-full text-left border-collapse">
         <thead>
           <tr className="bg-surface-container border-b border-outline-variant">
-            <th className="p-sm font-label-md text-label-md text-on-surface-variant uppercase font-medium">Parámetro</th>
-            <th className="p-sm font-label-md text-label-md text-on-surface-variant uppercase font-medium w-48">Valor Medido</th>
-            <th className="p-sm font-label-md text-label-md text-on-surface-variant uppercase font-medium w-24 text-center">Unidad</th>
+            <th className="p-sm font-label-md text-[1.6rem] text-on-surface-variant uppercase font-medium">Parámetro</th>
+            <th className="p-sm font-label-md text-[1.6rem] text-on-surface-variant uppercase font-medium w-48">Valor Medido</th>
+            <th className="p-sm font-label-md text-[1.6rem] text-on-surface-variant uppercase font-medium w-24 text-center">Unidad</th>
           </tr>
         </thead>
-        <tbody className="font-body-md text-on-surface divide-y divide-outline-variant/50">
+        <tbody className="font-body-lg text-body-lg text-on-surface divide-y divide-outline-variant/50">
           {VISIT_PARAMETER_DEFINITIONS.map((definition) => (
             <tr key={definition.key}>
               <td className="p-sm font-medium">{definition.label}</td>
               <td className="p-sm">
                 <input
                   type="number"
+                  required
                   value={parameterValues[definition.key] ?? ''}
                   onChange={(event) => onChangeParameter(definition.key, event.target.value)}
                   placeholder={definition.specMin != null && definition.specMax != null ? `${definition.specMin}-${definition.specMax}` : ''}
-                  className="w-full border border-outline-variant rounded-sm px-sm py-xs font-body-md text-body-md focus:border-primary focus:ring-1"
+                  className="w-full border border-outline-variant rounded-sm px-sm py-xs font-body-lg text-body-lg focus:border-primary focus:ring-1"
                 />
               </td>
               <td className="p-sm text-center text-on-surface-variant">{definition.unit}</td>

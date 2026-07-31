@@ -28,7 +28,7 @@ export const VISIT_STATUS = {
 export const VISIT_STATUS_LABELS = {
   [VISIT_STATUS.PLANIFICADA]: 'Planificada',
   [VISIT_STATUS.BORRADOR]: 'Borrador',
-  [VISIT_STATUS.ENVIADA]: 'Esperando Revisión',
+  [VISIT_STATUS.ENVIADA]: 'Enviada',
   [VISIT_STATUS.REVISION_SOLICITADA]: 'Revisión Solicitada',
   [VISIT_STATUS.APROBADA]: 'Aprobada',
   [VISIT_STATUS.RECHAZADA]: 'Rechazada',
@@ -53,6 +53,18 @@ export const SERVICE_TYPE_LABELS = {
   [SERVICE_TYPE.CORRECTIVO]: 'Reparación Correctiva',
   [SERVICE_TYPE.INSTALACION]: 'Instalación/Puesta en marcha',
   [SERVICE_TYPE.INSPECCION]: 'Inspección de Rutina',
+}
+
+// Solo aplica cuando service_type = preventivo: de que visita mensual se
+// trata (algunos equipos se visitan 1 o 2 veces por mes, ver CLAUDE.md).
+export const VISIT_OCCURRENCE = {
+  PRIMERA: 'primera',
+  SEGUNDA: 'segunda',
+}
+
+export const VISIT_OCCURRENCE_LABELS = {
+  [VISIT_OCCURRENCE.PRIMERA]: 'Primera Visita',
+  [VISIT_OCCURRENCE.SEGUNDA]: 'Segunda Visita',
 }
 
 export const FUEL_TYPE = {

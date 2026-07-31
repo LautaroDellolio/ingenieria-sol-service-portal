@@ -77,6 +77,7 @@ export default function AppRouter() {
             <Route path="personal/nuevo" element={<StaffNewPage />} />
             <Route path="visita/:visitId" element={<VisitDetailPage />} />
             <Route path="perfil" element={<ProfilePage />} />
+            <Route path="resumen" element={<SummaryPage />} />
           </Route>
         </Route>
       </Route>

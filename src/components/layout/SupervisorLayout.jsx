@@ -6,6 +6,7 @@ const NAV_ITEMS = [
   { to: '/supervisor/equipos', icon: 'precision_manufacturing', label: 'Equipos' },
   { to: '/supervisor/calendario', icon: 'calendar_month', label: 'Calendario' },
   { to: '/supervisor/personal', icon: 'group', label: 'Personal' },
+  { to: '/supervisor/resumen', icon: 'insights', label: 'Resumen' },
 ]
 
 export default function SupervisorLayout() {

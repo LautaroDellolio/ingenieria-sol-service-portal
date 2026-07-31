@@ -70,12 +70,12 @@ export async function listVisitsPendingReview() {
   return data.map(normalizeVisit)
 }
 
-export async function listReceivedVisits() {
+export async function listAllSubmittedVisits() {
   const { data, error } = await supabase
     .from('visits')
     .select(VISIT_SELECT)
-    .not('received_at', 'is', null)
-    .order('received_at', { ascending: false })
+    .not('submitted_at', 'is', null)
+    .order('submitted_at', { ascending: false })
   if (error) throw error
   return data.map(normalizeVisit)
 }
