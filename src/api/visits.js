@@ -3,7 +3,7 @@ import { VISIT_STATUS, VISIT_PARAMETER_DEFINITIONS } from '../lib/constants'
 import { logVisitEvent } from './visitEvents'
 
 const ROUTE_SHEET_EMBED = 'route_sheets(id, vehicle_id, scheduled_time_start, vehicles(plate), route_sheet_technicians(profiles(id, full_name)))'
-const VISIT_SELECT = `*, equipment(internal_code, motor, generador, client_id, clients(name)), ${ROUTE_SHEET_EMBED}`
+const VISIT_SELECT = `*, equipment(internal_code, motor, generador, client_id, fuel_capacity, clients(name)), ${ROUTE_SHEET_EMBED}`
 
 // La asignacion de tecnicos/vehiculo vive en la hoja de ruta, no en la
 // visita. Esto aplana ese embed anidado a la misma forma plana que ya

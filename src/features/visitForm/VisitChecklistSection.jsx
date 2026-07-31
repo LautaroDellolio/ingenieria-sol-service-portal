@@ -32,41 +32,47 @@ export default function VisitChecklistSection({ category, checklistData, onChang
           </tr>
         </thead>
         <tbody className="font-body-lg text-body-lg text-on-surface divide-y divide-outline-variant/50">
-          {items.map((item) => (
-            <tr key={item.key}>
-              <td className="p-sm">{item.label}</td>
-              {hasMeasurementColumn && (
-                <td className="p-sm">
-                  {item.measurement ? (
-                    <div className="flex items-center gap-xs">
-                      <input
-                        type="number"
-                        required
-                        value={checklistData[item.measurement.key] ?? ''}
-                        onChange={(event) => onChangeItem(item.measurement.key, event.target.value)}
-                        className="w-full border border-outline-variant rounded-sm px-sm py-xs font-body-lg text-body-lg focus:border-primary"
-                      />
-                      <span className="font-label-sm text-label-sm text-on-surface-variant">{item.measurement.unit}</span>
-                    </div>
-                  ) : (
-                    <span className="text-on-surface-variant">—</span>
-                  )}
+          {items.map((item) => {
+            const currentStatus = checklistData[item.key] ?? CHECKLIST_ITEM_STATUS.OK
+            const statusOptions = Object.entries(CHECKLIST_ITEM_STATUS_LABELS).filter(
+              ([value]) => value !== CHECKLIST_ITEM_STATUS.NO_TIENE || item.allowNoTiene
+            )
+            return (
+              <tr key={item.key}>
+                <td className="p-sm">{item.label}</td>
+                {hasMeasurementColumn && (
+                  <td className="p-sm">
+                    {item.measurement ? (
+                      <div className="flex items-center gap-xs">
+                        <input
+                          type="number"
+                          required={currentStatus === CHECKLIST_ITEM_STATUS.OK}
+                          value={checklistData[item.measurement.key] ?? ''}
+                          onChange={(event) => onChangeItem(item.measurement.key, event.target.value)}
+                          className="w-full border border-outline-variant rounded-sm px-sm py-xs font-body-lg text-body-lg focus:border-primary"
+                        />
+                        <span className="font-label-sm text-label-sm text-on-surface-variant">{item.measurement.unit}</span>
+                      </div>
+                    ) : (
+                      <span className="text-on-surface-variant">—</span>
+                    )}
+                  </td>
+                )}
+                <td className="p-sm text-center">
+                  <select
+                    required
+                    value={currentStatus}
+                    onChange={(event) => onChangeItem(item.key, event.target.value)}
+                    className="w-full border border-outline-variant rounded-sm font-body-lg text-body-lg px-sm py-xs focus:border-primary"
+                  >
+                    {statusOptions.map(([value, label]) => (
+                      <option key={value} value={value}>{label}</option>
+                    ))}
+                  </select>
                 </td>
-              )}
-              <td className="p-sm text-center">
-                <select
-                  required
-                  value={checklistData[item.key] ?? CHECKLIST_ITEM_STATUS.OK}
-                  onChange={(event) => onChangeItem(item.key, event.target.value)}
-                  className="w-full border border-outline-variant rounded-sm font-body-lg text-body-lg px-sm py-xs focus:border-primary"
-                >
-                  {Object.entries(CHECKLIST_ITEM_STATUS_LABELS).map(([value, label]) => (
-                    <option key={value} value={value}>{label}</option>
-                  ))}
-                </select>
-              </td>
-            </tr>
-          ))}
+              </tr>
+            )
+          })}
         </tbody>
       </table>
     </section>

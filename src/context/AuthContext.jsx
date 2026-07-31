@@ -35,7 +35,10 @@ export function AuthProvider({ children }) {
 
     const { data: subscription } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession)
-      loadProfileForSession(newSession)
+      setLoading(true)
+      loadProfileForSession(newSession).finally(() => {
+        if (isMounted) setLoading(false)
+      })
     })
 
     return () => {

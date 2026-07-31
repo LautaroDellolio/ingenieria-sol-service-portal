@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Modal from '../../components/ui/Modal'
+import ConfirmModal from '../../components/ui/ConfirmModal'
 import StatusChip from '../../components/ui/StatusChip'
 import EmptyState from '../../components/ui/EmptyState'
 import Spinner from '../../components/ui/Spinner'
@@ -8,7 +9,7 @@ import FormSection from '../../components/ui/FormSection'
 import Field from '../../components/ui/Field'
 import { useAuth } from '../../context/AuthContext'
 import { useEquipmentHistory } from '../../hooks/useEquipment'
-import { updateEquipment } from '../../api/equipment'
+import { updateEquipment, deleteEquipment } from '../../api/equipment'
 import {
   SERVICE_TYPE_LABELS,
   VISIT_STATUS,
@@ -19,7 +20,7 @@ import {
   FUEL_TYPE_LABELS,
   ROLE_HOME_PATH,
 } from '../../lib/constants'
-import { formatDate } from '../../lib/dateUtils'
+import { formatDate, addYears, toISODateString } from '../../lib/dateUtils'
 
 const STATUS_TONE = {
   [VISIT_STATUS.APROBADA]: 'success',
@@ -43,6 +44,12 @@ function DetailField({ label, value }) {
   )
 }
 
+function computeDefaultDueDate(changedAt, storedDueAt, years) {
+  if (storedDueAt) return storedDueAt
+  if (!changedAt) return ''
+  return toISODateString(addYears(new Date(changedAt), years))
+}
+
 function toFormValues(equipment) {
   return {
     motor: equipment.motor ?? '',
@@ -60,19 +67,26 @@ function toFormValues(equipment) {
     battery_size: equipment.battery_size ?? '',
     fuel_filter_changed_at: equipment.fuel_filter_changed_at ?? '',
     oil_filter_changed_at: equipment.oil_filter_changed_at ?? '',
+    air_filter_changed_at: equipment.air_filter_changed_at ?? '',
     battery_changed_at: equipment.battery_changed_at ?? '',
+    fuel_filter_next_due_at: computeDefaultDueDate(equipment.fuel_filter_changed_at, equipment.fuel_filter_next_due_at, 1),
+    oil_filter_next_due_at: computeDefaultDueDate(equipment.oil_filter_changed_at, equipment.oil_filter_next_due_at, 1),
+    air_filter_next_due_at: computeDefaultDueDate(equipment.air_filter_changed_at, equipment.air_filter_next_due_at, 1),
+    battery_next_due_at: computeDefaultDueDate(equipment.battery_changed_at, equipment.battery_next_due_at, 2),
     fuel_percentage: equipment.fuel_percentage ?? '',
     hours_of_use: equipment.hours_of_use ?? '',
     condition_status: equipment.condition_status ?? CONDITION_STATUS.OPTIMO,
   }
 }
 
-export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated }) {
+export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated, onDeleted }) {
   const { profile } = useAuth()
   const navigate = useNavigate()
   const { history, loading } = useEquipmentHistory(equipment?.id)
   const [isEditing, setIsEditing] = useState(false)
   const [form, setForm] = useState(null)
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   function startEditing() {
     setForm(toFormValues(equipment))
@@ -86,7 +100,18 @@ export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated })
 
   function handleClose() {
     stopEditing()
+    setErrorMessage('')
     onClose()
+  }
+
+  function handleChangeTrackingDate(dateKey, dueKey, yearsAhead) {
+    return (value) => {
+      setForm((f) => ({
+        ...f,
+        [dateKey]: value,
+        [dueKey]: f[dueKey] || (value ? toISODateString(addYears(new Date(value), yearsAhead)) : f[dueKey]),
+      }))
+    }
   }
 
   async function handleSubmit(event) {
@@ -94,14 +119,36 @@ export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated })
     const updated = await updateEquipment(equipment.id, {
       ...form,
       power_kva: form.power_kva !== '' ? Number(form.power_kva) : null,
+      fuel_capacity: form.fuel_capacity !== '' ? Number(form.fuel_capacity) : null,
       fuel_percentage: form.fuel_percentage !== '' ? Number(form.fuel_percentage) : null,
       hours_of_use: form.hours_of_use !== '' ? Number(form.hours_of_use) : null,
       fuel_filter_changed_at: form.fuel_filter_changed_at || null,
       oil_filter_changed_at: form.oil_filter_changed_at || null,
+      air_filter_changed_at: form.air_filter_changed_at || null,
       battery_changed_at: form.battery_changed_at || null,
+      fuel_filter_next_due_at: form.fuel_filter_next_due_at || null,
+      oil_filter_next_due_at: form.oil_filter_next_due_at || null,
+      air_filter_next_due_at: form.air_filter_next_due_at || null,
+      battery_next_due_at: form.battery_next_due_at || null,
     })
     stopEditing()
     onUpdated({ ...equipment, ...updated })
+  }
+
+  async function handleDelete() {
+    setErrorMessage('')
+    try {
+      await deleteEquipment(equipment.id)
+      setConfirmingDelete(false)
+      handleClose()
+      onDeleted()
+    } catch (error) {
+      setErrorMessage(
+        error.message?.includes('foreign key')
+          ? 'No se puede eliminar: el equipo todavía tiene visitas asociadas.'
+          : error.message || 'No se pudo eliminar el equipo.'
+      )
+    }
   }
 
   const actions = isEditing
@@ -111,10 +158,12 @@ export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated })
       ]
     : [
         { label: 'Cerrar', variant: 'secondary-outline', onClick: handleClose },
+        { label: 'Eliminar', variant: 'destructive-outline', icon: 'delete', onClick: () => setConfirmingDelete(true) },
         { label: 'Editar', variant: 'primary', icon: 'edit', onClick: startEditing },
       ]
 
   return (
+    <>
     <Modal open={Boolean(equipment)} title={`Detalle de ${equipment?.motor ?? ''}`} onClose={handleClose} size="lg" actions={actions}>
       {equipment && isEditing && (
         <form id="edit-equipment-form" onSubmit={handleSubmit} className="space-y-md mb-lg">
@@ -145,7 +194,7 @@ export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated })
               <Field label="Filtro de Aceite" value={form.oil_filter_spec} onChange={(v) => setForm((f) => ({ ...f, oil_filter_spec: v }))} />
               <Field label="Filtro de Aire" value={form.air_filter_spec} onChange={(v) => setForm((f) => ({ ...f, air_filter_spec: v }))} />
               <Field label="Cantidad de Agua" value={form.coolant_capacity} onChange={(v) => setForm((f) => ({ ...f, coolant_capacity: v }))} />
-              <Field label="Cantidad de Combustible" value={form.fuel_capacity} onChange={(v) => setForm((f) => ({ ...f, fuel_capacity: v }))} />
+              <Field label="Tamaño de Tanque (Litros)" type="number" value={form.fuel_capacity} onChange={(v) => setForm((f) => ({ ...f, fuel_capacity: v }))} />
               <Field label="Cantidad de Aceite" value={form.oil_capacity} onChange={(v) => setForm((f) => ({ ...f, oil_capacity: v }))} />
               <Field label="Cantidad de Baterías" value={form.battery_quantity} onChange={(v) => setForm((f) => ({ ...f, battery_quantity: v }))} />
               <Field label="Medida de Batería" value={form.battery_size} onChange={(v) => setForm((f) => ({ ...f, battery_size: v }))} />
@@ -154,9 +203,10 @@ export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated })
 
           <FormSection title="Seguimiento">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
-              <Field label="Cambio Filtro de Combustible" type="date" value={form.fuel_filter_changed_at} onChange={(v) => setForm((f) => ({ ...f, fuel_filter_changed_at: v }))} />
-              <Field label="Cambio Filtro de Aceite" type="date" value={form.oil_filter_changed_at} onChange={(v) => setForm((f) => ({ ...f, oil_filter_changed_at: v }))} />
-              <Field label="Fecha de Batería" type="date" value={form.battery_changed_at} onChange={(v) => setForm((f) => ({ ...f, battery_changed_at: v }))} />
+              <Field label="Cambio Filtro de Combustible" type="date" value={form.fuel_filter_changed_at} onChange={handleChangeTrackingDate('fuel_filter_changed_at', 'fuel_filter_next_due_at', 1)} />
+              <Field label="Cambio Filtro de Aceite" type="date" value={form.oil_filter_changed_at} onChange={handleChangeTrackingDate('oil_filter_changed_at', 'oil_filter_next_due_at', 1)} />
+              <Field label="Cambio Filtro de Aire" type="date" value={form.air_filter_changed_at} onChange={handleChangeTrackingDate('air_filter_changed_at', 'air_filter_next_due_at', 1)} />
+              <Field label="Fecha de Batería" type="date" value={form.battery_changed_at} onChange={handleChangeTrackingDate('battery_changed_at', 'battery_next_due_at', 2)} />
               <Field label="Porcentaje de Combustible" type="number" value={form.fuel_percentage} onChange={(v) => setForm((f) => ({ ...f, fuel_percentage: v }))} />
               <Field label="Horas de Uso" type="number" value={form.hours_of_use} onChange={(v) => setForm((f) => ({ ...f, hours_of_use: v }))} />
               <div className="space-y-xs">
@@ -171,6 +221,15 @@ export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated })
                   ))}
                 </select>
               </div>
+            </div>
+          </FormSection>
+
+          <FormSection title="Próximo Service">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
+              <Field label="Próx. Cambio Filtro de Combustible" type="date" value={form.fuel_filter_next_due_at} onChange={(v) => setForm((f) => ({ ...f, fuel_filter_next_due_at: v }))} />
+              <Field label="Próx. Cambio Filtro de Aceite" type="date" value={form.oil_filter_next_due_at} onChange={(v) => setForm((f) => ({ ...f, oil_filter_next_due_at: v }))} />
+              <Field label="Próx. Cambio Filtro de Aire" type="date" value={form.air_filter_next_due_at} onChange={(v) => setForm((f) => ({ ...f, air_filter_next_due_at: v }))} />
+              <Field label="Próx. Cambio de Batería" type="date" value={form.battery_next_due_at} onChange={(v) => setForm((f) => ({ ...f, battery_next_due_at: v }))} />
             </div>
           </FormSection>
         </form>
@@ -197,12 +256,13 @@ export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated })
             <DetailField label="Filtro de Aceite" value={equipment.oil_filter_spec} />
             <DetailField label="Filtro de Aire" value={equipment.air_filter_spec} />
             <DetailField label="Cantidad de Agua" value={equipment.coolant_capacity} />
-            <DetailField label="Cantidad de Combustible" value={equipment.fuel_capacity} />
+            <DetailField label="Tamaño de Tanque" value={equipment.fuel_capacity != null ? `${equipment.fuel_capacity} L` : null} />
             <DetailField label="Cantidad de Aceite" value={equipment.oil_capacity} />
             <DetailField label="Cantidad de Baterías" value={equipment.battery_quantity} />
             <DetailField label="Medida de Batería" value={equipment.battery_size} />
             <DetailField label="Cambio Filtro de Combustible" value={equipment.fuel_filter_changed_at ? formatDate(equipment.fuel_filter_changed_at) : null} />
             <DetailField label="Cambio Filtro de Aceite" value={equipment.oil_filter_changed_at ? formatDate(equipment.oil_filter_changed_at) : null} />
+            <DetailField label="Cambio Filtro de Aire" value={equipment.air_filter_changed_at ? formatDate(equipment.air_filter_changed_at) : null} />
             <DetailField label="Fecha de Batería" value={equipment.battery_changed_at ? formatDate(equipment.battery_changed_at) : null} />
             <DetailField label="Porcentaje de Combustible" value={equipment.fuel_percentage != null ? `${equipment.fuel_percentage}%` : null} />
             <DetailField label="Horas de Uso" value={equipment.hours_of_use != null ? `${equipment.hours_of_use} h` : null} />
@@ -213,6 +273,14 @@ export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated })
               <DetailField label="Notas" value={equipment.notes} />
             </div>
           )}
+
+          <h3 className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mt-lg mb-md">Próximo Service</h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-md">
+            <DetailField label="Próx. Cambio Filtro de Combustible" value={equipment.fuel_filter_next_due_at ? formatDate(equipment.fuel_filter_next_due_at) : null} />
+            <DetailField label="Próx. Cambio Filtro de Aceite" value={equipment.oil_filter_next_due_at ? formatDate(equipment.oil_filter_next_due_at) : null} />
+            <DetailField label="Próx. Cambio Filtro de Aire" value={equipment.air_filter_next_due_at ? formatDate(equipment.air_filter_next_due_at) : null} />
+            <DetailField label="Próx. Cambio de Batería" value={equipment.battery_next_due_at ? formatDate(equipment.battery_next_due_at) : null} />
+          </div>
         </section>
       )}
 
@@ -249,5 +317,21 @@ export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated })
         </ul>
       )}
     </Modal>
+
+      <ConfirmModal
+        open={confirmingDelete}
+        title={`Eliminar ${equipment?.motor ?? ''}`}
+        confirmLabel="Eliminar"
+        danger
+        onCancel={() => {
+          setConfirmingDelete(false)
+          setErrorMessage('')
+        }}
+        onConfirm={handleDelete}
+      >
+        ¿Seguro que querés eliminar este equipo? Esta acción no se puede deshacer.
+        {errorMessage && <span role="alert" className="block text-error mt-sm">{errorMessage}</span>}
+      </ConfirmModal>
+    </>
   )
 }

@@ -62,6 +62,17 @@ export default function VisitFormPage() {
     setClientSignatureAt(dataUrl ? new Date().toISOString() : null)
   }
 
+  function handleChangeParameter(key, value) {
+    setParameterValues((values) => {
+      const next = { ...values, [key]: value }
+      const tankSize = Number(visit?.equipment?.fuel_capacity)
+      if (key === 'combustible_litros' && value !== '' && tankSize > 0) {
+        next.nivel_combustible = String(Math.round((Number(value) / tankSize) * 100))
+      }
+      return next
+    })
+  }
+
   useEffect(() => {
     if (!existingParameters) return
     const values = {}
@@ -124,21 +135,11 @@ export default function VisitFormPage() {
   return (
     <div className="w-full">
       <form onSubmit={handleSubmit} className="space-y-lg">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-md">
-          <div>
-            <h1 className="font-headline-lg text-headline-lg text-on-surface mb-xs">Informe de Visita de Servicio</h1>
-            <p className="font-body-md text-body-md text-on-surface-variant">
-              {visit.equipment?.motor} · {visit.equipment?.clients?.name}
-            </p>
-          </div>
-          <div className="flex gap-sm">
-            <Button type="button" variant="secondary-outline" disabled={saving} onClick={handleSaveDraft}>
-              Guardar Borrador
-            </Button>
-            <Button type="submit" variant="primary" disabled={saving}>
-              Finalizar Reporte
-            </Button>
-          </div>
+        <div>
+          <h1 className="font-headline-lg text-headline-lg text-on-surface mb-xs">Informe de Visita de Servicio</h1>
+          <p className="font-body-md text-body-md text-on-surface-variant">
+            {visit.equipment?.motor} · {visit.equipment?.clients?.name}
+          </p>
         </div>
 
         <VisitMetadataCard visit={visit} serviceType={serviceType} onChangeServiceType={setServiceType} />
@@ -149,10 +150,7 @@ export default function VisitFormPage() {
           onChangeItem={(key, value) => setChecklistData((data) => ({ ...data, [key]: value }))}
         />
 
-        <VisitParametersForm
-          parameterValues={parameterValues}
-          onChangeParameter={(key, value) => setParameterValues((values) => ({ ...values, [key]: value }))}
-        />
+        <VisitParametersForm parameterValues={parameterValues} onChangeParameter={handleChangeParameter} />
 
         <VisitChecklistSection
           category={CHECKLIST_CATEGORY.EQUIPO_MARCHA}
@@ -176,6 +174,15 @@ export default function VisitFormPage() {
           clientSignatureName={clientSignatureName}
           onChangeClientSignatureName={setClientSignatureName}
         />
+
+        <div className="flex justify-end gap-sm">
+          <Button type="button" variant="secondary-outline" disabled={saving} onClick={handleSaveDraft}>
+            Guardar Borrador
+          </Button>
+          <Button type="submit" variant="primary" disabled={saving}>
+            Finalizar Reporte
+          </Button>
+        </div>
       </form>
     </div>
   )

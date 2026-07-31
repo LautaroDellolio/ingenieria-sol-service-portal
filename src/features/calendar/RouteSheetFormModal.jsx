@@ -7,6 +7,7 @@ import { isVisitLocked, hasLockedVisits } from '../../lib/visitColor'
 import { SERVICE_TYPE, SERVICE_TYPE_LABELS, VISIT_OCCURRENCE_LABELS } from '../../lib/constants'
 
 const EMPTY_FORM = { serviceType: SERVICE_TYPE.PREVENTIVO, scheduledDate: '', descripcion: '', visitOccurrence: '' }
+const LARGE_INPUT = 'font-body-lg text-body-lg'
 
 export default function RouteSheetFormModal({
   open,
@@ -153,10 +154,17 @@ export default function RouteSheetFormModal({
         actions={actions}
       >
         <form id="route-sheet-form" onSubmit={handleSubmit} className="space-y-md">
+          <Field
+            label="Descripción"
+            value={form.descripcion}
+            onChange={(value) => setForm((f) => ({ ...f, descripcion: value }))}
+            inputClassName={LARGE_INPUT}
+          />
+
           <div className="space-y-xs">
-            <label className="font-label-sm text-label-sm text-on-surface block">Clientes y Equipos</label>
+            <label className="font-label-md text-label-md text-on-surface block">Clientes y Equipos</label>
             {clients.length === 0 ? (
-              <p className="font-body-sm text-body-sm text-on-surface-variant">Todavía no hay clientes cargados.</p>
+              <p className="font-body-md text-body-md text-on-surface-variant">Todavía no hay clientes cargados.</p>
             ) : (
               <>
                 <Field
@@ -164,9 +172,10 @@ export default function RouteSheetFormModal({
                   value={searchTerm}
                   onChange={setSearchTerm}
                   className="mb-sm"
+                  inputClassName={LARGE_INPUT}
                 />
                 {visibleClients.length === 0 && (
-                  <p className="font-body-sm text-body-sm text-on-surface-variant">No se encontraron clientes ni equipos para tu búsqueda.</p>
+                  <p className="font-body-md text-body-md text-on-surface-variant">No se encontraron clientes ni equipos para tu búsqueda.</p>
                 )}
               </>
             )}
@@ -189,15 +198,15 @@ export default function RouteSheetFormModal({
                           onChange={() => toggleClient(client.id)}
                           className="w-[1.6rem] h-[1.6rem] rounded border-outline"
                         />
-                        <span className="font-label-md text-label-md text-on-surface">{client.name}</span>
-                        <span className="font-label-sm text-label-sm text-on-surface-variant">
+                        <span className="font-label-md text-[1.6rem] text-on-surface">{client.name}</span>
+                        <span className="font-label-md text-label-md text-on-surface-variant">
                           ({selectedCount}/{clientEquipment.length})
                         </span>
                       </label>
                       {isExpanded && (
                         <div>
                           {visibleEquipment.length === 0 ? (
-                            <p className="py-sm pl-xl pr-sm font-body-sm text-body-sm text-on-surface-variant border-t border-outline-variant/50">
+                            <p className="py-sm pl-xl pr-sm font-body-md text-body-md text-on-surface-variant border-t border-outline-variant/50">
                               {clientEquipment.length === 0
                                 ? 'Este cliente todavía no tiene equipos cargados.'
                                 : 'Ningún equipo de este cliente coincide con la búsqueda.'}
@@ -219,11 +228,11 @@ export default function RouteSheetFormModal({
                                     disabled={isLocked}
                                     className="w-[1.6rem] h-[1.6rem] rounded border-outline"
                                   />
-                                  <span className="font-body-sm text-body-sm text-on-surface">
+                                  <span className="font-body-md text-body-md text-on-surface">
                                     {item.motor} {item.generador}
                                   </span>
                                   {isLocked && (
-                                    <span className="font-label-sm text-label-sm text-on-surface-variant">Ya tiene reporte</span>
+                                    <span className="font-label-md text-label-md text-on-surface-variant">Ya tiene reporte</span>
                                   )}
                                 </label>
                               )
@@ -239,20 +248,20 @@ export default function RouteSheetFormModal({
           </div>
 
           {selectedClientIds.size > 0 && (
-            <p className="font-label-sm text-label-sm text-on-surface-variant">
+            <p className="font-label-md text-label-md text-on-surface-variant">
               Total: {selectedEquipmentIds.size} equipo(s) seleccionado(s) en esta Hoja de Ruta.
             </p>
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
             <div className="space-y-xs">
-              <label className="font-label-sm text-label-sm text-on-surface block">Tipo de Servicio</label>
+              <label className="font-label-md text-label-md text-on-surface block">Tipo de Servicio</label>
               <select
                 value={form.serviceType}
                 onChange={(event) =>
                   setForm((f) => ({ ...f, serviceType: event.target.value, visitOccurrence: '' }))
                 }
-                className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface"
+                className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-lg text-body-lg text-on-surface"
               >
                 {Object.entries(SERVICE_TYPE_LABELS).map(([value, label]) => (
                   <option key={value} value={value}>{label}</option>
@@ -261,12 +270,12 @@ export default function RouteSheetFormModal({
             </div>
             {form.serviceType === SERVICE_TYPE.PREVENTIVO && (
               <div className="space-y-xs">
-                <label className="font-label-sm text-label-sm text-on-surface block">Ocurrencia del Mes</label>
+                <label className="font-label-md text-label-md text-on-surface block">Ocurrencia del Mes</label>
                 <select
                   required
                   value={form.visitOccurrence}
                   onChange={(event) => setForm((f) => ({ ...f, visitOccurrence: event.target.value }))}
-                  className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface"
+                  className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-lg text-body-lg text-on-surface"
                 >
                   <option value="" disabled>Seleccionar…</option>
                   {Object.entries(VISIT_OCCURRENCE_LABELS).map(([value, label]) => (
@@ -281,16 +290,12 @@ export default function RouteSheetFormModal({
               value={form.scheduledDate}
               onChange={(value) => setForm((f) => ({ ...f, scheduledDate: value }))}
               required
-            />
-            <Field
-              label="Descripción"
-              value={form.descripcion}
-              onChange={(value) => setForm((f) => ({ ...f, descripcion: value }))}
+              inputClassName={LARGE_INPUT}
             />
           </div>
 
           {isEdit && !canDelete && (
-            <p className="font-body-sm text-body-sm text-on-surface-variant">
+            <p className="font-body-md text-body-md text-on-surface-variant">
               No se puede eliminar esta Hoja de Ruta ni destildar sus equipos con reporte enviado: se perdería ese historial.
             </p>
           )}

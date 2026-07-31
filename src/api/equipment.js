@@ -28,6 +28,11 @@ export async function updateEquipment(equipmentId, changes) {
   return data
 }
 
+export async function deleteEquipment(equipmentId) {
+  const { error } = await supabase.from('equipment').delete().eq('id', equipmentId)
+  if (error) throw error
+}
+
 // Solo visitas que el tecnico ya trabajo: se excluyen planificada/borrador
 // (todavia no las toco), quedan enviada/revision_solicitada/aprobada/rechazada.
 export async function getEquipmentVisitHistory(equipmentId) {

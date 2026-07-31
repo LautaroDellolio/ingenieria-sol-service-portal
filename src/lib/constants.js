@@ -110,12 +110,14 @@ export const CHECKLIST_ITEM_STATUS = {
   OK: 'ok',
   A_REVISAR: 'a_revisar',
   FALLA: 'falla',
+  NO_TIENE: 'no_tiene',
 }
 
 export const CHECKLIST_ITEM_STATUS_LABELS = {
   [CHECKLIST_ITEM_STATUS.OK]: 'OK',
   [CHECKLIST_ITEM_STATUS.A_REVISAR]: 'A Revisar',
   [CHECKLIST_ITEM_STATUS.FALLA]: 'Falla',
+  [CHECKLIST_ITEM_STATUS.NO_TIENE]: 'No tiene',
 }
 
 export const VISIT_CHECKLIST_ITEMS = [
@@ -131,6 +133,7 @@ export const VISIT_CHECKLIST_ITEMS = [
     category: CHECKLIST_CATEGORY.EQUIPO_PARADO,
     label: 'Funcionamiento de precalentador',
     measurement: { key: 'funcionamiento_precalentador_temp', unit: '°C' },
+    allowNoTiene: true,
   },
   {
     key: 'cargador_flote',
@@ -159,5 +162,6 @@ export const VISIT_PARAMETER_DEFINITIONS = [
   { key: 'horas_operacion', label: 'Horas de Operación', unit: 'Hs' },
   { key: 'presion_aceite_caliente', label: 'Presión de Aceite en Caliente', unit: 'bar', specMin: 2, specMax: 6 },
   { key: 'temperatura_agua', label: 'Temperatura del Agua', unit: '°C', specMin: 70, specMax: 95 },
+  { key: 'combustible_litros', label: 'Cantidad de Combustible (Litros)', unit: 'L', optional: true },
   { key: 'nivel_combustible', label: 'Nivel de Combustible', unit: '%', specMin: 20, specMax: 100 },
 ]

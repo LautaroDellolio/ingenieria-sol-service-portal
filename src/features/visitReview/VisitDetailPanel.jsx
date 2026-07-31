@@ -8,6 +8,7 @@ const CHECKLIST_STATUS_ICON = {
   [CHECKLIST_ITEM_STATUS.OK]: { icon: 'check_circle', className: 'text-tertiary-fixed-dim' },
   [CHECKLIST_ITEM_STATUS.A_REVISAR]: { icon: 'warning', className: 'text-secondary' },
   [CHECKLIST_ITEM_STATUS.FALLA]: { icon: 'cancel', className: 'text-error' },
+  [CHECKLIST_ITEM_STATUS.NO_TIENE]: { icon: 'block', className: 'text-on-surface-variant' },
 }
 
 function SignatureDisplay({ label, signature, signatureName, signatureAt }) {

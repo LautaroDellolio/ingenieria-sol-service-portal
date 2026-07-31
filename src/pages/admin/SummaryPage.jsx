@@ -122,6 +122,7 @@ export default function SummaryPage() {
           setHistoryEquipment(updated)
           reloadEquipment()
         }}
+        onDeleted={reloadEquipment}
       />
     </div>
   )

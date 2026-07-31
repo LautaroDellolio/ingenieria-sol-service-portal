@@ -22,7 +22,7 @@ export default function VisitParametersForm({ parameterValues, onChangeParameter
               <td className="p-sm">
                 <input
                   type="number"
-                  required
+                  required={!definition.optional}
                   value={parameterValues[definition.key] ?? ''}
                   onChange={(event) => onChangeParameter(definition.key, event.target.value)}
                   placeholder={definition.specMin != null && definition.specMax != null ? `${definition.specMin}-${definition.specMax}` : ''}

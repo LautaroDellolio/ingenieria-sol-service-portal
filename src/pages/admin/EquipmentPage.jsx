@@ -80,6 +80,7 @@ export default function EquipmentPage() {
     await createEquipment({
       ...equipmentForm,
       power_kva: equipmentForm.power_kva ? Number(equipmentForm.power_kva) : null,
+      fuel_capacity: equipmentForm.fuel_capacity ? Number(equipmentForm.fuel_capacity) : null,
       created_by: profile.id,
     })
     setEquipmentForm(EMPTY_EQUIPMENT_FORM)
@@ -144,6 +145,7 @@ export default function EquipmentPage() {
           setHistoryEquipment(updated)
           reloadEquipment()
         }}
+        onDeleted={reloadEquipment}
       />
 
       <Modal
@@ -234,7 +236,7 @@ export default function EquipmentPage() {
               <Field label="Filtro de Aceite" value={equipmentForm.oil_filter_spec} onChange={(v) => setEquipmentForm((f) => ({ ...f, oil_filter_spec: v }))} />
               <Field label="Filtro de Aire" value={equipmentForm.air_filter_spec} onChange={(v) => setEquipmentForm((f) => ({ ...f, air_filter_spec: v }))} />
               <Field label="Cantidad de Agua" value={equipmentForm.coolant_capacity} onChange={(v) => setEquipmentForm((f) => ({ ...f, coolant_capacity: v }))} />
-              <Field label="Cantidad de Combustible" value={equipmentForm.fuel_capacity} onChange={(v) => setEquipmentForm((f) => ({ ...f, fuel_capacity: v }))} />
+              <Field label="Tamaño de Tanque (Litros)" type="number" value={equipmentForm.fuel_capacity} onChange={(v) => setEquipmentForm((f) => ({ ...f, fuel_capacity: v }))} />
               <Field label="Cantidad de Aceite" value={equipmentForm.oil_capacity} onChange={(v) => setEquipmentForm((f) => ({ ...f, oil_capacity: v }))} />
               <Field label="Cantidad de Baterías" value={equipmentForm.battery_quantity} onChange={(v) => setEquipmentForm((f) => ({ ...f, battery_quantity: v }))} />
               <Field label="Medida de Batería" value={equipmentForm.battery_size} onChange={(v) => setEquipmentForm((f) => ({ ...f, battery_size: v }))} />
