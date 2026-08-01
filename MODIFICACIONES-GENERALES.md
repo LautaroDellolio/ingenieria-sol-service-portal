@@ -18,7 +18,7 @@
 	-y agreguegar tanto en seguimiento como proximo service:
 		(CORREGIDA)-Cambio filtro de aire (default se auto complete un año despues de la fecha que indique seguimiento pero sea editable)
 		
-		-Nivel de combustible en la ficha tecnica debe tener doble input "Cant de Litros" y el actual de porcentaje(Si la ficha tecnica conoce el tamaño de tanque al ingresar la cantidad de litros auto complete el segundo input del porcentaje).
+		(CORREGIDA)-Nivel de combustible en la ficha tecnica debe tener doble input "Cant de Litros" y el actual de porcentaje(Si la ficha tecnica conoce el tamaño de tanque al ingresar la cantidad de litros auto complete el segundo input del porcentaje).
 		Modificaciones del item anterior
 		(CORREGIDA)-El Doble input va en el formulario de la visita tecnica. El tecnico puede introducir "Cantidad de combustible" o "Porcentaje"(Como esta actualmente) En la ficha tecnica debe tener el campo "Tamaño del tanque" que indique numerica cuantos litros contiene y Porcentaje de Combustible. Si el tecnico en el formulario completa la cantidad de litros que tiene el tanque quiero que se auto complete su nivel de porcentaje siempre que se conozca el tamaño del tanque
 

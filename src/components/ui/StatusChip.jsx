@@ -1,6 +1,6 @@
 const TONE_CLASSES = {
   success: 'bg-tertiary-fixed-dim/20 text-on-tertiary-fixed-variant',
-  warning: 'bg-secondary-fixed text-on-secondary-fixed-variant',
+  warning: 'bg-warning-container text-on-warning-container',
   error: 'bg-error-container text-on-error-container',
   neutral: 'bg-surface-variant text-on-surface-variant',
 }

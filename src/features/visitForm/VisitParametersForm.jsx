@@ -25,7 +25,6 @@ export default function VisitParametersForm({ parameterValues, onChangeParameter
                   required={!definition.optional}
                   value={parameterValues[definition.key] ?? ''}
                   onChange={(event) => onChangeParameter(definition.key, event.target.value)}
-                  placeholder={definition.specMin != null && definition.specMax != null ? `${definition.specMin}-${definition.specMax}` : ''}
                   className="w-full border border-outline-variant rounded-sm px-sm py-xs font-body-lg text-body-lg focus:border-primary focus:ring-1"
                 />
               </td>

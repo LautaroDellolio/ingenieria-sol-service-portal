@@ -41,7 +41,7 @@ export default function SignaturePad({ value, onChange }) {
     if (!drawingRef.current) return
     const context = canvasRef.current.getContext('2d')
     const point = getPoint(event)
-    context.strokeStyle = '#0b1c30'
+    context.strokeStyle = '#12181a'
     context.lineWidth = 2
     context.lineCap = 'round'
     context.beginPath()

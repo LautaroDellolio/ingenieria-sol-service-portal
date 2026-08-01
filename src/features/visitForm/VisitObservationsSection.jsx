@@ -55,7 +55,7 @@ export default function VisitObservationsSection({
               onChange={(event) => onToggleFaultReported(event.target.checked)}
               className="w-lg h-lg"
             />
-            <span className="material-symbols-outlined text-secondary">warning</span>
+            <span className="material-symbols-outlined text-error">warning</span>
             Se detectó una falla
           </label>
           {faultReported && (

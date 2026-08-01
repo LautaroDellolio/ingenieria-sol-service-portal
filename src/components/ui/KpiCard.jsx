@@ -5,7 +5,7 @@ export default function KpiCard({ icon, label, value, sublabel, statusChip = nul
     <Container
       type={onClick ? 'button' : undefined}
       onClick={onClick ?? undefined}
-      className={`w-full text-left bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden ${onClick ? 'hover:border-secondary transition-colors cursor-pointer' : ''}`}
+      className={`w-full text-left bg-surface-container-lowest border border-outline-variant rounded-lg shadow-elevation-1 overflow-hidden ${onClick ? 'hover:border-secondary hover:shadow-elevation-2 transition-all cursor-pointer' : ''}`}
     >
       <div className="flex items-center justify-between gap-sm p-md border-b border-outline-variant">
         <div className="flex items-center gap-sm text-on-surface-variant">

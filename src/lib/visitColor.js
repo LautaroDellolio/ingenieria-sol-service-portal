@@ -34,7 +34,7 @@ export function getRouteSheetColor(routeSheet, today = new Date()) {
 
 export const VISIT_COLOR_CLASSES = {
   blanco: 'bg-surface-container-lowest border-outline-variant',
-  amarillo: 'bg-[#fff6da] border-[#e3b341]',
+  amarillo: 'bg-warning-container border-warning',
   verde: 'bg-tertiary-fixed-dim/20 border-tertiary-fixed-dim',
   rojo: 'bg-error-container border-error',
 }

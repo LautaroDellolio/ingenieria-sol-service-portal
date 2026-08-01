@@ -36,7 +36,7 @@ export default function Modal({ open, title, children, onClose, actions = [], si
       onClick={onClose}
     >
       <div
-        className={`${SIZE_CLASSES[size]} bg-surface-container-lowest border border-outline-variant rounded-lg shadow-sm overflow-hidden flex flex-col`}
+        className={`${SIZE_CLASSES[size]} bg-surface-container-lowest border border-outline-variant rounded-lg shadow-elevation-2 overflow-hidden flex flex-col`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"

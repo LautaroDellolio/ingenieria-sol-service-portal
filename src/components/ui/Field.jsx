@@ -7,7 +7,7 @@ export default function Field({ label, value, onChange, type = 'text', required 
         required={required}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className={`w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface focus:border-primary focus:border-2 transition-all ${inputClassName}`}
+        className={`w-full bg-surface-container-lowest border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-all ${inputClassName}`}
       />
     </div>
   )

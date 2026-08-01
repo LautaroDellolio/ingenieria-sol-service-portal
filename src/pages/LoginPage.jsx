@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import LoginCard from '../components/ui/LoginCard'
 import Modal from '../components/ui/Modal'
+import Button from '../components/ui/Button'
 import { signInWithUsername } from '../api/auth'
 
 export default function LoginPage() {
@@ -44,12 +45,12 @@ export default function LoginPage() {
               value={username}
               onChange={(event) => setUsername(event.target.value)}
               placeholder="operator_id"
-              className="w-full border border-outline rounded bg-surface-bright px-md py-sm font-body-md text-body-md text-on-surface focus:border-primary focus:border-2 transition-all"
+              className="w-full border border-outline rounded bg-surface-container-lowest px-md py-sm font-body-md text-body-md text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-all"
             />
           </div>
 
           <div className="flex flex-col gap-xs">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-wrap justify-between items-center gap-x-sm gap-y-xs">
               <label htmlFor="password" className="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs">
                 <span className="material-symbols-outlined text-[1.6rem]">lock</span>
                 Contraseña
@@ -57,7 +58,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowForgotPassword(true)}
-                className="font-label-sm text-label-sm text-secondary hover:text-secondary-container transition-colors text-right"
+                className="font-label-sm text-label-sm text-secondary hover:text-secondary-container transition-colors whitespace-nowrap"
               >
                 ¿Olvidó su contraseña?
               </button>
@@ -70,7 +71,7 @@ export default function LoginPage() {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="••••••••"
-              className="w-full border border-outline rounded bg-surface-bright px-md py-sm font-body-md text-body-md text-on-surface focus:border-primary focus:border-2 transition-all"
+              className="w-full border border-outline rounded bg-surface-container-lowest px-md py-sm font-body-md text-body-md text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-all"
             />
           </div>
 
@@ -80,7 +81,7 @@ export default function LoginPage() {
               type="checkbox"
               checked={secureSession}
               onChange={(event) => setSecureSession(event.target.checked)}
-              className="w-[1.6rem] h-[1.6rem] rounded border-outline text-primary"
+              className="w-[1.6rem] h-[1.6rem] rounded border-outline accent-secondary"
             />
             <label htmlFor="remember" className="font-body-sm text-body-sm text-on-surface-variant">
               Sesión Segura
@@ -93,14 +94,9 @@ export default function LoginPage() {
             </p>
           )}
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="mt-md bg-secondary text-on-secondary font-label-md text-label-md py-md px-lg rounded flex items-center justify-center gap-sm hover:bg-secondary-container transition-colors shadow-sm disabled:opacity-60"
-          >
+          <Button type="submit" disabled={submitting} fullWidth icon="login" className="mt-md">
             {submitting ? 'Ingresando…' : 'Iniciar Sesión'}
-            <span className="material-symbols-outlined text-[1.8rem]">login</span>
-          </button>
+          </Button>
         </form>
       </LoginCard>
 
