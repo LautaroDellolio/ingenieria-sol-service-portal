@@ -28,17 +28,17 @@ export default function ClientGroupRow({ client, equipmentList, onOpenHistory, o
 
   return (
     <div className="border-b border-outline-variant last:border-b-0">
-      <div className="w-full flex items-center gap-sm py-sm px-sm hover:bg-surface-container-low transition-colors">
+      <div className="w-full flex items-center gap-sm py-sm px-sm bg-secondary hover:bg-secondary-container transition-colors">
         <button
           type="button"
           onClick={() => setExpanded((value) => !value)}
           className="flex-1 flex items-center gap-sm text-left"
         >
-          <span className="material-symbols-outlined text-[2rem] text-on-surface-variant">
+          <span className="material-symbols-outlined text-[2rem] text-secondary-fixed-dim">
             {expanded ? 'expand_more' : 'chevron_right'}
           </span>
-          <span className="font-label-md text-label-md text-on-surface">{client.name}</span>
-          <span className="font-label-sm text-label-sm text-on-surface-variant">({equipmentList.length})</span>
+          <span className="font-label-md text-label-md text-on-secondary">{client.name}</span>
+          <span className="font-label-sm text-label-sm text-secondary-fixed-dim">({equipmentList.length})</span>
         </button>
         {profile?.role === 'supervisor' && (
           <Button
