@@ -5,9 +5,8 @@ import Button from '../../components/ui/Button'
 import ConfirmModal from '../../components/ui/ConfirmModal'
 import EquipmentRow from './EquipmentRow'
 
-export default function ClientGroupRow({ client, equipmentList, onOpenHistory, onClientDeleted }) {
+export default function ClientGroupRow({ client, equipmentList, expanded, onToggleExpanded, onOpenHistory, onClientDeleted }) {
   const { profile } = useAuth()
-  const [expanded, setExpanded] = useState(true)
   const [confirmingDelete, setConfirmingDelete] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -31,7 +30,7 @@ export default function ClientGroupRow({ client, equipmentList, onOpenHistory, o
       <div className="w-full flex items-center gap-sm py-sm px-sm bg-secondary hover:bg-secondary-container transition-colors">
         <button
           type="button"
-          onClick={() => setExpanded((value) => !value)}
+          onClick={onToggleExpanded}
           className="flex-1 flex items-center gap-sm text-left"
         >
           <span className="material-symbols-outlined text-[2rem] text-secondary-fixed-dim">

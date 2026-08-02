@@ -43,6 +43,7 @@ export default function EquipmentPage() {
   const [clientForm, setClientForm] = useState(EMPTY_CLIENT_FORM)
   const [equipmentForm, setEquipmentForm] = useState(EMPTY_EQUIPMENT_FORM)
   const [searchTerm, setSearchTerm] = useState('')
+  const [collapsedClientIds, setCollapsedClientIds] = useState(() => new Set())
 
   const filteredEquipment = useMemo(() => {
     const term = searchTerm.trim().toLowerCase()
@@ -66,6 +67,24 @@ export default function EquipmentPage() {
     }
     return Array.from(groups.values()).sort((a, b) => a.client.name.localeCompare(b.client.name))
   }, [filteredEquipment])
+
+  const allClientsCollapsed =
+    clientGroups.length > 0 && clientGroups.every((group) => collapsedClientIds.has(group.client.id))
+
+  function toggleClientExpanded(clientId) {
+    setCollapsedClientIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(clientId)) next.delete(clientId)
+      else next.add(clientId)
+      return next
+    })
+  }
+
+  function toggleAllClientsCollapsed() {
+    setCollapsedClientIds(
+      allClientsCollapsed ? new Set() : new Set(clientGroups.map((group) => group.client.id))
+    )
+  }
 
   async function handleCreateClient(event) {
     event.preventDefault()
@@ -115,7 +134,21 @@ export default function EquipmentPage() {
 
       <div className="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
         <div className="grid grid-cols-12 gap-sm px-sm py-xs bg-surface-container border-b border-outline-variant">
-          <span className="col-span-4 font-label-sm text-label-sm text-on-surface-variant uppercase pl-xl">Cliente / Equipo</span>
+          <div className="col-span-4 flex items-center gap-xs font-label-sm text-label-sm text-on-surface-variant uppercase">
+            {clientGroups.length > 0 && (
+              <button
+                type="button"
+                onClick={toggleAllClientsCollapsed}
+                aria-label={allClientsCollapsed ? 'Expandir todos los clientes' : 'Contraer todos los clientes'}
+                className="text-on-surface-variant hover:text-secondary transition-colors"
+              >
+                <span className="material-symbols-outlined text-[1.8rem] block">
+                  {allClientsCollapsed ? 'unfold_more' : 'unfold_less'}
+                </span>
+              </button>
+            )}
+            <span>Cliente / Equipo</span>
+          </div>
           <span className="col-span-2 font-label-sm text-label-sm text-on-surface-variant uppercase">% Combustible</span>
           <span className="col-span-2 font-label-sm text-label-sm text-on-surface-variant uppercase">Horas de Uso</span>
           <span className="col-span-2 font-label-sm text-label-sm text-on-surface-variant uppercase">Último Service</span>
@@ -131,6 +164,8 @@ export default function EquipmentPage() {
               key={group.client.id}
               client={group.client}
               equipmentList={group.equipmentList}
+              expanded={!collapsedClientIds.has(group.client.id)}
+              onToggleExpanded={() => toggleClientExpanded(group.client.id)}
               onOpenHistory={setHistoryEquipment}
               onClientDeleted={reloadClients}
             />
