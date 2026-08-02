@@ -39,7 +39,6 @@ export default function VisitObservationsSection({
         <div className="flex flex-col flex-1">
           <label className="font-label-md text-[1.6rem] text-on-surface-variant uppercase mb-sm">Observaciones / Comentarios</label>
           <textarea
-            required
             value={notes}
             onChange={(event) => onChangeNotes(event.target.value)}
             placeholder="Ingrese notas adicionales de la visita…"
