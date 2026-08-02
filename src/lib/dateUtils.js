@@ -14,9 +14,29 @@ export function daysBetween(from, to) {
   return Math.round((startOfDay(to) - startOfDay(from)) / MS_PER_DAY)
 }
 
+const NEXT_SERVICE_DATE_FIELDS = [
+  'fuel_filter_next_due_at',
+  'oil_filter_next_due_at',
+  'air_filter_next_due_at',
+  'battery_next_due_at',
+]
+
+// La fecha de proximo service de un equipo es la mas cercana entre sus 4
+// campos de "Proximo Service" (ficha tecnica) y, si existiera, la derivada
+// de last_annual_service_date (legado: ya no se completa desde el formulario
+// de visita, pero se sigue respetando por si algun equipo la tiene cargada).
 export function getNextAnnualServiceDue(equipment) {
-  const base = equipment.last_annual_service_date
-  return base ? addYears(new Date(base), 1) : null
+  const candidates = NEXT_SERVICE_DATE_FIELDS
+    .map((field) => equipment[field])
+    .filter(Boolean)
+    .map((value) => new Date(value))
+
+  if (equipment.last_annual_service_date) {
+    candidates.push(addYears(new Date(equipment.last_annual_service_date), 1))
+  }
+
+  if (candidates.length === 0) return null
+  return candidates.reduce((earliest, date) => (date < earliest ? date : earliest))
 }
 
 // 'sin_datos' | 'vencido' | 'proximo' | 'al_dia'
