@@ -3,7 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useVisitDetail, useVisitParameters, useVisitEvents } from '../../hooks/useVisits'
 import { saveVisitDraft, submitVisitForReview, saveVisitParameters } from '../../api/visits'
-import { CHECKLIST_CATEGORY, SERVICE_TYPE, TECHNICIAN_EDITABLE_STATUSES } from '../../lib/constants'
+import {
+  CHECKLIST_CATEGORY,
+  CHECKLIST_ITEM_STATUS,
+  SERVICE_TYPE,
+  TECHNICIAN_EDITABLE_STATUSES,
+  VISIT_CHECKLIST_ITEMS,
+} from '../../lib/constants'
 import Button from '../../components/ui/Button'
 import Spinner from '../../components/ui/Spinner'
 import VisitDetailPanel from '../../features/visitReview/VisitDetailPanel'
@@ -39,7 +45,10 @@ export default function VisitFormPage() {
   useEffect(() => {
     if (!visit || initialized) return
     setServiceType(visit.service_type ?? SERVICE_TYPE.PREVENTIVO)
-    setChecklistData(visit.checklist_data ?? {})
+    const defaultChecklistData = Object.fromEntries(
+      VISIT_CHECKLIST_ITEMS.map((item) => [item.key, CHECKLIST_ITEM_STATUS.OK])
+    )
+    setChecklistData({ ...defaultChecklistData, ...(visit.checklist_data ?? {}) })
     setNotes(visit.notes ?? '')
     setFaultReported(visit.fault_reported ?? false)
     setFaultDescription(visit.fault_description ?? '')
