@@ -7,7 +7,6 @@ function SignatureBlock({ label, signature, onChangeSignature, signatureName, on
       <SignaturePad value={signature} onChange={onChangeSignature} />
       <input
         type="text"
-        required
         value={signatureName}
         onChange={(event) => onChangeSignatureName(event.target.value)}
         placeholder="Aclaración"
