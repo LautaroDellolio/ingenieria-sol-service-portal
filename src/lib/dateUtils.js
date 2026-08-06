@@ -2,6 +2,18 @@ import { ANNUAL_SERVICE_ALERT_WINDOW_DAYS } from './constants'
 
 const MS_PER_DAY = 86400000
 
+// "YYYY-MM-DD" (columna DATE de Supabase, sin hora) es interpretado por
+// `new Date()` como medianoche UTC, lo que puede correr el dia en un dia
+// hacia atras en husos horarios negativos (ej. Argentina, UTC-3). Estas
+// fechas "puras" se parsean por componentes para construirlas en hora local.
+function parseDateInput(dateInput) {
+  if (typeof dateInput === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateInput)) {
+    const [year, month, day] = dateInput.split('-').map(Number)
+    return new Date(year, month - 1, day)
+  }
+  return new Date(dateInput)
+}
+
 export function addYears(date, years) {
   return new Date(date.getFullYear() + years, date.getMonth(), date.getDate())
 }
@@ -50,7 +62,7 @@ export function getAlertLevel(dueDate, today = new Date()) {
 
 export function formatDate(dateInput) {
   if (!dateInput) return '—'
-  const date = new Date(dateInput)
+  const date = parseDateInput(dateInput)
   return date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
@@ -63,7 +75,7 @@ const MONTH_NAMES = [
 // Ej: "Lunes 3 de Agosto del 2026" (titular del detalle del dia).
 export function formatFullDate(dateInput) {
   if (!dateInput) return '—'
-  const date = new Date(dateInput)
+  const date = parseDateInput(dateInput)
   return `${WEEKDAY_NAMES[date.getDay()]} ${date.getDate()} de ${MONTH_NAMES[date.getMonth()]} del ${date.getFullYear()}`
 }
 
