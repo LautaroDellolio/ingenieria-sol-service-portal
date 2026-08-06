@@ -59,6 +59,8 @@ function ClientVisitGroup({ client, visits, selectedId, onSelect }) {
 }
 
 export default function ReceivedVisitsByClient({ visits, selectedId, onSelect }) {
+  const [expanded, setExpanded] = useState(true)
+
   const groups = useMemo(() => {
     const map = new Map()
     for (const visit of visits) {
@@ -71,19 +73,28 @@ export default function ReceivedVisitsByClient({ visits, selectedId, onSelect })
 
   return (
     <div className="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden flex flex-col">
-      <div className="list-title-bar p-md text-center">
+      <button
+        type="button"
+        onClick={() => setExpanded((value) => !value)}
+        className="list-title-bar relative w-full p-md text-center hover:brightness-110 transition-all"
+      >
+        <span className="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-[2rem]">
+          {expanded ? 'expand_more' : 'chevron_right'}
+        </span>
         <p className="font-label-sm text-label-sm uppercase opacity-80">Todas</p>
         <p className="font-display-lg text-display-lg leading-none">{visits.length}</p>
-      </div>
-      <div className="overflow-y-auto max-h-[60rem]">
-        {groups.length === 0 ? (
-          <EmptyState icon="inventory" title="Sin visitas recibidas" />
-        ) : (
-          groups.map(({ client, visits: clientVisits }) => (
-            <ClientVisitGroup key={client?.id ?? 'sin-cliente'} client={client} visits={clientVisits} selectedId={selectedId} onSelect={onSelect} />
-          ))
-        )}
-      </div>
+      </button>
+      {expanded && (
+        <div className="overflow-y-auto max-h-[60rem]">
+          {groups.length === 0 ? (
+            <EmptyState icon="inventory" title="Sin visitas recibidas" />
+          ) : (
+            groups.map(({ client, visits: clientVisits }) => (
+              <ClientVisitGroup key={client?.id ?? 'sin-cliente'} client={client} visits={clientVisits} selectedId={selectedId} onSelect={onSelect} />
+            ))
+          )}
+        </div>
+      )}
     </div>
   )
 }

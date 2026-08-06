@@ -15,4 +15,5 @@ Correcciones
     (CORREGIDAS)-Quiero que el boton "Hojas de ruta sin asiganar" tenga un efecto sombreado como los demas botones
     (CORREGIDAS)-En Recepcion falta un fondo al div de  Pendientes y el de Todas, y al listado del pendientes tambien aplica el mismo intercalado de verdes 
     (CORREGIDAS)-En resumen oscurece el verde de los titulares, y aplica el intercalado al listado
-    -En el listado del historial del tecnico aplica el intercalado de verdes
+    (CORREGIDAS)-En el listado del historial del tecnico aplica el intercalado de verdes
+    -En la vista Recepcion quiero que "Pendientes" y "Todas" tengan comportamineto de boton que al darle click se oculte o muestre el listado

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import { useVisitsPendingReview, useAllSubmittedVisits, useVisitParameters, useVisitEvents } from '../../hooks/useVisits'
 import { markVisitReceived } from '../../api/visits'
+import { VISIT_STATUS } from '../../lib/constants'
 import VisitReviewQueue from '../../features/visitReview/VisitReviewQueue'
 import ReceivedVisitsByClient from '../../features/visitReview/ReceivedVisitsByClient'
 import VisitDetailPanel from '../../features/visitReview/VisitDetailPanel'
@@ -14,6 +15,11 @@ export default function ReceptionPage() {
   const { data: visits, loading, reload } = useVisitsPendingReview()
   const { data: receivedVisits, loading: receivedLoading, reload: reloadReceived } = useAllSubmittedVisits()
   const [selectedId, setSelectedId] = useState(null)
+
+  // "Todas" es el historico, no la bandeja de pendientes: sin este filtro,
+  // una visita recien enviada (status ENVIADA) aparece duplicada en los dos
+  // listados a la vez.
+  const historicalVisits = (receivedVisits ?? []).filter((visit) => visit.status !== VISIT_STATUS.ENVIADA)
 
   const selectedVisit =
     visits?.find((visit) => visit.id === selectedId) ?? receivedVisits?.find((visit) => visit.id === selectedId) ?? null
@@ -41,7 +47,7 @@ export default function ReceptionPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-md">
         <div className="lg:col-span-4 flex flex-col gap-md">
           <VisitReviewQueue visits={visits ?? []} selectedId={selectedId} onSelect={setSelectedId} />
-          <ReceivedVisitsByClient visits={receivedVisits ?? []} selectedId={selectedId} onSelect={setSelectedId} />
+          <ReceivedVisitsByClient visits={historicalVisits} selectedId={selectedId} onSelect={setSelectedId} />
         </div>
         <div className="lg:col-span-8">
           {selectedVisit ? (
