@@ -65,7 +65,7 @@ Preferencias de código:
 -html debe ser semantico
 -Usa siempre let o const y no uses nunca var
 -no uses alerta o ventana modal que aparezca debe tener el mismo estilo que la web
--no uses innerHTML, todo el contenido deve ser inertado con docn appendChild o previamente creando un elemento con document.createElement
+-no uses innerHTML, todo el contenido debe ser insertado con docn appendChild o previamente creando un elemento con document.createElement
 -cuidado con olvidar prevenir el default en los eventos submit o click
 -prioriza el codigo legible y mantenible
 -prioriza que el codigo sea sencillo de entender
