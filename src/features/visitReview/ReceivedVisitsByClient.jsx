@@ -19,23 +19,27 @@ function ClientVisitGroup({ client, visits, selectedId, onSelect }) {
       <button
         type="button"
         onClick={() => setExpanded((value) => !value)}
-        className="w-full flex items-center gap-sm py-sm px-md hover:bg-surface-container-low transition-colors"
+        className="w-full flex items-center gap-sm py-sm px-md bg-secondary hover:bg-secondary-container transition-colors"
       >
-        <span className="material-symbols-outlined text-[2rem] text-on-surface-variant">
+        <span className="material-symbols-outlined text-[2rem] text-secondary-fixed-dim">
           {expanded ? 'expand_more' : 'chevron_right'}
         </span>
-        <span className="font-label-md text-label-md text-on-surface">{client?.name ?? 'Sin cliente'}</span>
-        <span className="font-label-sm text-label-sm text-on-surface-variant">({visits.length})</span>
+        <span className="font-label-md text-label-md text-on-secondary">{client?.name ?? 'Sin cliente'}</span>
+        <span className="font-label-sm text-label-sm text-secondary-fixed-dim">({visits.length})</span>
       </button>
       {expanded && (
         <ul className="divide-y divide-outline-variant/50">
-          {visits.map((visit) => (
+          {visits.map((visit, index) => (
             <li key={visit.id}>
               <button
                 type="button"
                 onClick={() => onSelect(visit.id)}
-                className={`w-full text-left py-sm px-lg transition-colors hover:bg-surface-container-low ${
-                  selectedId === visit.id ? 'bg-surface-container-low border-l-4 border-secondary' : ''
+                className={`w-full text-left py-sm px-lg transition-all hover:brightness-95 ${
+                  selectedId === visit.id
+                    ? 'bg-surface-container-lowest border-l-4 border-secondary'
+                    : index % 2 === 0
+                      ? 'bg-secondary-fixed'
+                      : 'bg-secondary-fixed-dim'
                 }`}
               >
                 <div className="flex items-center justify-between gap-sm">
@@ -67,9 +71,9 @@ export default function ReceivedVisitsByClient({ visits, selectedId, onSelect })
 
   return (
     <div className="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden flex flex-col">
-      <div className="p-md border-b border-outline-variant">
-        <p className="font-label-sm text-label-sm text-on-surface-variant uppercase">Todas</p>
-        <p className="font-display-lg text-display-lg text-on-surface leading-none">{visits.length}</p>
+      <div className="list-title-bar p-md text-center">
+        <p className="font-label-sm text-label-sm uppercase opacity-80">Todas</p>
+        <p className="font-display-lg text-display-lg leading-none">{visits.length}</p>
       </div>
       <div className="overflow-y-auto max-h-[60rem]">
         {groups.length === 0 ? (

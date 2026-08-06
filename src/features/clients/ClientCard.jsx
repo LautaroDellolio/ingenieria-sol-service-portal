@@ -17,31 +17,31 @@ export default function ClientCard({ client, equipmentList, expanded, onToggleEx
 
       {expanded && (
         <div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-sm p-md border-b border-outline-variant">
+          <div className="bg-secondary-container grid grid-cols-2 md:grid-cols-4 gap-sm p-md">
             <div>
-              <p className="font-label-sm text-label-sm text-on-surface-variant uppercase">CUIT</p>
-              <p className="font-body-sm text-body-sm text-on-surface">{client.tax_id || '—'}</p>
+              <p className="font-label-sm text-label-sm text-on-secondary-container/80 uppercase">CUIT</p>
+              <p className="font-body-sm text-body-sm text-on-secondary-container">{client.tax_id || '—'}</p>
             </div>
             <div>
-              <p className="font-label-sm text-label-sm text-on-surface-variant uppercase">Contacto</p>
-              <p className="font-body-sm text-body-sm text-on-surface">{client.contact_name || '—'}</p>
+              <p className="font-label-sm text-label-sm text-on-secondary-container/80 uppercase">Contacto</p>
+              <p className="font-body-sm text-body-sm text-on-secondary-container">{client.contact_name || '—'}</p>
             </div>
             <div>
-              <p className="font-label-sm text-label-sm text-on-surface-variant uppercase">Teléfono</p>
-              <p className="font-body-sm text-body-sm text-on-surface">{client.contact_phone || '—'}</p>
+              <p className="font-label-sm text-label-sm text-on-secondary-container/80 uppercase">Teléfono</p>
+              <p className="font-body-sm text-body-sm text-on-secondary-container">{client.contact_phone || '—'}</p>
             </div>
             <div>
-              <p className="font-label-sm text-label-sm text-on-surface-variant uppercase">Email</p>
-              <p className="font-body-sm text-body-sm text-on-surface">{client.contact_email || '—'}</p>
+              <p className="font-label-sm text-label-sm text-on-secondary-container/80 uppercase">Email</p>
+              <p className="font-body-sm text-body-sm text-on-secondary-container">{client.contact_email || '—'}</p>
             </div>
             <div>
-              <p className="font-label-sm text-label-sm text-on-surface-variant uppercase">Dirección</p>
-              <p className="font-body-sm text-body-sm text-on-surface">{client.address || '—'}</p>
+              <p className="font-label-sm text-label-sm text-on-secondary-container/80 uppercase">Dirección</p>
+              <p className="font-body-sm text-body-sm text-on-secondary-container">{client.address || '—'}</p>
             </div>
             {client.notes && (
               <div className="col-span-2 md:col-span-4">
-                <p className="font-label-sm text-label-sm text-on-surface-variant uppercase">Notas</p>
-                <p className="font-body-sm text-body-sm text-on-surface">{client.notes}</p>
+                <p className="font-label-sm text-label-sm text-on-secondary-container/80 uppercase">Notas</p>
+                <p className="font-body-sm text-body-sm text-on-secondary-container">{client.notes}</p>
               </div>
             )}
           </div>
@@ -52,8 +52,8 @@ export default function ClientCard({ client, equipmentList, expanded, onToggleEx
             </p>
           ) : (
             <div>
-              {equipmentList.map((equipment) => (
-                <EquipmentRow key={equipment.id} equipment={equipment} onOpenHistory={onOpenHistory} />
+              {equipmentList.map((equipment, index) => (
+                <EquipmentRow key={equipment.id} equipment={equipment} onOpenHistory={onOpenHistory} index={index} />
               ))}
             </div>
           )}

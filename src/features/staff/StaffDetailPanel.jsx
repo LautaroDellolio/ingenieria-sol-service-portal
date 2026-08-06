@@ -83,7 +83,7 @@ export default function StaffDetailPanel({ staff, onClose, onUpdated }) {
                 <select
                   value={form.role}
                   onChange={(event) => setForm((f) => ({ ...f, role: event.target.value }))}
-                  className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface"
+                  className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-all"
                 >
                   {Object.entries(ROLE_LABELS).map(([value, label]) => (
                     <option key={value} value={value}>{label}</option>
@@ -99,8 +99,8 @@ export default function StaffDetailPanel({ staff, onClose, onUpdated }) {
 
       {staff && !isEditing && (
         <section>
-          <div className="flex items-center justify-between mb-md">
-            <h3 className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Datos de la Persona</h3>
+          <div className="list-title-bar flex items-center justify-between mb-md px-md py-sm rounded">
+            <h3 className="font-label-md text-label-md uppercase tracking-wider">Datos de la Persona</h3>
             <div className="flex items-center gap-sm">
               <StatusChip label={ROLE_LABELS[staff.role]} tone={ROLE_TONE[staff.role]} variant="tag" />
               <StatusChip label={staff.active ? 'Activo' : 'Inactivo'} tone={staff.active ? 'success' : 'error'} variant="dot" />

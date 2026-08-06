@@ -53,7 +53,7 @@ export default function VisitDetailPanel({ visit, parameters, events, actions })
 
       <div className="p-md grid grid-cols-1 md:grid-cols-2 gap-md">
         <div className="border border-outline-variant rounded p-md">
-          <h3 className="font-label-md text-label-md text-on-surface-variant uppercase mb-sm">Detalles del Equipo</h3>
+          <h3 className="list-title-bar -mx-md -mt-md mb-sm font-label-md text-label-md uppercase px-md py-sm rounded-t">Detalles del Equipo</h3>
           <dl className="grid grid-cols-2 gap-y-xs font-body-sm text-body-sm">
             <dt className="text-on-surface-variant">Motor / Generador</dt>
             <dd className="text-on-surface">{visit.equipment?.motor} {visit.equipment?.generador}</dd>
@@ -71,7 +71,7 @@ export default function VisitDetailPanel({ visit, parameters, events, actions })
         </div>
 
         <div className="border border-outline-variant rounded p-md">
-          <h3 className="font-label-md text-label-md text-on-surface-variant uppercase mb-sm">Validación Técnica</h3>
+          <h3 className="list-title-bar -mx-md -mt-md mb-sm font-label-md text-label-md uppercase px-md py-sm rounded-t">Validación Técnica</h3>
           <ul className="space-y-xs">
             {VISIT_CHECKLIST_ITEMS.map((item) => {
               const status = visit.checklist_data?.[item.key]
@@ -96,7 +96,7 @@ export default function VisitDetailPanel({ visit, parameters, events, actions })
         </div>
 
         <div className="border border-outline-variant rounded p-md md:col-span-2">
-          <h3 className="font-label-md text-label-md text-on-surface-variant uppercase mb-sm">Parámetros Registrados</h3>
+          <h3 className="list-title-bar -mx-md -mt-md mb-sm font-label-md text-label-md uppercase px-md py-sm rounded-t">Parámetros Registrados</h3>
           <ParametersTable parameters={parameters} />
         </div>
 
@@ -111,12 +111,12 @@ export default function VisitDetailPanel({ visit, parameters, events, actions })
         )}
 
         <div className="border border-outline-variant rounded p-md md:col-span-2">
-          <h3 className="font-label-md text-label-md text-on-surface-variant uppercase mb-sm">Notas del Técnico</h3>
+          <h3 className="list-title-bar -mx-md -mt-md mb-sm font-label-md text-label-md uppercase px-md py-sm rounded-t">Notas del Técnico</h3>
           <p className="font-body-sm text-body-sm text-on-surface whitespace-pre-wrap">{visit.notes || 'Sin notas.'}</p>
         </div>
 
         <div className="border border-outline-variant rounded p-md md:col-span-2">
-          <h3 className="font-label-md text-label-md text-on-surface-variant uppercase mb-sm">Firmas</h3>
+          <h3 className="list-title-bar -mx-md -mt-md mb-sm font-label-md text-label-md uppercase px-md py-sm rounded-t">Firmas</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
             <SignatureDisplay
               label="Firma Técnico Responsable"
@@ -134,7 +134,7 @@ export default function VisitDetailPanel({ visit, parameters, events, actions })
         </div>
 
         <div className="border border-outline-variant rounded p-md md:col-span-2">
-          <h3 className="font-label-md text-label-md text-on-surface-variant uppercase mb-sm">Historial</h3>
+          <h3 className="list-title-bar -mx-md -mt-md mb-sm font-label-md text-label-md uppercase px-md py-sm rounded-t">Historial</h3>
           <Timeline events={timelineEvents} />
         </div>
       </div>

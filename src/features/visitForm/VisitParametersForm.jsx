@@ -3,9 +3,9 @@ import { VISIT_PARAMETER_DEFINITIONS } from '../../lib/constants'
 export default function VisitParametersForm({ parameterValues, onChangeParameter }) {
   return (
     <section className="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
-      <div className="border-b border-outline-variant p-md flex items-center gap-sm">
-        <span className="material-symbols-outlined text-on-surface-variant">speed</span>
-        <h3 className="font-label-md text-label-md text-on-surface uppercase">Verificación de Parámetros</h3>
+      <div className="list-title-bar p-md flex items-center gap-sm">
+        <span className="material-symbols-outlined">speed</span>
+        <h3 className="font-label-md text-label-md uppercase">Verificación de Parámetros</h3>
       </div>
       <table className="w-full text-left border-collapse">
         <thead>
@@ -26,7 +26,7 @@ export default function VisitParametersForm({ parameterValues, onChangeParameter
                   required={!definition.optional}
                   value={parameterValues[definition.key] ?? ''}
                   onChange={(event) => onChangeParameter(definition.key, event.target.value)}
-                  className="w-full bg-surface border border-outline rounded px-md py-sm font-body-lg text-body-lg text-on-surface focus:border-primary focus:border-2 focus:outline-none transition-colors"
+                  className="w-full bg-surface border border-outline rounded px-md py-sm font-body-lg text-body-lg text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-colors"
                 />
               </td>
               <td className="p-md text-center text-on-surface-variant">{definition.unit}</td>

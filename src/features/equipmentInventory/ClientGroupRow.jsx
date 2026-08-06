@@ -50,8 +50,8 @@ export default function ClientGroupRow({ client, equipmentList, expanded, onTogg
       </div>
       {expanded && (
         <div>
-          {equipmentList.map((equipment) => (
-            <EquipmentRow key={equipment.id} equipment={equipment} onOpenHistory={onOpenHistory} />
+          {equipmentList.map((equipment, index) => (
+            <EquipmentRow key={equipment.id} equipment={equipment} onOpenHistory={onOpenHistory} index={index} />
           ))}
         </div>
       )}

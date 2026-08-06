@@ -72,8 +72,8 @@ export default function VehicleDetailPanel({ vehicle, onClose, onUpdated }) {
 
       {vehicle && !isEditing && (
         <section>
-          <div className="flex items-center justify-between mb-md">
-            <h3 className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Datos del Vehículo</h3>
+          <div className="list-title-bar flex items-center justify-between mb-md px-md py-sm rounded">
+            <h3 className="font-label-md text-label-md uppercase tracking-wider">Datos del Vehículo</h3>
             <StatusChip label={vehicle.active ? 'Activo' : 'Inactivo'} tone={vehicle.active ? 'success' : 'error'} variant="dot" />
           </div>
           <div className="grid grid-cols-2 gap-md">

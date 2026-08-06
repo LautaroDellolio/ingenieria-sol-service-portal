@@ -91,7 +91,7 @@ export default {
         'margin-desktop': '3.2rem',
       },
       borderRadius: {
-        DEFAULT: '0.25rem',
+        DEFAULT: '0.4rem',
         lg: '0.5rem',
         xl: '0.75rem',
         full: '9999px',

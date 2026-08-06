@@ -77,7 +77,7 @@ export default function AssignmentPopover({ routeSheet, technicians, vehicles, o
           <select
             value={vehicleId}
             onChange={(event) => setVehicleId(event.target.value)}
-            className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface"
+            className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-all"
           >
             <option value="">Sin asignar</option>
             {vehicles.map((vehicle) => (
@@ -93,7 +93,7 @@ export default function AssignmentPopover({ routeSheet, technicians, vehicles, o
               type="date"
               value={scheduledDate}
               onChange={(event) => setScheduledDate(event.target.value)}
-              className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface"
+              className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-all"
             />
           </div>
           <div className="space-y-xs">
@@ -102,7 +102,7 @@ export default function AssignmentPopover({ routeSheet, technicians, vehicles, o
               type="time"
               value={scheduledTime}
               onChange={(event) => setScheduledTime(event.target.value)}
-              className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface"
+              className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-all"
             />
           </div>
         </div>

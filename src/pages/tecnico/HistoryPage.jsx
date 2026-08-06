@@ -39,12 +39,14 @@ export default function HistoryPage() {
         </div>
       ) : (
         <div className="space-y-sm">
-          {history.map((visit) => (
+          {history.map((visit, index) => (
             <button
               key={visit.id}
               type="button"
               onClick={() => navigate(`/tecnico/visita/${visit.id}`)}
-              className="w-full text-left bg-surface-container-lowest border border-outline-variant rounded-lg p-md hover:border-secondary transition-colors flex items-center justify-between gap-sm"
+              className={`w-full text-left border border-outline-variant rounded-lg p-md hover:border-secondary hover:brightness-95 transition-all flex items-center justify-between gap-sm ${
+                index % 2 === 0 ? 'bg-secondary-fixed' : 'bg-secondary-fixed-dim'
+              }`}
             >
               <div>
                 <p className="font-label-md text-label-md text-on-surface">{visit.equipment?.motor}</p>

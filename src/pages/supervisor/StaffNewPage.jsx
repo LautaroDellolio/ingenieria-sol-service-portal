@@ -67,7 +67,7 @@ export default function StaffNewPage() {
                 <select
                   value={form.role}
                   onChange={(event) => setForm((f) => ({ ...f, role: event.target.value }))}
-                  className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface"
+                  className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-all"
                 >
                   {Object.entries(ROLE_LABELS).map(([value, label]) => (
                     <option key={value} value={value}>{label}</option>

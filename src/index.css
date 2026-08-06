@@ -60,6 +60,11 @@ body {
   border-radius: 9999px;
 }
 
+.list-title-bar {
+  background-color: theme('colors.secondary-container');
+  color: theme('colors.on-secondary-container');
+}
+
 .grid-pattern {
   background-image:
     linear-gradient(to right, rgba(18, 24, 26, 0.06) 1px, transparent 1px),

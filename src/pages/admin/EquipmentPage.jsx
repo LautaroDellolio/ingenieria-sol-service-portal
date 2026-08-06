@@ -260,7 +260,7 @@ export default function EquipmentPage() {
               required
               value={equipmentForm.client_id}
               onChange={(event) => setEquipmentForm((f) => ({ ...f, client_id: event.target.value }))}
-              className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface"
+              className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-all"
             >
               <option value="" disabled>Seleccionar cliente</option>
               {clients.map((client) => (
@@ -280,7 +280,7 @@ export default function EquipmentPage() {
                 <select
                   value={equipmentForm.fuel_type}
                   onChange={(event) => setEquipmentForm((f) => ({ ...f, fuel_type: event.target.value }))}
-                  className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface"
+                  className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-all"
                 >
                   {Object.entries(FUEL_TYPE_LABELS).map(([value, label]) => (
                     <option key={value} value={value}>{label}</option>
@@ -292,7 +292,7 @@ export default function EquipmentPage() {
                 <select
                   value={equipmentForm.condition_status}
                   onChange={(event) => setEquipmentForm((f) => ({ ...f, condition_status: event.target.value }))}
-                  className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface"
+                  className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-all"
                 >
                   {Object.entries(CONDITION_STATUS_LABELS).map(([value, label]) => (
                     <option key={value} value={value}>{label}</option>

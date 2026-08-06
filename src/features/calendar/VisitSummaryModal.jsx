@@ -58,7 +58,7 @@ export default function VisitSummaryModal({ routeSheet, onClose, onAssign = null
             </div>
           </dl>
 
-          <h3 className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider border-t border-outline-variant pt-md mb-sm">
+          <h3 className="list-title-bar font-label-md text-label-md uppercase tracking-wider mt-md mb-sm px-md py-sm rounded">
             Equipos ({visits.length})
           </h3>
           <ul className="divide-y divide-outline-variant/50">

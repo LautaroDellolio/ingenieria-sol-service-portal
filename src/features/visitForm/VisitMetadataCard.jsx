@@ -28,7 +28,7 @@ export default function VisitMetadataCard({ visit, serviceType, onChangeServiceT
             required
             value={serviceType}
             onChange={(event) => onChangeServiceType(event.target.value)}
-            className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-lg text-body-lg text-on-surface"
+            className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-lg text-body-lg text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-all"
           >
             {Object.entries(SERVICE_TYPE_LABELS).map(([value, label]) => (
               <option key={value} value={value}>{label}</option>

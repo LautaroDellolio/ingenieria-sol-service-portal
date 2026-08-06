@@ -69,11 +69,11 @@ function DateGroupList({ section, dateGroups, expandedGroupKeys, onToggleGroup, 
 
         return (
           <div key={dateKey}>
-            <h3 className="font-label-md text-label-md text-on-surface uppercase tracking-wide mb-sm pb-xs border-b border-outline-variant flex items-center gap-xs">
+            <h3 className="list-title-bar font-label-md text-label-md uppercase tracking-wide mb-sm px-md py-sm rounded flex items-center gap-xs">
               {dateKey === 'sin-fecha' ? 'Sin fecha asignada' : formatFullDate(dateKey)}
               {dayAvailableOffline && (
                 <span
-                  className="material-symbols-outlined text-[1.6rem] text-on-tertiary-fixed-variant"
+                  className="material-symbols-outlined text-[1.6rem]"
                   aria-label="Disponible sin conexión"
                   title="Disponible sin conexión"
                 >
@@ -268,7 +268,7 @@ export default function MonthlyPlanPage() {
 
           {pendingValidationGroups.length > 0 && (
             <div className={plannedGroups.length > 0 ? 'mt-xl pt-lg border-t border-outline-variant' : undefined}>
-              <h2 className="font-headline-md text-headline-md text-on-surface mb-md">
+              <h2 className="list-title-bar font-headline-md text-headline-md mb-md px-md py-sm rounded">
                 Pendiente de Validación
               </h2>
               <DateGroupList

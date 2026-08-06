@@ -17,7 +17,7 @@ export default function CompletedVisitsModal({ open, routeSheets, onClose, onSel
     >
       <div className="space-y-lg">
         <section>
-          <h3 className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-sm">
+          <h3 className="list-title-bar font-label-md text-label-md uppercase tracking-wider mb-sm px-md py-sm rounded">
             Hojas de Ruta Realizadas ({done.length})
           </h3>
           {done.length === 0 ? (
@@ -32,7 +32,7 @@ export default function CompletedVisitsModal({ open, routeSheets, onClose, onSel
         </section>
 
         <section>
-          <h3 className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-sm">
+          <h3 className="list-title-bar font-label-md text-label-md uppercase tracking-wider mb-sm px-md py-sm rounded">
             Hojas de Ruta Por Realizar ({pending.length})
           </h3>
           {pending.length === 0 ? (

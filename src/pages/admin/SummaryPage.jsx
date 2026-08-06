@@ -46,32 +46,41 @@ export default function SummaryPage() {
         Estado de las visitas del mes y próximos services anuales a {FUTURE_WINDOW_DAYS} días.
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-md mb-md">
-        <KpiCard icon="event" label="Visitas Planificadas" value={visitsThisMonth.length} sublabel="Este mes" />
-        <KpiCard icon="fact_check" label="Visitas Realizadas (Mes)" value={`${completionPercentage}%`} sublabel={`${completedVisits.length}/${visitsThisMonth.length} visitas`} />
-        <KpiCard icon="check_circle" label="Aprobadas" value={completedVisits.length} sublabel="Este mes" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-md mb-md justify-items-center">
+        <KpiCard icon="event" label="Visitas Planificadas" value={visitsThisMonth.length} sublabel="Este mes" tone="primary" />
+        <KpiCard
+          icon="fact_check"
+          label="Visitas Realizadas (Mes)"
+          value={`${completionPercentage}%`}
+          sublabel={`${completedVisits.length}/${visitsThisMonth.length} visitas`}
+          tone="secondary"
+        />
+        <KpiCard icon="check_circle" label="Aprobadas" value={completedVisits.length} sublabel="Este mes" tone="soft" />
         <KpiCard
           icon="event_upcoming"
           label="Services Anuales Próximos"
           value={upcomingAnnualServices.length}
           sublabel={`Próximos ${FUTURE_WINDOW_DAYS} días`}
+          tone="warning"
         />
       </div>
 
       <div className="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden mb-md">
-        <h2 className="font-label-md text-label-md text-on-surface-variant uppercase p-md border-b border-outline-variant">
+        <h2 className="list-title-bar font-label-md text-label-md uppercase tracking-wide p-md">
           Visitas Realizadas
         </h2>
         {visibleCompletedVisits.length === 0 ? (
           <EmptyState icon="task_alt" title="Sin visitas realizadas este mes" />
         ) : (
           <ul className="divide-y divide-outline-variant/50">
-            {visibleCompletedVisits.map((visit) => (
+            {visibleCompletedVisits.map((visit, index) => (
               <li key={visit.id}>
                 <button
                   type="button"
                   onClick={() => navigate(`${ROLE_HOME_PATH[profile.role]}/visita/${visit.id}`)}
-                  className="w-full flex items-center justify-between gap-sm p-md text-left hover:bg-surface-container-low transition-colors"
+                  className={`w-full flex items-center justify-between gap-sm p-md text-left transition-all hover:brightness-95 ${
+                    index % 2 === 0 ? 'bg-secondary-fixed' : 'bg-secondary-fixed-dim'
+                  }`}
                 >
                   <div>
                     <p className="font-label-md text-label-md text-on-surface">{visit.equipment?.motor}</p>
@@ -89,19 +98,21 @@ export default function SummaryPage() {
       </div>
 
       <div className="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
-        <h2 className="font-label-md text-label-md text-on-surface-variant uppercase p-md border-b border-outline-variant">
+        <h2 className="list-title-bar font-label-md text-label-md uppercase tracking-wide p-md">
           Próximos Services Anuales
         </h2>
         {upcomingAnnualServices.length === 0 ? (
           <EmptyState icon="event_available" title="Sin vencimientos próximos" />
         ) : (
           <ul className="divide-y divide-outline-variant/50">
-            {upcomingAnnualServices.map(({ item, dueDate }) => (
+            {upcomingAnnualServices.map(({ item, dueDate }, index) => (
               <li key={item.id}>
                 <button
                   type="button"
                   onClick={() => setHistoryEquipment(item)}
-                  className="w-full flex items-center justify-between gap-sm p-md text-left hover:bg-surface-container-low transition-colors"
+                  className={`w-full flex items-center justify-between gap-sm p-md text-left transition-all hover:brightness-95 ${
+                    index % 2 === 0 ? 'bg-secondary-fixed' : 'bg-secondary-fixed-dim'
+                  }`}
                 >
                   <div>
                     <p className="font-label-md text-label-md text-on-surface">{item.motor}</p>

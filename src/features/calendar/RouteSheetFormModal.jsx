@@ -285,7 +285,7 @@ export default function RouteSheetFormModal({
                 onChange={(event) =>
                   setForm((f) => ({ ...f, serviceType: event.target.value, visitOccurrence: '' }))
                 }
-                className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-lg text-body-lg text-on-surface"
+                className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-lg text-body-lg text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-all"
               >
                 {Object.entries(SERVICE_TYPE_LABELS).map(([value, label]) => (
                   <option key={value} value={value}>{label}</option>
@@ -299,7 +299,7 @@ export default function RouteSheetFormModal({
                   required
                   value={form.visitOccurrence}
                   onChange={(event) => setForm((f) => ({ ...f, visitOccurrence: event.target.value }))}
-                  className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-lg text-body-lg text-on-surface"
+                  className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-lg text-body-lg text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-all"
                 >
                   <option value="" disabled>Seleccionar…</option>
                   {Object.entries(VISIT_OCCURRENCE_LABELS).map(([value, label]) => (

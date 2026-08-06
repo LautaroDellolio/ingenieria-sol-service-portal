@@ -6,22 +6,26 @@ import EmptyState from '../../components/ui/EmptyState'
 export default function VisitReviewQueue({ visits, selectedId, onSelect }) {
   return (
     <div className="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden flex flex-col">
-      <div className="p-md border-b border-outline-variant">
-        <p className="font-label-sm text-label-sm text-on-surface-variant uppercase">Pendientes</p>
-        <p className="font-display-lg text-display-lg text-on-surface leading-none">{visits.length}</p>
+      <div className="list-title-bar p-md text-center">
+        <p className="font-label-sm text-label-sm uppercase opacity-80">Pendientes</p>
+        <p className="font-display-lg text-display-lg leading-none">{visits.length}</p>
       </div>
       <div className="overflow-y-auto max-h-[60rem]">
         {visits.length === 0 ? (
           <EmptyState icon="fact_check" title="No hay visitas pendientes" />
         ) : (
           <ul className="divide-y divide-outline-variant/50">
-            {visits.map((visit) => (
+            {visits.map((visit, index) => (
               <li key={visit.id}>
                 <button
                   type="button"
                   onClick={() => onSelect(visit.id)}
-                  className={`w-full text-left p-md transition-colors hover:bg-surface-container-low ${
-                    selectedId === visit.id ? 'bg-surface-container-low border-l-4 border-secondary' : ''
+                  className={`w-full text-left p-md transition-all hover:brightness-95 ${
+                    selectedId === visit.id
+                      ? 'bg-surface-container-lowest border-l-4 border-secondary'
+                      : index % 2 === 0
+                        ? 'bg-secondary-fixed'
+                        : 'bg-secondary-fixed-dim'
                   }`}
                 >
                   <p className="font-label-md text-label-md text-on-surface">{visit.equipment?.motor}</p>

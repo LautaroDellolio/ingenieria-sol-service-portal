@@ -17,9 +17,9 @@ export default function VisitChecklistSection({ category, checklistData, onChang
 
   return (
     <section className="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
-      <div className="border-b border-outline-variant p-md bg-surface-container flex items-center gap-sm">
-        <span className="material-symbols-outlined text-on-surface-variant">{CATEGORY_ICON[category]}</span>
-        <h3 className="font-label-md text-label-md text-on-surface uppercase">{CHECKLIST_CATEGORY_LABELS[category]}</h3>
+      <div className="list-title-bar p-md flex items-center gap-sm">
+        <span className="material-symbols-outlined">{CATEGORY_ICON[category]}</span>
+        <h3 className="font-label-md text-label-md uppercase">{CHECKLIST_CATEGORY_LABELS[category]}</h3>
       </div>
       <table className="w-full text-left border-collapse">
         <thead>
@@ -50,7 +50,7 @@ export default function VisitChecklistSection({ category, checklistData, onChang
                           required={currentStatus === CHECKLIST_ITEM_STATUS.OK}
                           value={checklistData[item.measurement.key] ?? ''}
                           onChange={(event) => onChangeItem(item.measurement.key, event.target.value)}
-                          className="w-full bg-surface border border-outline rounded px-md py-sm font-body-lg text-body-lg text-on-surface focus:border-primary focus:border-2 focus:outline-none transition-colors"
+                          className="w-full bg-surface border border-outline rounded px-md py-sm font-body-lg text-body-lg text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-colors"
                         />
                         <span className="font-label-sm text-label-sm text-on-surface-variant shrink-0">{item.measurement.unit}</span>
                       </div>
@@ -64,7 +64,7 @@ export default function VisitChecklistSection({ category, checklistData, onChang
                     required
                     value={currentStatus}
                     onChange={(event) => onChangeItem(item.key, event.target.value)}
-                    className="w-full bg-surface border border-outline rounded font-body-lg text-body-lg text-on-surface px-md py-sm focus:border-primary focus:border-2 focus:outline-none transition-colors"
+                    className="w-full bg-surface border border-outline rounded font-body-lg text-body-lg text-on-surface px-md py-sm focus:border-secondary focus:border-2 focus:outline-none transition-colors"
                   >
                     {statusOptions.map(([value, label]) => (
                       <option key={value} value={value}>{label}</option>

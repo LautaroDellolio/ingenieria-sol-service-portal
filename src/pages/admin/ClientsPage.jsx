@@ -59,21 +59,7 @@ export default function ClientsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-sm mb-xs">
-        <h1 className="font-headline-lg text-headline-lg text-on-surface">Clientes</h1>
-        {clientGroups.length > 0 && (
-          <button
-            type="button"
-            onClick={toggleAllClientsCollapsed}
-            aria-label={allClientsCollapsed ? 'Expandir todos los clientes' : 'Contraer todos los clientes'}
-            className="text-on-surface-variant hover:text-secondary transition-colors"
-          >
-            <span className="material-symbols-outlined text-[2rem] block">
-              {allClientsCollapsed ? 'unfold_more' : 'unfold_less'}
-            </span>
-          </button>
-        )}
-      </div>
+      <h1 className="font-headline-lg text-headline-lg text-on-surface mb-xs">Clientes</h1>
       <p className="font-body-md text-body-md text-on-surface-variant mb-lg">Ficha y equipos instalados por cliente.</p>
 
       <Field label="Buscar por cliente o motor" value={searchTerm} onChange={setSearchTerm} className="max-w-[36rem] mb-md" />
@@ -84,6 +70,17 @@ export default function ClientsPage() {
         </p>
       ) : (
         <div className="space-y-sm">
+          <button
+            type="button"
+            onClick={toggleAllClientsCollapsed}
+            aria-label={allClientsCollapsed ? 'Expandir todos los clientes' : 'Contraer todos los clientes'}
+            className="flex items-center gap-xs px-md font-label-sm text-label-sm text-on-surface-variant hover:text-secondary transition-colors"
+          >
+            <span className="material-symbols-outlined text-[2rem]">
+              {allClientsCollapsed ? 'unfold_more' : 'unfold_less'}
+            </span>
+            {allClientsCollapsed ? 'Expandir todos' : 'Contraer todos'}
+          </button>
           {clientGroups.map(({ client, equipmentList }) => (
             <ClientCard
               key={client.id}

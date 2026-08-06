@@ -10,7 +10,7 @@ function SignatureBlock({ label, signature, onChangeSignature, signatureName, on
         value={signatureName}
         onChange={(event) => onChangeSignatureName(event.target.value)}
         placeholder="Aclaración"
-        className="w-full mt-sm border-b border-outline-variant bg-transparent pb-xs font-body-lg text-body-lg text-on-surface text-center focus:outline-none focus:border-primary"
+        className="w-full mt-sm bg-surface border border-outline rounded px-md py-sm font-body-lg text-body-lg text-on-surface text-center focus:border-secondary focus:border-2 focus:outline-none transition-colors"
       />
     </div>
   )
@@ -41,7 +41,7 @@ export default function VisitObservationsSection({
             value={notes}
             onChange={(event) => onChangeNotes(event.target.value)}
             placeholder="Ingrese notas adicionales de la visita…"
-            className="w-full flex-1 bg-surface border border-outline rounded p-md font-body-lg text-body-lg text-on-surface focus:border-primary focus:border-2 focus:outline-none transition-colors min-h-[15rem] resize-none"
+            className="w-full flex-1 bg-surface border border-outline rounded p-md font-body-lg text-body-lg text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-colors min-h-[15rem] resize-none"
           />
         </div>
 
@@ -51,7 +51,7 @@ export default function VisitObservationsSection({
               type="checkbox"
               checked={faultReported}
               onChange={(event) => onToggleFaultReported(event.target.checked)}
-              className="w-lg h-lg"
+              className="w-[1.6rem] h-[1.6rem] rounded border-outline"
             />
             <span className="material-symbols-outlined text-error">warning</span>
             Se detectó una falla
@@ -62,7 +62,7 @@ export default function VisitObservationsSection({
               value={faultDescription}
               onChange={(event) => onChangeFaultDescription(event.target.value)}
               placeholder="Describí la falla detectada…"
-              className="w-full mt-sm bg-surface border border-outline rounded p-md font-body-lg text-body-lg text-on-surface focus:border-primary focus:border-2 focus:outline-none transition-colors min-h-[8rem] resize-none"
+              className="w-full mt-sm bg-surface border border-outline rounded p-md font-body-lg text-body-lg text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-colors min-h-[8rem] resize-none"
             />
           )}
         </div>

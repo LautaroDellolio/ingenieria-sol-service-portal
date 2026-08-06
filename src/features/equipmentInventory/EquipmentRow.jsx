@@ -8,12 +8,14 @@ const CONDITION_TONE = {
   [CONDITION_STATUS.FUERA_SERVICIO]: 'error',
 }
 
-export default function EquipmentRow({ equipment, onOpenHistory }) {
+export default function EquipmentRow({ equipment, onOpenHistory, index = 0 }) {
+  const zebraClass = index % 2 === 0 ? 'bg-secondary-fixed' : 'bg-secondary-fixed-dim'
+
   return (
     <button
       type="button"
       onClick={() => onOpenHistory(equipment)}
-      className="w-full grid grid-cols-12 gap-sm items-center py-sm pl-xl pr-sm text-left hover:bg-surface-container-low transition-colors border-t border-outline-variant/50"
+      className={`w-full grid grid-cols-12 gap-sm items-center py-sm pl-xl pr-sm text-left hover:brightness-95 transition-all border-t border-outline-variant/50 ${zebraClass}`}
     >
       <span className="col-span-4 font-label-md text-label-md text-on-surface">{equipment.motor}</span>
       <span className="col-span-2 font-body-sm text-body-sm text-on-surface-variant">

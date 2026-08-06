@@ -178,7 +178,7 @@ export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated, o
                 <select
                   value={form.fuel_type}
                   onChange={(event) => setForm((f) => ({ ...f, fuel_type: event.target.value }))}
-                  className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface"
+                  className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-all"
                 >
                   {Object.entries(FUEL_TYPE_LABELS).map(([value, label]) => (
                     <option key={value} value={value}>{label}</option>
@@ -214,7 +214,7 @@ export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated, o
                 <select
                   value={form.condition_status}
                   onChange={(event) => setForm((f) => ({ ...f, condition_status: event.target.value }))}
-                  className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface"
+                  className="w-full bg-surface border border-outline rounded px-sm py-sm font-body-md text-body-md text-on-surface focus:border-secondary focus:border-2 focus:outline-none transition-all"
                 >
                   {Object.entries(CONDITION_STATUS_LABELS).map(([value, label]) => (
                     <option key={value} value={value}>{label}</option>
@@ -237,8 +237,8 @@ export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated, o
 
       {equipment && !isEditing && (
         <section className="mb-lg">
-          <div className="flex items-center justify-between mb-md">
-            <h3 className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Ficha Técnica</h3>
+          <div className="list-title-bar flex items-center justify-between mb-md px-md py-sm rounded">
+            <h3 className="font-label-md text-label-md uppercase tracking-wider">Ficha Técnica</h3>
             <StatusChip
               label={CONDITION_STATUS_LABELS[equipment.condition_status]}
               tone={CONDITION_TONE[equipment.condition_status]}
@@ -274,7 +274,7 @@ export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated, o
             </div>
           )}
 
-          <h3 className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mt-lg mb-md">Próximo Service</h3>
+          <h3 className="list-title-bar font-label-md text-label-md uppercase tracking-wider mt-lg mb-md px-md py-sm rounded">Próximo Service</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-md">
             <DetailField label="Próx. Cambio Filtro de Combustible" value={equipment.fuel_filter_next_due_at ? formatDate(equipment.fuel_filter_next_due_at) : null} />
             <DetailField label="Próx. Cambio Filtro de Aceite" value={equipment.oil_filter_next_due_at ? formatDate(equipment.oil_filter_next_due_at) : null} />
@@ -284,7 +284,7 @@ export default function EquipmentHistoryPanel({ equipment, onClose, onUpdated, o
         </section>
       )}
 
-      <h3 className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider border-t border-outline-variant pt-md mb-sm">
+      <h3 className="list-title-bar font-label-md text-label-md uppercase tracking-wider mt-md mb-sm px-md py-sm rounded">
         Historial de Visitas
       </h3>
       {loading && <Spinner label="Cargando historial…" />}

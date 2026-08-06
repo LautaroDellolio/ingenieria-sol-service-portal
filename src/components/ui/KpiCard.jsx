@@ -1,23 +1,24 @@
-export default function KpiCard({ icon, label, value, sublabel, statusChip = null, onClick = null }) {
+const TONE_CLASSES = {
+  primary: 'bg-secondary-container text-on-secondary-container',
+  secondary: 'bg-tertiary-fixed-dim text-on-tertiary-fixed-variant',
+  warning: 'bg-warning-container text-on-warning-container',
+  soft: 'bg-secondary-fixed-dim text-on-secondary-fixed-variant',
+}
+
+export default function KpiCard({ icon, label, value, sublabel, statusChip = null, onClick = null, tone = 'primary' }) {
   const Container = onClick ? 'button' : 'div'
 
   return (
     <Container
       type={onClick ? 'button' : undefined}
       onClick={onClick ?? undefined}
-      className={`w-full text-left bg-surface-container-lowest border border-outline-variant rounded-lg shadow-elevation-1 overflow-hidden ${onClick ? 'hover:border-secondary hover:shadow-elevation-2 transition-all cursor-pointer' : ''}`}
+      className={`relative mx-auto w-[16rem] h-[16rem] md:w-[19rem] md:h-[19rem] shrink-0 rounded-full flex flex-col items-center justify-center text-center gap-xs p-lg shadow-elevation-1 ${TONE_CLASSES[tone]} ${onClick ? 'hover:shadow-elevation-2 hover:scale-[1.03] transition-all cursor-pointer' : ''}`}
     >
-      <div className="flex items-center justify-between gap-sm p-md border-b border-outline-variant">
-        <div className="flex items-center gap-sm text-on-surface-variant">
-          <span className="material-symbols-outlined text-[2rem]">{icon}</span>
-          <span className="font-label-sm text-label-sm uppercase">{label}</span>
-        </div>
-        {statusChip}
-      </div>
-      <div className="p-md">
-        <p className="font-display-lg text-display-lg text-on-surface leading-none">{value}</p>
-        {sublabel && <p className="font-body-sm text-body-sm text-on-surface-variant mt-xs">{sublabel}</p>}
-      </div>
+      {statusChip && <span className="absolute top-md right-md">{statusChip}</span>}
+      <span className="material-symbols-outlined text-[3.2rem]">{icon}</span>
+      <p className="font-display-lg text-display-lg leading-none">{value}</p>
+      <p className="font-label-sm text-label-sm uppercase tracking-wide leading-tight px-sm">{label}</p>
+      {sublabel && <p className="font-body-sm text-body-sm opacity-80 leading-tight">{sublabel}</p>}
     </Container>
   )
 }
