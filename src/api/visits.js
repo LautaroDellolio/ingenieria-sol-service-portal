@@ -114,7 +114,7 @@ function signatureColumns({
   }
 }
 
-export async function saveVisitDraft(visitId, formSnapshot, actorId) {
+export async function saveVisitDraft(visitId, formSnapshot) {
   const { serviceType, checklistData, notes, faultReported, faultDescription } = formSnapshot
   const { error } = await supabase
     .from('visits')
@@ -130,7 +130,6 @@ export async function saveVisitDraft(visitId, formSnapshot, actorId) {
     })
     .eq('id', visitId)
   if (error) throw error
-  await logVisitEvent(visitId, 'borrador_guardado', actorId)
 }
 
 export async function submitVisitForReview(visitId, formSnapshot, actorId) {

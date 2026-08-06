@@ -80,7 +80,7 @@ export async function saveVisitOrQueue({ visitId, kind, formSnapshot, parameterV
   try {
     await saveVisitParameters(visitId, parameterValues)
     if (kind === 'submit') await submitVisitForReview(visitId, formSnapshot, actorId)
-    else await saveVisitDraft(visitId, formSnapshot, actorId)
+    else await saveVisitDraft(visitId, formSnapshot)
 
     // Ya se sincronizo en vivo: si habia una entrada vieja en la cola para
     // esta visita (ej. un borrador previo que se habia quedado pendiente),
@@ -116,7 +116,7 @@ export async function flushPendingWrites({ onProgress } = {}) {
     try {
       await saveVisitParameters(entry.visitId, entry.parameterValues)
       if (entry.kind === 'submit') await submitVisitForReview(entry.visitId, entry.formSnapshot, entry.actorId)
-      else await saveVisitDraft(entry.visitId, entry.formSnapshot, entry.actorId)
+      else await saveVisitDraft(entry.visitId, entry.formSnapshot)
     } catch (error) {
       if (isNetworkError(error)) {
         // Se corto la conexion a mitad del flush: se deja la entrada tal
