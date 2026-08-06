@@ -41,7 +41,7 @@ export default function VisitObservationsSection({
             value={notes}
             onChange={(event) => onChangeNotes(event.target.value)}
             placeholder="Ingrese notas adicionales de la visita…"
-            className="w-full flex-1 border border-outline-variant rounded-sm p-sm font-body-lg text-body-lg text-on-surface focus:border-primary focus:ring-1 focus:ring-primary min-h-[15rem] resize-none"
+            className="w-full flex-1 bg-surface border border-outline rounded p-md font-body-lg text-body-lg text-on-surface focus:border-primary focus:border-2 focus:outline-none transition-colors min-h-[15rem] resize-none"
           />
         </div>
 
@@ -62,7 +62,7 @@ export default function VisitObservationsSection({
               value={faultDescription}
               onChange={(event) => onChangeFaultDescription(event.target.value)}
               placeholder="Describí la falla detectada…"
-              className="w-full mt-sm border border-outline-variant rounded-sm p-sm font-body-lg text-body-lg text-on-surface focus:border-primary focus:ring-1 focus:ring-primary min-h-[8rem] resize-none"
+              className="w-full mt-sm bg-surface border border-outline rounded p-md font-body-lg text-body-lg text-on-surface focus:border-primary focus:border-2 focus:outline-none transition-colors min-h-[8rem] resize-none"
             />
           )}
         </div>

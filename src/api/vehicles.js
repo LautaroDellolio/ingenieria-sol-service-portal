@@ -32,3 +32,8 @@ export async function setVehicleActive(vehicleId, active) {
   const { error } = await supabase.from('vehicles').update({ active }).eq('id', vehicleId)
   if (error) throw error
 }
+
+export async function deleteVehicle(vehicleId) {
+  const { error } = await supabase.from('vehicles').delete().eq('id', vehicleId)
+  if (error) throw error
+}

@@ -42,6 +42,10 @@ export default function EquipmentPage() {
   const [showNewEquipment, setShowNewEquipment] = useState(false)
   const [clientForm, setClientForm] = useState(EMPTY_CLIENT_FORM)
   const [equipmentForm, setEquipmentForm] = useState(EMPTY_EQUIPMENT_FORM)
+  const [savingClient, setSavingClient] = useState(false)
+  const [clientError, setClientError] = useState('')
+  const [savingEquipment, setSavingEquipment] = useState(false)
+  const [equipmentError, setEquipmentError] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   const [collapsedClientIds, setCollapsedClientIds] = useState(() => new Set())
 
@@ -88,23 +92,51 @@ export default function EquipmentPage() {
 
   async function handleCreateClient(event) {
     event.preventDefault()
-    await createClient({ ...clientForm, created_by: profile.id })
-    setClientForm(EMPTY_CLIENT_FORM)
+    setSavingClient(true)
+    setClientError('')
+    try {
+      await createClient({ ...clientForm, created_by: profile.id })
+      setClientForm(EMPTY_CLIENT_FORM)
+      setShowNewClient(false)
+      reloadClients()
+    } catch (error) {
+      setClientError(error.message || 'No se pudo guardar el cliente.')
+    } finally {
+      setSavingClient(false)
+    }
+  }
+
+  function closeNewClient() {
     setShowNewClient(false)
-    reloadClients()
+    setClientForm(EMPTY_CLIENT_FORM)
+    setClientError('')
   }
 
   async function handleCreateEquipment(event) {
     event.preventDefault()
-    await createEquipment({
-      ...equipmentForm,
-      power_kva: equipmentForm.power_kva ? Number(equipmentForm.power_kva) : null,
-      fuel_capacity: equipmentForm.fuel_capacity ? Number(equipmentForm.fuel_capacity) : null,
-      created_by: profile.id,
-    })
-    setEquipmentForm(EMPTY_EQUIPMENT_FORM)
+    setSavingEquipment(true)
+    setEquipmentError('')
+    try {
+      await createEquipment({
+        ...equipmentForm,
+        power_kva: equipmentForm.power_kva ? Number(equipmentForm.power_kva) : null,
+        fuel_capacity: equipmentForm.fuel_capacity ? Number(equipmentForm.fuel_capacity) : null,
+        created_by: profile.id,
+      })
+      setEquipmentForm(EMPTY_EQUIPMENT_FORM)
+      setShowNewEquipment(false)
+      reloadEquipment()
+    } catch (error) {
+      setEquipmentError(error.message || 'No se pudo guardar el equipo.')
+    } finally {
+      setSavingEquipment(false)
+    }
+  }
+
+  function closeNewEquipment() {
     setShowNewEquipment(false)
-    reloadEquipment()
+    setEquipmentForm(EMPTY_EQUIPMENT_FORM)
+    setEquipmentError('')
   }
 
   if (loading || clientsLoading) return <Spinner label="Cargando inventario…" />
@@ -186,11 +218,11 @@ export default function EquipmentPage() {
       <Modal
         open={showNewClient}
         title="Nuevo Cliente"
-        onClose={() => setShowNewClient(false)}
+        onClose={savingClient ? () => {} : closeNewClient}
         size="lg"
         actions={[
-          { label: 'Cancelar', variant: 'secondary-outline', onClick: () => setShowNewClient(false) },
-          { label: 'Guardar Cliente', variant: 'primary', type: 'submit', form: 'new-client-form' },
+          { label: 'Cancelar', variant: 'secondary-outline', onClick: closeNewClient, disabled: savingClient },
+          { label: savingClient ? 'Guardando…' : 'Guardar Cliente', variant: 'primary', type: 'submit', form: 'new-client-form', disabled: savingClient },
         ]}
       >
         <form id="new-client-form" onSubmit={handleCreateClient} className="space-y-md">
@@ -203,17 +235,22 @@ export default function EquipmentPage() {
               <Field label="Ciudad" value={clientForm.city} onChange={(v) => setClientForm((f) => ({ ...f, city: v }))} />
             </div>
           </FormSection>
+          {clientError && (
+            <p role="alert" className="font-body-sm text-body-sm text-error">
+              {clientError}
+            </p>
+          )}
         </form>
       </Modal>
 
       <Modal
         open={showNewEquipment}
         title="Nuevo Equipo"
-        onClose={() => setShowNewEquipment(false)}
+        onClose={savingEquipment ? () => {} : closeNewEquipment}
         size="lg"
         actions={[
-          { label: 'Cancelar', variant: 'secondary-outline', onClick: () => setShowNewEquipment(false) },
-          { label: 'Guardar Equipo', variant: 'primary', type: 'submit', form: 'new-equipment-form' },
+          { label: 'Cancelar', variant: 'secondary-outline', onClick: closeNewEquipment, disabled: savingEquipment },
+          { label: savingEquipment ? 'Guardando…' : 'Guardar Equipo', variant: 'primary', type: 'submit', form: 'new-equipment-form', disabled: savingEquipment },
         ]}
       >
         <form id="new-equipment-form" onSubmit={handleCreateEquipment} className="space-y-md">
@@ -277,6 +314,11 @@ export default function EquipmentPage() {
               <Field label="Medida de Batería" value={equipmentForm.battery_size} onChange={(v) => setEquipmentForm((f) => ({ ...f, battery_size: v }))} />
             </div>
           </FormSection>
+          {equipmentError && (
+            <p role="alert" className="font-body-sm text-body-sm text-error">
+              {equipmentError}
+            </p>
+          )}
         </form>
       </Modal>
     </div>

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { listStaff, setProfileActive } from '../../api/profiles'
-import { createVehicle, setVehicleActive } from '../../api/vehicles'
+import { createVehicle, setVehicleActive, deleteVehicle } from '../../api/vehicles'
 import { useAllVehicles } from '../../hooks/useVehicles'
 import { ROLE_LABELS } from '../../lib/constants'
 import Button from '../../components/ui/Button'
 import Modal from '../../components/ui/Modal'
+import ConfirmModal from '../../components/ui/ConfirmModal'
 import FormSection from '../../components/ui/FormSection'
 import Field from '../../components/ui/Field'
 import StatusChip from '../../components/ui/StatusChip'
@@ -25,6 +26,10 @@ export default function StaffListPage() {
   const [detailVehicle, setDetailVehicle] = useState(null)
   const [showNewVehicle, setShowNewVehicle] = useState(false)
   const [vehicleForm, setVehicleForm] = useState(EMPTY_VEHICLE_FORM)
+  const [savingVehicle, setSavingVehicle] = useState(false)
+  const [vehicleError, setVehicleError] = useState('')
+  const [deletingVehicle, setDeletingVehicle] = useState(null)
+  const [deleteVehicleError, setDeleteVehicleError] = useState('')
 
   async function loadStaff() {
     setStaff(await listStaff())
@@ -46,10 +51,39 @@ export default function StaffListPage() {
 
   async function handleCreateVehicle(event) {
     event.preventDefault()
-    await createVehicle(vehicleForm)
-    setVehicleForm(EMPTY_VEHICLE_FORM)
+    setSavingVehicle(true)
+    setVehicleError('')
+    try {
+      await createVehicle(vehicleForm)
+      setVehicleForm(EMPTY_VEHICLE_FORM)
+      setShowNewVehicle(false)
+      reloadVehicles()
+    } catch (error) {
+      setVehicleError(
+        error.code === '23505' ? 'Ya existe un vehículo con esa patente.' : error.message || 'No se pudo guardar el vehículo.'
+      )
+    } finally {
+      setSavingVehicle(false)
+    }
+  }
+
+  function closeNewVehicle() {
     setShowNewVehicle(false)
-    reloadVehicles()
+    setVehicleForm(EMPTY_VEHICLE_FORM)
+    setVehicleError('')
+  }
+
+  async function handleDeleteVehicle() {
+    setDeleteVehicleError('')
+    try {
+      await deleteVehicle(deletingVehicle.id)
+      setDeletingVehicle(null)
+      reloadVehicles()
+    } catch (error) {
+      setDeleteVehicleError(
+        error.message?.includes('foreign key') ? 'No se puede eliminar: el vehículo tiene hojas de ruta asociadas.' : error.message || 'No se pudo eliminar el vehículo.'
+      )
+    }
   }
 
   if (!staff) return <Spinner label="Cargando personal…" />
@@ -138,6 +172,16 @@ export default function StaffListPage() {
                     >
                       {vehicle.active ? 'Desactivar' : 'Activar'}
                     </Button>
+                    <Button
+                      variant="destructive-outline"
+                      icon="delete"
+                      className="rounded-full"
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        setDeleteVehicleError('')
+                        setDeletingVehicle(vehicle)
+                      }}
+                    />
                   </div>
                 </button>
               </li>
@@ -167,11 +211,11 @@ export default function StaffListPage() {
       <Modal
         open={showNewVehicle}
         title="Nuevo Vehículo"
-        onClose={() => setShowNewVehicle(false)}
+        onClose={savingVehicle ? () => {} : closeNewVehicle}
         size="md"
         actions={[
-          { label: 'Cancelar', variant: 'secondary-outline', onClick: () => setShowNewVehicle(false) },
-          { label: 'Guardar Vehículo', variant: 'primary', type: 'submit', form: 'new-vehicle-form' },
+          { label: 'Cancelar', variant: 'secondary-outline', onClick: closeNewVehicle, disabled: savingVehicle },
+          { label: savingVehicle ? 'Guardando…' : 'Guardar Vehículo', variant: 'primary', type: 'submit', form: 'new-vehicle-form', disabled: savingVehicle },
         ]}
       >
         <form id="new-vehicle-form" onSubmit={handleCreateVehicle} className="space-y-md">
@@ -181,8 +225,28 @@ export default function StaffListPage() {
               <Field label="Nombre" value={vehicleForm.name} onChange={(v) => setVehicleForm((f) => ({ ...f, name: v }))} required />
             </div>
           </FormSection>
+          {vehicleError && (
+            <p role="alert" className="font-body-sm text-body-sm text-error">
+              {vehicleError}
+            </p>
+          )}
         </form>
       </Modal>
+
+      <ConfirmModal
+        open={Boolean(deletingVehicle)}
+        title={`Eliminar ${deletingVehicle?.name ?? ''}`}
+        confirmLabel="Eliminar"
+        danger
+        onCancel={() => {
+          setDeletingVehicle(null)
+          setDeleteVehicleError('')
+        }}
+        onConfirm={handleDeleteVehicle}
+      >
+        ¿Seguro que querés eliminar este vehículo? Esta acción no se puede deshacer.
+        {deleteVehicleError && <span role="alert" className="block text-error mt-sm">{deleteVehicleError}</span>}
+      </ConfirmModal>
     </div>
   )
 }

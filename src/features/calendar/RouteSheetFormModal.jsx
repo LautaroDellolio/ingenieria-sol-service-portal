@@ -28,6 +28,9 @@ export default function RouteSheetFormModal({
   const [lockedEquipmentIds, setLockedEquipmentIds] = useState(new Set())
   const [confirmingDelete, setConfirmingDelete] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
     if (!open) return
@@ -50,6 +53,9 @@ export default function RouteSheetFormModal({
     }
     setConfirmingDelete(false)
     setSearchTerm('')
+    setSaving(false)
+    setDeleting(false)
+    setErrorMessage('')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, isEdit, routeSheet, initialDate])
 
@@ -102,46 +108,64 @@ export default function RouteSheetFormModal({
   async function handleSubmit(event) {
     event.preventDefault()
     if (selectedEquipmentIds.size === 0) return
-    const isPreventivo = form.serviceType === SERVICE_TYPE.PREVENTIVO
-    const payload = {
-      equipmentIds: Array.from(selectedEquipmentIds),
-      serviceType: form.serviceType,
-      scheduledDate: form.scheduledDate,
-      descripcion: form.descripcion,
-      visitOccurrence: isPreventivo ? form.visitOccurrence : null,
-      createdBy,
+    setSaving(true)
+    setErrorMessage('')
+    try {
+      const isPreventivo = form.serviceType === SERVICE_TYPE.PREVENTIVO
+      const payload = {
+        equipmentIds: Array.from(selectedEquipmentIds),
+        serviceType: form.serviceType,
+        scheduledDate: form.scheduledDate,
+        descripcion: form.descripcion,
+        visitOccurrence: isPreventivo ? form.visitOccurrence : null,
+        createdBy,
+      }
+      if (isEdit) {
+        await updateRouteSheetDetails(routeSheet.id, payload)
+      } else {
+        await createRouteSheetWithVisits(payload)
+      }
+      onSaved()
+    } catch (error) {
+      setErrorMessage(error.message || 'No se pudo guardar la hoja de ruta.')
+    } finally {
+      setSaving(false)
     }
-    if (isEdit) {
-      await updateRouteSheetDetails(routeSheet.id, payload)
-    } else {
-      await createRouteSheetWithVisits(payload)
-    }
-    onSaved()
   }
 
   async function handleDelete() {
-    await deleteRouteSheet(routeSheet.id)
-    setConfirmingDelete(false)
-    onDeleted()
+    setDeleting(true)
+    setErrorMessage('')
+    try {
+      await deleteRouteSheet(routeSheet.id)
+      setConfirmingDelete(false)
+      onDeleted()
+    } catch (error) {
+      setConfirmingDelete(false)
+      setErrorMessage(error.message || 'No se pudo eliminar la hoja de ruta.')
+    } finally {
+      setDeleting(false)
+    }
   }
 
   const canDelete = isEdit && routeSheet && !hasLockedVisits(routeSheet)
 
-  const actions = [{ label: 'Cancelar', variant: 'secondary-outline', onClick: onClose }]
+  const actions = [{ label: 'Cancelar', variant: 'secondary-outline', onClick: onClose, disabled: saving }]
   if (isEdit) {
     actions.push({
       label: 'Eliminar',
       variant: 'destructive-outline',
       icon: 'delete',
-      disabled: !canDelete,
+      disabled: !canDelete || saving,
       onClick: () => setConfirmingDelete(true),
     })
   }
   actions.push({
-    label: isEdit ? 'Guardar Cambios' : 'Crear Hoja de Ruta',
+    label: saving ? 'Guardando…' : isEdit ? 'Guardar Cambios' : 'Crear Hoja de Ruta',
     variant: 'primary',
     type: 'submit',
     form: 'route-sheet-form',
+    disabled: saving,
   })
 
   return (
@@ -149,7 +173,7 @@ export default function RouteSheetFormModal({
       <Modal
         open={open}
         title={isEdit ? 'Editar Hoja de Ruta' : 'Nueva Hoja de Ruta'}
-        onClose={confirmingDelete ? () => {} : onClose}
+        onClose={confirmingDelete || saving ? () => {} : onClose}
         size="lg"
         actions={actions}
       >
@@ -299,6 +323,12 @@ export default function RouteSheetFormModal({
               No se puede eliminar esta Hoja de Ruta ni destildar sus equipos con reporte enviado: se perdería ese historial.
             </p>
           )}
+
+          {errorMessage && (
+            <p role="alert" className="font-body-sm text-body-sm text-error">
+              {errorMessage}
+            </p>
+          )}
         </form>
       </Modal>
 
@@ -306,7 +336,7 @@ export default function RouteSheetFormModal({
         open={confirmingDelete}
         title="Eliminar Hoja de Ruta"
         danger
-        confirmLabel="Eliminar"
+        confirmLabel={deleting ? 'Eliminando…' : 'Eliminar'}
         onCancel={() => setConfirmingDelete(false)}
         onConfirm={handleDelete}
       >
