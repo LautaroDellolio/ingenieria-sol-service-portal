@@ -26,9 +26,7 @@ export default function ValidationPage() {
   }
 
   async function handleApprove() {
-    await approveVisit(selectedVisit.id, profile.id, null, selectedVisit.equipment_id, {
-      isAnnualService: selectedVisit.is_annual_service,
-    })
+    await approveVisit(selectedVisit.id, profile.id, null)
     setSelectedId(null)
     reload()
   }

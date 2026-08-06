@@ -3,7 +3,7 @@ import { VISIT_STATUS } from '../lib/constants'
 import { logVisitEvent } from './visitEvents'
 
 const ROUTE_SHEET_SELECT =
-  '*, vehicles(plate), route_sheet_technicians(profiles(id, full_name)), visits(id, equipment_id, status, submitted_at, service_type, equipment(motor, client_id, clients(name)))'
+  '*, vehicles(plate, name), route_sheet_technicians(profiles(id, full_name)), visits(id, equipment_id, status, submitted_at, service_type, equipment(motor, client_id, clients(name)))'
 
 // Aplana route_sheet_technicians a un array simple technicians = [{ id, full_name }, ...].
 function normalizeRouteSheet(row) {
@@ -73,6 +73,27 @@ export async function createRouteSheetWithVisits({ equipmentIds, serviceType, sc
   return { routeSheet, visits }
 }
 
+// Crea una hoja de ruta nueva por cada fila (equipos + fecha ya resueltos
+// por el llamador, ver ReplicatePlanModal). Secuencial para no disparar
+// insercciones concurrentes contra Supabase. Como no se llama a
+// updateRouteSheetAssignment ni a setRouteSheetTechnicians, las hojas
+// quedan sin tecnico ni vehiculo asignado.
+export async function replicateRouteSheets(rows, createdBy) {
+  const created = []
+  for (const row of rows) {
+    const { routeSheet } = await createRouteSheetWithVisits({
+      equipmentIds: row.equipmentIds,
+      serviceType: row.serviceType,
+      scheduledDate: row.date,
+      descripcion: row.descripcion,
+      visitOccurrence: row.visitOccurrence,
+      createdBy,
+    })
+    created.push(routeSheet)
+  }
+  return created
+}
+
 // Reemplaza el conjunto completo de tecnicos asignados a una hoja de ruta.
 export async function setRouteSheetTechnicians(routeSheetId, technicianIds) {
   const { error: deleteError } = await supabase
@@ -89,18 +110,31 @@ export async function setRouteSheetTechnicians(routeSheetId, technicianIds) {
 // Guardado completo desde el popover de asignacion: tecnicos, vehiculo,
 // fecha y hora de toda la hoja de ruta de una vez.
 export async function updateRouteSheetAssignment(routeSheetId, { technicianIds, vehicleId, scheduledDate, scheduledTimeStart }) {
-  const { data, error } = await supabase
+  // Sin .select().single(): ninguno de los llamadores usa la fila devuelta,
+  // y pedirla de vuelta agrega un round-trip de lectura (sujeto a la policy
+  // de SELECT ademas de la de UPDATE) que puede fallar con 406 sin motivo
+  // real para el caso de uso.
+  const { error } = await supabase
     .from('route_sheets')
     .update({ vehicle_id: vehicleId, scheduled_date: scheduledDate, scheduled_time_start: scheduledTimeStart })
     .eq('id', routeSheetId)
-    .select()
-    .single()
   if (error) throw error
 
   await setRouteSheetTechnicians(routeSheetId, technicianIds ?? [])
   await syncVisitDates(routeSheetId, scheduledDate)
+}
 
-  return data
+// Asigna el mismo tecnico(s) y vehiculo a varias hojas de ruta de una vez
+// (ver BulkAssignModal), sin tocar la fecha/hora que cada una ya tenia.
+export async function bulkAssignRouteSheets(routeSheets, { technicianIds, vehicleId }) {
+  for (const routeSheet of routeSheets) {
+    await updateRouteSheetAssignment(routeSheet.id, {
+      technicianIds,
+      vehicleId,
+      scheduledDate: routeSheet.scheduled_date,
+      scheduledTimeStart: routeSheet.scheduled_time_start,
+    })
+  }
 }
 
 // Reprograma solo la fecha (usado por el arrastre en la vista semana) sin

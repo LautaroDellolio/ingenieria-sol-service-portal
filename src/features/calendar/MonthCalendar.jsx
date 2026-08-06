@@ -1,5 +1,5 @@
 import { toISODateString } from '../../lib/dateUtils'
-import { getRouteSheetColor, VISIT_COLOR_CLASSES } from '../../lib/visitColor'
+import { getRouteSheetColor, getRouteSheetLabel, VISIT_COLOR_CLASSES } from '../../lib/visitColor'
 
 const DAY_LABELS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
 const MAX_VISIBLE_ROUTE_SHEETS = 3
@@ -17,7 +17,7 @@ export default function MonthCalendar({ monthAnchor, weeks, routeSheets, onSelec
 
   return (
     <div className="min-h-full flex flex-col border border-outline-variant rounded-lg overflow-hidden">
-      <div className="shrink-0 grid grid-cols-7 bg-surface-container">
+      <div className="shrink-0 grid grid-cols-[repeat(5,minmax(0,1fr))_repeat(2,minmax(0,0.6fr))] bg-surface-container">
         {DAY_LABELS.map((label) => (
           <div key={label} className="py-xs text-center font-label-sm text-label-sm text-on-surface-variant uppercase">
             {label}
@@ -25,7 +25,7 @@ export default function MonthCalendar({ monthAnchor, weeks, routeSheets, onSelec
         ))}
       </div>
       <div
-        className="flex-1 grid grid-cols-7 gap-px bg-outline-variant"
+        className="flex-1 grid grid-cols-[repeat(5,minmax(0,1fr))_repeat(2,minmax(0,0.6fr))] gap-px bg-outline-variant"
         style={{ gridTemplateRows: `repeat(${weekCount}, minmax(11.2rem, 1fr))` }}
       >
         {weeks.flat().map((day) => {
@@ -58,12 +58,7 @@ export default function MonthCalendar({ monthAnchor, weeks, routeSheets, onSelec
               {dayRouteSheets.length > 0 && (
                 <div className="min-w-0 flex flex-col gap-[0.2rem]">
                   {dayRouteSheets.slice(0, MAX_VISIBLE_ROUTE_SHEETS).map((routeSheet) => {
-                    const routeSheetVisits = routeSheet.visits ?? []
-                    const label = routeSheet.descripcion?.trim()
-                      ? routeSheet.descripcion
-                      : routeSheetVisits.length === 1
-                        ? routeSheetVisits[0].equipment?.motor ?? '—'
-                        : `${routeSheetVisits.length} equipos`
+                    const label = getRouteSheetLabel(routeSheet)
                     return (
                       <span
                         key={routeSheet.id}

@@ -24,6 +24,8 @@ import DayDetailModal from '../../features/calendar/DayDetailModal'
 import UnassignedList from '../../features/calendar/UnassignedList'
 import AssignmentPopover from '../../features/calendar/AssignmentPopover'
 import RouteSheetFormModal from '../../features/calendar/RouteSheetFormModal'
+import ReplicatePlanModal from '../../features/calendar/ReplicatePlanModal'
+import BulkAssignModal from '../../features/calendar/BulkAssignModal'
 import MonthYearPicker from '../../features/calendar/MonthYearPicker'
 import VisitSummaryModal from '../../features/calendar/VisitSummaryModal'
 
@@ -55,6 +57,18 @@ export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState(null)
   // null | { mode: 'create', initialDate } | { mode: 'edit', routeSheet }
   const [formModal, setFormModal] = useState(null)
+  const [replicating, setReplicating] = useState(false)
+  const [bulkAssigning, setBulkAssigning] = useState(false)
+
+  // Solo las hojas del mes realmente visible (rangeRouteSheets en vista Mes
+  // incluye dias de relleno de los meses vecinos que completan la grilla).
+  const currentMonthRouteSheets = useMemo(() => {
+    return (rangeRouteSheets ?? []).filter((routeSheet) => {
+      if (!routeSheet.scheduled_date) return false
+      const date = new Date(`${routeSheet.scheduled_date}T00:00:00`)
+      return date.getFullYear() === monthAnchor.getFullYear() && date.getMonth() === monthAnchor.getMonth()
+    })
+  }, [rangeRouteSheets, monthAnchor])
 
   const selectedDateRouteSheets = useMemo(() => {
     if (!selectedDate) return []
@@ -134,16 +148,28 @@ export default function CalendarPage() {
             </Button>
             <Button variant="secondary-outline" onClick={goToToday}>Hoy</Button>
           </div>
-          <Button variant="primary" icon="add" onClick={() => setFormModal({ mode: 'create', initialDate: null })}>
-            Nueva Hoja de Ruta
-          </Button>
+          <div className="flex flex-wrap items-center gap-sm">
+            {viewMode === 'mes' && (
+              <Button
+                variant="secondary-outline"
+                icon="content_copy"
+                disabled={currentMonthRouteSheets.length === 0}
+                onClick={() => setReplicating(true)}
+              >
+                Replicar Planificación al Mes Siguiente
+              </Button>
+            )}
+            <Button variant="primary" icon="add" onClick={() => setFormModal({ mode: 'create', initialDate: null })}>
+              Nueva Hoja de Ruta
+            </Button>
+          </div>
         </div>
       </div>
 
       <div className="shrink-0 flex flex-wrap gap-md mb-md">
         {Object.entries(VISIT_COLOR_LABELS).map(([color, label]) => (
           <div key={color} className="flex items-center gap-xs">
-            <span className={`w-sm h-sm rounded-full border ${VISIT_COLOR_CLASSES[color]}`} />
+            <span className={`w-md h-md rounded-full border ${VISIT_COLOR_CLASSES[color]}`} />
             <span className="font-label-sm text-label-sm text-on-surface-variant">{label}</span>
           </div>
         ))}
@@ -151,7 +177,11 @@ export default function CalendarPage() {
 
       <div className="flex flex-col lg:flex-row gap-md flex-1 lg:min-h-0">
         <aside className="order-2 lg:order-1 lg:w-[28rem] shrink-0 max-h-[24rem] lg:max-h-none min-h-0 overflow-hidden lg:pr-xs">
-          <UnassignedList routeSheets={sidebarRouteSheets} onSelectRouteSheet={setSelectedRouteSheet} />
+          <UnassignedList
+            routeSheets={sidebarRouteSheets}
+            onSelectRouteSheet={setSelectedRouteSheet}
+            onOpenBulkAssign={() => setBulkAssigning(true)}
+          />
         </aside>
 
         <div className="order-1 lg:order-2 flex-1 min-w-0 flex flex-col lg:min-h-0">
@@ -237,6 +267,29 @@ export default function CalendarPage() {
         }}
         onDeleted={() => {
           setFormModal(null)
+          reloadAll()
+        }}
+      />
+
+      <ReplicatePlanModal
+        open={replicating}
+        routeSheets={currentMonthRouteSheets}
+        createdBy={profile.id}
+        onClose={() => setReplicating(false)}
+        onReplicated={() => {
+          setReplicating(false)
+          reloadAll()
+        }}
+      />
+
+      <BulkAssignModal
+        open={bulkAssigning}
+        routeSheets={sidebarRouteSheets}
+        technicians={technicians}
+        vehicles={vehicles}
+        onClose={() => setBulkAssigning(false)}
+        onSaved={() => {
+          setBulkAssigning(false)
           reloadAll()
         }}
       />

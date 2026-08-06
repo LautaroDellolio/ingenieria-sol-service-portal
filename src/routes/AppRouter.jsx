@@ -11,6 +11,7 @@ import ProfilePage from '../pages/ProfilePage'
 import AdminLayout from '../components/layout/AdminLayout'
 import DashboardPage from '../pages/admin/DashboardPage'
 import EquipmentPage from '../pages/admin/EquipmentPage'
+import ClientsPage from '../pages/admin/ClientsPage'
 import CalendarPage from '../pages/admin/CalendarPage'
 import ReceptionPage from '../pages/admin/ReceptionPage'
 import SummaryPage from '../pages/admin/SummaryPage'
@@ -50,6 +51,7 @@ export default function AppRouter() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<DashboardPage />} />
             <Route path="equipos" element={<EquipmentPage />} />
+            <Route path="clientes" element={<ClientsPage />} />
             <Route path="calendario" element={<CalendarPage />} />
             <Route path="recepcion" element={<ReceptionPage />} />
             <Route path="resumen" element={<SummaryPage />} />
@@ -72,6 +74,7 @@ export default function AppRouter() {
             <Route index element={<DashboardPage />} />
             <Route path="validacion" element={<ValidationPage />} />
             <Route path="equipos" element={<EquipmentPage />} />
+            <Route path="clientes" element={<ClientsPage />} />
             <Route path="calendario" element={<CalendarPage />} />
             <Route path="personal" element={<StaffListPage />} />
             <Route path="personal/nuevo" element={<StaffNewPage />} />

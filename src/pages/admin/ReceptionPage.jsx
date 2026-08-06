@@ -21,7 +21,9 @@ export default function ReceptionPage() {
   const { data: events } = useVisitEvents(selectedId)
 
   async function handleMarkReceived() {
-    await markVisitReceived(selectedId, profile.id)
+    await markVisitReceived(selectedId, profile.id, selectedVisit.equipment_id, parameters, {
+      isAnnualService: selectedVisit.is_annual_service,
+    })
     setSelectedId(null)
     reload()
     reloadReceived()

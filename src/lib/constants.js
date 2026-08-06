@@ -94,6 +94,9 @@ export const CONDITION_STATUS_LABELS = {
 // Cantidad de dias antes del vencimiento del service anual para mostrar la alerta.
 export const ANNUAL_SERVICE_ALERT_WINDOW_DAYS = 30
 
+// Nivel de combustible (%) en o por debajo del cual se muestra una alerta.
+export const FUEL_ALERT_THRESHOLD_PERCENTAGE = 30
+
 // Categorias del checklist tecnico, segun el diseno de "Informe de Visita de
 // Servicio" (Desing/stitch_ingenieria_sol_service_portal/stitch_ingenieria_sol_service_portal (1)).
 export const CHECKLIST_CATEGORY = {

@@ -32,6 +32,30 @@ export function getRouteSheetColor(routeSheet, today = new Date()) {
   return 'blanco'
 }
 
+// Titulo a mostrar para una hoja de ruta sin "Descripcion" cargada: antes
+// caia en "N equipos" (poco representativo), ahora agrupa por cliente para
+// que se pueda reconocer de un vistazo aunque el administrativo nunca haya
+// escrito una descripcion (ej. al asignar varias hojas de ruta juntas).
+export function getRouteSheetLabel(routeSheet) {
+  if (routeSheet.descripcion?.trim()) return routeSheet.descripcion
+
+  const visits = routeSheet.visits ?? []
+  if (visits.length === 0) return 'Sin equipos'
+  if (visits.length === 1) return visits[0].equipment?.motor ?? '—'
+
+  const clientCounts = new Map()
+  for (const visit of visits) {
+    const name = visit.equipment?.clients?.name
+    if (!name) continue
+    clientCounts.set(name, (clientCounts.get(name) ?? 0) + 1)
+  }
+  if (clientCounts.size === 0) return `${visits.length} equipos`
+
+  return Array.from(clientCounts.entries())
+    .map(([name, count]) => (count > 1 ? `${name} (${count})` : name))
+    .join(', ')
+}
+
 export const VISIT_COLOR_CLASSES = {
   blanco: 'bg-surface-container-lowest border-outline-variant',
   amarillo: 'bg-warning-container border-warning',

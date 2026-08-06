@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useEquipment } from '../../hooks/useEquipment'
 import { useAnnualServiceAlerts } from '../../hooks/useAnnualServiceAlerts'
+import { useFuelAlerts } from '../../hooks/useFuelAlerts'
 import { useVisitsThisMonth } from '../../hooks/useVisits'
 import { useRouteSheetsInRange } from '../../hooks/useRouteSheets'
 import { useTechnicians } from '../../hooks/useTechnicians'
@@ -16,6 +17,7 @@ import TechnicianRouteSummaryList from '../../features/dashboard/TechnicianRoute
 import TechnicianRouteSheetsModal from '../../features/dashboard/TechnicianRouteSheetsModal'
 import CompletedVisitsModal from '../../features/dashboard/CompletedVisitsModal'
 import EquipmentHistoryPanel from '../../features/equipmentInventory/EquipmentHistoryPanel'
+import FuelAlerts from '../../features/dashboard/FuelAlerts'
 import VisitSummaryModal from '../../features/calendar/VisitSummaryModal'
 import Spinner from '../../components/ui/Spinner'
 
@@ -24,6 +26,7 @@ export default function DashboardPage() {
   const navigate = useNavigate()
   const { equipment, loading: equipmentLoading, reload: reloadEquipment } = useEquipment()
   const alerts = useAnnualServiceAlerts(equipment)
+  const fuelAlerts = useFuelAlerts(equipment)
   const { data: visitsThisMonth, loading: visitsLoading } = useVisitsThisMonth()
   const now = new Date()
   const { data: routeSheetsThisMonth, loading: routeSheetsLoading } = useRouteSheetsInRange(
@@ -58,7 +61,7 @@ export default function DashboardPage() {
         Estado general de los equipos y las visitas planificadas para este mes.
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-md mb-md">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-md mb-md">
         <KpiCard icon="precision_manufacturing" label="Grupos Activos" value={activeEquipmentCount} sublabel={`${equipment.length} equipos en total`} />
         <KpiCard
           icon="fact_check"
@@ -68,17 +71,18 @@ export default function DashboardPage() {
           onClick={() => setShowCompletedVisits(true)}
         />
         <KpiCard icon="warning" label="Alertas de Service Anual" value={alertCount} sublabel="Vencidas o próximas a vencer" />
+        <KpiCard icon="local_gas_station" label="Alertas de Combustible" value={fuelAlerts.length} sublabel="Equipos con ≤ 30% de combustible" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-md">
-        <div className="md:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
+        <div className="md:col-span-3 bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
           <h2 className="font-label-md text-label-md text-on-surface-variant uppercase p-md border-b border-outline-variant">
             Actividad Reciente
           </h2>
           <RecentActivityFeed events={recentEvents} onSelectEvent={(visitId) => navigate(`${ROLE_HOME_PATH[profile.role]}/visita/${visitId}`)} />
         </div>
 
-        <div className="md:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
+        <div className="md:col-span-3 bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
           <h2 className="font-label-md text-label-md text-on-surface-variant uppercase p-md border-b border-outline-variant">
             Hojas de Ruta por Técnico
           </h2>
@@ -89,11 +93,18 @@ export default function DashboardPage() {
           />
         </div>
 
-        <div className="md:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
+        <div className="md:col-span-3 bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
           <h2 className="font-label-md text-label-md text-on-surface-variant uppercase p-md border-b border-outline-variant">
             Alertas de Service Anual
           </h2>
           <AnnualServiceAlerts equipment={equipment} alerts={alerts} onSelectEquipment={setHistoryEquipment} />
+        </div>
+
+        <div className="md:col-span-3 bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
+          <h2 className="font-label-md text-label-md text-on-surface-variant uppercase p-md border-b border-outline-variant">
+            Alertas de Combustible
+          </h2>
+          <FuelAlerts equipment={fuelAlerts} onSelectEquipment={setHistoryEquipment} />
         </div>
       </div>
 

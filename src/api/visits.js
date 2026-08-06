@@ -143,30 +143,40 @@ export async function submitVisitForReview(visitId, formSnapshot, actorId) {
   await logVisitEvent(visitId, 'enviada', actorId)
 }
 
-export async function markVisitReceived(visitId, receivedBy) {
-  const { error } = await supabase
-    .from('visits')
-    .update({ received_by: receivedBy, received_at: new Date().toISOString() })
-    .eq('id', visitId)
-  if (error) throw error
-  await logVisitEvent(visitId, 'recibida', receivedBy)
-}
-
-export async function approveVisit(visitId, reviewedBy, reviewNotes, equipmentId, { isAnnualService } = {}) {
+// Al recibir la visita se vuelca a la ficha del equipo lo que el tecnico
+// releva en terreno (nivel de combustible, horas de uso, fecha del
+// service), para que "Equipos" refleje el dato apenas el administrativo
+// confirma la recepcion, sin esperar a la aprobacion del supervisor.
+export async function markVisitReceived(visitId, receivedBy, equipmentId, parameters, { isAnnualService } = {}) {
   const nowIso = new Date().toISOString()
   const { error } = await supabase
     .from('visits')
-    .update({ status: VISIT_STATUS.APROBADA, reviewed_by: reviewedBy, reviewed_at: nowIso, review_notes: reviewNotes })
+    .update({ received_by: receivedBy, received_at: nowIso })
     .eq('id', visitId)
   if (error) throw error
 
+  const findValue = (metricKey) => (parameters ?? []).find((parameter) => parameter.metric_key === metricKey)?.value
+  const fuelPercentage = findValue('nivel_combustible')
+  const hoursOfUse = findValue('horas_operacion')
+
   const today = nowIso.slice(0, 10)
   const equipmentChanges = { last_service_date: today }
+  if (fuelPercentage != null) equipmentChanges.fuel_percentage = fuelPercentage
+  if (hoursOfUse != null) equipmentChanges.hours_of_use = hoursOfUse
   if (isAnnualService) equipmentChanges.last_annual_service_date = today
 
   const { error: equipmentError } = await supabase.from('equipment').update(equipmentChanges).eq('id', equipmentId)
   if (equipmentError) throw equipmentError
 
+  await logVisitEvent(visitId, 'recibida', receivedBy)
+}
+
+export async function approveVisit(visitId, reviewedBy, reviewNotes) {
+  const { error } = await supabase
+    .from('visits')
+    .update({ status: VISIT_STATUS.APROBADA, reviewed_by: reviewedBy, reviewed_at: new Date().toISOString(), review_notes: reviewNotes })
+    .eq('id', visitId)
+  if (error) throw error
   await logVisitEvent(visitId, 'aprobada', reviewedBy, reviewNotes)
 }
 

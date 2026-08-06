@@ -54,6 +54,19 @@ export function formatDate(dateInput) {
   return date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
+const WEEKDAY_NAMES = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+const MONTH_NAMES = [
+  'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
+]
+
+// Ej: "Lunes 3 de Agosto del 2026" (titular del detalle del dia).
+export function formatFullDate(dateInput) {
+  if (!dateInput) return '—'
+  const date = new Date(dateInput)
+  return `${WEEKDAY_NAMES[date.getDay()]} ${date.getDate()} de ${MONTH_NAMES[date.getMonth()]} del ${date.getFullYear()}`
+}
+
 export function formatDateTime(dateInput) {
   if (!dateInput) return '—'
   const date = new Date(dateInput)
@@ -97,6 +110,42 @@ export function endOfMonth(date) {
 
 export function addMonths(date, months) {
   return new Date(date.getFullYear(), date.getMonth() + months, 1)
+}
+
+export function isWeekend(date) {
+  const day = date.getDay()
+  return day === 0 || day === 6
+}
+
+// Cantidad de dias habiles (lunes a viernes) desde el 1 del mes hasta la
+// fecha dada, inclusive (1-indexado). Ej: si el mes empieza sabado, el
+// primer lunes es el "dia habil 1".
+export function businessDayOrdinalOfMonth(date) {
+  let ordinal = 0
+  let cursor = startOfMonth(date)
+  while (cursor <= date) {
+    if (!isWeekend(cursor)) ordinal += 1
+    cursor = addDays(cursor, 1)
+  }
+  return ordinal
+}
+
+// N-esimo dia habil del mes de "monthAnchor" (1-indexado). Si ese mes no
+// tiene tantos dias habiles, devuelve su ultimo dia habil.
+export function nthBusinessDayOfMonth(monthAnchor, ordinal) {
+  const end = endOfMonth(monthAnchor)
+  let cursor = startOfMonth(monthAnchor)
+  let count = 0
+  let lastBusinessDay = cursor
+  while (cursor <= end) {
+    if (!isWeekend(cursor)) {
+      count += 1
+      lastBusinessDay = cursor
+      if (count === ordinal) return cursor
+    }
+    cursor = addDays(cursor, 1)
+  }
+  return lastBusinessDay
 }
 
 // Grilla de semanas completas (Lunes a Domingo) que cubre todo el mes,

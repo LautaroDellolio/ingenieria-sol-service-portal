@@ -1,6 +1,6 @@
 # MODIFICACIONES.md
 
-	(CORREGIDA)-agregar cant de aceite a la ficha tecnica del equipo (Justo despues de cant de combustible)
+	<!-- (CORREGIDA)-agregar cant de aceite a la ficha tecnica del equipo (Justo despues de cant de combustible)
 	(CORREGIDA)-El supervisor puede eliminar clientes
 	(CORREGIDA)-Agregar campo "Descripción" en el formulario "Nueva hoja de ruta" y que ese sea el texto que se visualice en el calendario(esto quedo bien pero mueve el input arriba, justo debajo del titulo y agranda el font size general de ese formulario)
 	(CORREGIDA)- y si tipo de visita = mantenimiento preventivo agregar select con "Primera visita" y "Segunda visita"
@@ -29,4 +29,29 @@
 		(CORREGIDA)-Hay un pequeño bug al iniciar sesión debo presionar dos veces el boton de iniciar(Sigue haciendo el mismo bug)
 		
 		(CORREGIDA)-El supervisor puede editar o eliminar una visita sin reporte del tecnico
-		(CORREGIDA)-Agregar un boton "Eliminar" en el detalle de equipo (invetario-equipo-editar) 
+		(CORREGIDA)-Agregar un boton "Eliminar" en el detalle de equipo (invetario-equipo-editar)  -->
+
+		Realiza esta nueva ronda de modificaiones:
+
+			(CORREGIDA)-Incluir en la pantalla de panel de control alertas de combustible cuando esté este al 30% o menos.
+			(CORREGIDA)-En la vista mensual o semanal quita relevancia a los sábados y domingo ya que esos días no se programas visitas pero no los elimines del caledario solo hazlos mas pequeños y reparte ese espacio en los días hábiles
+			-Agregar una funcion para replicar una planificacion para el mes siguiente. Asegurando que siempre se asignen visitas a los dias habiles.
+			(CORREGIDA)-Ajusta los estilos del cuadro de referencia de colores del calendario, agranda un poco el tamaño del circle de referencia.
+			(CORREGIDA)-Agrega en el asaide debajo de "Equipos" un vista de "Clientes" que contenga:
+				-Listado de clientes con su ficha de datos
+				-Equipos(que al hacer click abra el mismo detalle que usa "Equipos")
+			-En el listado de mi plan mensual que se agrupen por hospitales(puede ser una vista similar a la que tambien utiliza "Equipos)
+
+			Correcciones:
+				(CORREGIDA)1-En la funcion replicar planificación que aplique la siguiente logica, sin alterar el orden se orgnicen desde el primer dia habil en adelante salteando sabados y domingos
+				(CORREGIDA)2-El listado de plan mensual se agrupe por hospital pero se ordene por fecha desde la mas proxima
+
+		Una funcion mas.
+			El titular "Hojas de Ruta sin Asignar" quiero sin modificar ese listado tambien sea un boton que me lleve a una nueva vista, puede seguir siendo en formato de pop up para que el usuario tenga la opcion de seleccionar muchas visitas y asignarles tecnicos y vehiculos
+
+		correccion
+			-agrega un over a hojas de ruta sin asignar
+			- correccion estetica:
+				-las lista de tecnicos solo muestre hasta 5 y luego tenga scroll
+				-vehiculos siga siedo menu desplegable
+				-hoja de rutas ocupe el resto del espacio disponible

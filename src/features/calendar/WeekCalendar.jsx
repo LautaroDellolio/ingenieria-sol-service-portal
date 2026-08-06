@@ -17,7 +17,7 @@ export default function WeekCalendar({ weekStart, routeSheets, onSelectRouteShee
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-7 lg:grid-rows-[1fr] gap-sm lg:h-full">
+    <div className="grid grid-cols-1 md:grid-cols-[repeat(5,minmax(0,1fr))_repeat(2,minmax(0,0.6fr))] lg:grid-rows-[1fr] gap-sm lg:h-full">
       {days.map((day) => {
         const dateStr = toISODateString(day)
         const dayRouteSheets = routeSheets
