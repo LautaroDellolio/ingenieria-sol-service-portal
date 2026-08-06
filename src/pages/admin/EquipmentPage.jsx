@@ -3,7 +3,6 @@ import { useAuth } from '../../context/AuthContext'
 import { useEquipment } from '../../hooks/useEquipment'
 import { useClients } from '../../hooks/useClients'
 import { createEquipment } from '../../api/equipment'
-import { createClient } from '../../api/clients'
 import Button from '../../components/ui/Button'
 import Modal from '../../components/ui/Modal'
 import FormSection from '../../components/ui/FormSection'
@@ -13,7 +12,6 @@ import ClientGroupRow from '../../features/equipmentInventory/ClientGroupRow'
 import EquipmentHistoryPanel from '../../features/equipmentInventory/EquipmentHistoryPanel'
 import { CONDITION_STATUS, CONDITION_STATUS_LABELS, FUEL_TYPE, FUEL_TYPE_LABELS } from '../../lib/constants'
 
-const EMPTY_CLIENT_FORM = { name: '', contact_name: '', contact_phone: '', address: '', city: '' }
 const EMPTY_EQUIPMENT_FORM = {
   client_id: '',
   motor: '',
@@ -38,12 +36,8 @@ export default function EquipmentPage() {
   const { clients, loading: clientsLoading, reload: reloadClients } = useClients()
 
   const [historyEquipment, setHistoryEquipment] = useState(null)
-  const [showNewClient, setShowNewClient] = useState(false)
   const [showNewEquipment, setShowNewEquipment] = useState(false)
-  const [clientForm, setClientForm] = useState(EMPTY_CLIENT_FORM)
   const [equipmentForm, setEquipmentForm] = useState(EMPTY_EQUIPMENT_FORM)
-  const [savingClient, setSavingClient] = useState(false)
-  const [clientError, setClientError] = useState('')
   const [savingEquipment, setSavingEquipment] = useState(false)
   const [equipmentError, setEquipmentError] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
@@ -90,28 +84,6 @@ export default function EquipmentPage() {
     )
   }
 
-  async function handleCreateClient(event) {
-    event.preventDefault()
-    setSavingClient(true)
-    setClientError('')
-    try {
-      await createClient({ ...clientForm, created_by: profile.id })
-      setClientForm(EMPTY_CLIENT_FORM)
-      setShowNewClient(false)
-      reloadClients()
-    } catch (error) {
-      setClientError(error.message || 'No se pudo guardar el cliente.')
-    } finally {
-      setSavingClient(false)
-    }
-  }
-
-  function closeNewClient() {
-    setShowNewClient(false)
-    setClientForm(EMPTY_CLIENT_FORM)
-    setClientError('')
-  }
-
   async function handleCreateEquipment(event) {
     event.preventDefault()
     setSavingEquipment(true)
@@ -147,14 +119,9 @@ export default function EquipmentPage() {
         <div>
           <h1 className="font-headline-lg text-headline-lg text-on-surface mb-xs">Inventario de Equipos</h1>
         </div>
-        <div className="flex gap-sm">
-          <Button variant="secondary-outline" icon="person_add" onClick={() => setShowNewClient(true)}>
-            Nuevo Cliente
-          </Button>
-          <Button variant="primary" icon="add" onClick={() => setShowNewEquipment(true)}>
-            Nuevo Equipo
-          </Button>
-        </div>
+        <Button variant="primary" icon="add" onClick={() => setShowNewEquipment(true)}>
+          Nuevo Equipo
+        </Button>
       </div>
 
       <Field
@@ -214,34 +181,6 @@ export default function EquipmentPage() {
         }}
         onDeleted={reloadEquipment}
       />
-
-      <Modal
-        open={showNewClient}
-        title="Nuevo Cliente"
-        onClose={savingClient ? () => {} : closeNewClient}
-        size="lg"
-        actions={[
-          { label: 'Cancelar', variant: 'secondary-outline', onClick: closeNewClient, disabled: savingClient },
-          { label: savingClient ? 'Guardando…' : 'Guardar Cliente', variant: 'primary', type: 'submit', form: 'new-client-form', disabled: savingClient },
-        ]}
-      >
-        <form id="new-client-form" onSubmit={handleCreateClient} className="space-y-md">
-          <FormSection title="Datos del Cliente">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
-              <Field label="Cliente" value={clientForm.name} onChange={(v) => setClientForm((f) => ({ ...f, name: v }))} required className="md:col-span-2" />
-              <Field label="Contacto" value={clientForm.contact_name} onChange={(v) => setClientForm((f) => ({ ...f, contact_name: v }))} />
-              <Field label="Teléfono" value={clientForm.contact_phone} onChange={(v) => setClientForm((f) => ({ ...f, contact_phone: v }))} />
-              <Field label="Dirección" value={clientForm.address} onChange={(v) => setClientForm((f) => ({ ...f, address: v }))} />
-              <Field label="Ciudad" value={clientForm.city} onChange={(v) => setClientForm((f) => ({ ...f, city: v }))} />
-            </div>
-          </FormSection>
-          {clientError && (
-            <p role="alert" className="font-body-sm text-body-sm text-error">
-              {clientError}
-            </p>
-          )}
-        </form>
-      </Modal>
 
       <Modal
         open={showNewEquipment}
