@@ -31,7 +31,7 @@ export async function listVisitsForTechnician(technicianId) {
   const { data, error } = await supabase
     .from('visits')
     .select(
-      `*, equipment(internal_code, motor, generador, client_id, clients(name)), route_sheets!inner(id, vehicle_id, scheduled_time_start, vehicles(plate), route_sheet_technicians!inner(profiles(id, full_name)))`
+      `*, equipment(internal_code, motor, generador, client_id, fuel_capacity, clients(name)), route_sheets!inner(id, vehicle_id, scheduled_time_start, vehicles(plate), route_sheet_technicians!inner(profiles(id, full_name)))`
     )
     .eq('route_sheets.route_sheet_technicians.technician_id', technicianId)
     .order('scheduled_date', { ascending: true })
@@ -85,6 +85,15 @@ export async function listVisitsThisMonth() {
   const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10)
   const end = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().slice(0, 10)
   return listVisitsInRange(start, end)
+}
+
+// Trae los parametros de varias visitas de una sola vez (evita N+1 queries
+// al descargar la hoja de ruta completa para uso offline).
+export async function listVisitParametersForVisits(visitIds) {
+  if (!visitIds.length) return []
+  const { data, error } = await supabase.from('visit_parameters').select('*').in('visit_id', visitIds)
+  if (error) throw error
+  return data
 }
 
 function signatureColumns({

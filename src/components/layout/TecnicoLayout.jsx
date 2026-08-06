@@ -1,4 +1,5 @@
 import RoleLayoutShell from './RoleLayoutShell'
+import SyncStatusBar from './SyncStatusBar'
 
 const NAV_ITEMS = [
   { to: '/tecnico', end: true, icon: 'calendar_month', label: 'Mi Plan' },
@@ -6,5 +7,5 @@ const NAV_ITEMS = [
 ]
 
 export default function TecnicoLayout() {
-  return <RoleLayoutShell navItems={NAV_ITEMS} title="Ingeniería Sol · Técnico" />
+  return <RoleLayoutShell navItems={NAV_ITEMS} title="Ingeniería Sol · Técnico" statusBar={<SyncStatusBar />} />
 }

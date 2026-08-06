@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useVisitDetail, useVisitParameters, useVisitEvents } from '../../hooks/useVisits'
-import { saveVisitDraft, submitVisitForReview, saveVisitParameters } from '../../api/visits'
+import { saveVisitOrQueue, getPendingWriteForVisit } from '../../offline/syncQueue'
 import {
   CHECKLIST_CATEGORY,
   CHECKLIST_ITEM_STATUS,
@@ -40,26 +40,80 @@ export default function VisitFormPage() {
   const [clientSignatureAt, setClientSignatureAt] = useState(null)
   const [clientSignatureName, setClientSignatureName] = useState('')
   const [saving, setSaving] = useState(false)
+  const [saveStatus, setSaveStatus] = useState(null)
+  const [saveError, setSaveError] = useState(null)
   const [initialized, setInitialized] = useState(false)
+  // undefined = todavia no se reviso IndexedDB; null = no hay nada pendiente.
+  const [pendingWrite, setPendingWrite] = useState(undefined)
 
   useEffect(() => {
-    if (!visit || initialized) return
-    setServiceType(visit.service_type ?? SERVICE_TYPE.PREVENTIVO)
+    let cancelled = false
+    if (visitId) {
+      getPendingWriteForVisit(visitId).then((entry) => {
+        if (!cancelled) setPendingWrite(entry ?? null)
+      })
+    }
+    return () => {
+      cancelled = true
+    }
+  }, [visitId])
+
+  function applyFormValues({
+    serviceType: nextServiceType,
+    checklistData: nextChecklistData,
+    notes: nextNotes,
+    faultReported: nextFaultReported,
+    faultDescription: nextFaultDescription,
+    technicianSignature: nextTechnicianSignature,
+    technicianSignatureAt: nextTechnicianSignatureAt,
+    technicianSignatureName: nextTechnicianSignatureName,
+    clientSignature: nextClientSignature,
+    clientSignatureAt: nextClientSignatureAt,
+    clientSignatureName: nextClientSignatureName,
+  }) {
+    setServiceType(nextServiceType ?? SERVICE_TYPE.PREVENTIVO)
     const defaultChecklistData = Object.fromEntries(
       VISIT_CHECKLIST_ITEMS.map((item) => [item.key, CHECKLIST_ITEM_STATUS.OK])
     )
-    setChecklistData({ ...defaultChecklistData, ...(visit.checklist_data ?? {}) })
-    setNotes(visit.notes ?? '')
-    setFaultReported(visit.fault_reported ?? false)
-    setFaultDescription(visit.fault_description ?? '')
-    setTechnicianSignature(visit.technician_signature ?? null)
-    setTechnicianSignatureAt(visit.technician_signature_at ?? null)
-    setTechnicianSignatureName(visit.technician_signature_name ?? '')
-    setClientSignature(visit.client_signature ?? null)
-    setClientSignatureAt(visit.client_signature_at ?? null)
-    setClientSignatureName(visit.client_signature_name ?? '')
+    setChecklistData({ ...defaultChecklistData, ...(nextChecklistData ?? {}) })
+    setNotes(nextNotes ?? '')
+    setFaultReported(nextFaultReported ?? false)
+    setFaultDescription(nextFaultDescription ?? '')
+    setTechnicianSignature(nextTechnicianSignature ?? null)
+    setTechnicianSignatureAt(nextTechnicianSignatureAt ?? null)
+    setTechnicianSignatureName(nextTechnicianSignatureName ?? '')
+    setClientSignature(nextClientSignature ?? null)
+    setClientSignatureAt(nextClientSignatureAt ?? null)
+    setClientSignatureName(nextClientSignatureName ?? '')
+  }
+
+  // Si hay una escritura encolada para esta visita, es mas nueva que
+  // cualquier dato del servidor (o del cache de lectura) y siempre gana al
+  // sembrar el formulario.
+  useEffect(() => {
+    if (initialized || pendingWrite === undefined) return
+    if (pendingWrite) {
+      applyFormValues(pendingWrite.formSnapshot)
+      setParameterValues(pendingWrite.parameterValues ?? {})
+      setInitialized(true)
+      return
+    }
+    if (!visit) return
+    applyFormValues({
+      serviceType: visit.service_type,
+      checklistData: visit.checklist_data,
+      notes: visit.notes,
+      faultReported: visit.fault_reported,
+      faultDescription: visit.fault_description,
+      technicianSignature: visit.technician_signature,
+      technicianSignatureAt: visit.technician_signature_at,
+      technicianSignatureName: visit.technician_signature_name,
+      clientSignature: visit.client_signature,
+      clientSignatureAt: visit.client_signature_at,
+      clientSignatureName: visit.client_signature_name,
+    })
     setInitialized(true)
-  }, [visit, initialized])
+  }, [visit, pendingWrite, initialized])
 
   function handleChangeTechnicianSignature(dataUrl) {
     setTechnicianSignature(dataUrl)
@@ -83,13 +137,16 @@ export default function VisitFormPage() {
   }
 
   useEffect(() => {
-    if (!existingParameters) return
+    // Si hay una escritura pendiente, applyFormValues + setParameterValues
+    // de arriba ya dejaron el formulario en el estado correcto; no
+    // corresponde mezclar valores del servidor/cache encima.
+    if (!existingParameters || pendingWrite) return
     const values = {}
     for (const parameter of existingParameters) values[parameter.metric_key] = String(parameter.value)
     setParameterValues((current) => ({ ...values, ...current }))
-  }, [existingParameters])
+  }, [existingParameters, pendingWrite])
 
-  if (visitLoading || !visit) return <Spinner label="Cargando visita…" />
+  if (visitLoading || !visit || pendingWrite === undefined) return <Spinner label="Cargando visita…" />
 
   if (!TECHNICIAN_EDITABLE_STATUSES.includes(visit.status)) {
     return (
@@ -121,9 +178,14 @@ export default function VisitFormPage() {
 
   async function handleSaveDraft() {
     setSaving(true)
+    setSaveStatus(null)
+    setSaveError(null)
     try {
-      await saveVisitParameters(visitId, parameterValues)
-      await saveVisitDraft(visitId, formSnapshot, profile.id)
+      const result = await saveVisitOrQueue({ visitId, kind: 'draft', formSnapshot, parameterValues, actorId: profile.id })
+      setSaveStatus(result.queued ? 'saved-offline' : 'saved-online')
+    } catch (error) {
+      setSaveStatus('error')
+      setSaveError(error)
     } finally {
       setSaving(false)
     }
@@ -132,10 +194,14 @@ export default function VisitFormPage() {
   async function handleSubmit(event) {
     event.preventDefault()
     setSaving(true)
+    setSaveStatus(null)
+    setSaveError(null)
     try {
-      await saveVisitParameters(visitId, parameterValues)
-      await submitVisitForReview(visitId, formSnapshot, profile.id)
+      await saveVisitOrQueue({ visitId, kind: 'submit', formSnapshot, parameterValues, actorId: profile.id })
       navigate('/tecnico', { replace: true })
+    } catch (error) {
+      setSaveStatus('error')
+      setSaveError(error)
     } finally {
       setSaving(false)
     }
@@ -184,13 +250,28 @@ export default function VisitFormPage() {
           onChangeClientSignatureName={setClientSignatureName}
         />
 
-        <div className="flex justify-end gap-sm">
-          <Button type="button" variant="secondary-outline" disabled={saving} onClick={handleSaveDraft}>
-            Guardar Borrador
-          </Button>
-          <Button type="submit" variant="primary" disabled={saving}>
-            Finalizar Reporte
-          </Button>
+        <div className="flex flex-col items-end gap-sm">
+          {saveStatus === 'saved-online' && (
+            <p className="font-body-sm text-body-sm text-on-surface-variant">Borrador guardado.</p>
+          )}
+          {saveStatus === 'saved-offline' && (
+            <p className="font-body-sm text-body-sm text-warning">
+              Guardado en el dispositivo. Se enviará cuando vuelvas a tener conexión.
+            </p>
+          )}
+          {saveStatus === 'error' && (
+            <p className="font-body-sm text-body-sm text-error">
+              No se pudo guardar: {saveError?.message ?? 'error desconocido'}.
+            </p>
+          )}
+          <div className="flex justify-end gap-sm">
+            <Button type="button" variant="secondary-outline" disabled={saving} onClick={handleSaveDraft}>
+              Guardar Borrador
+            </Button>
+            <Button type="submit" variant="primary" disabled={saving}>
+              Finalizar Reporte
+            </Button>
+          </div>
         </div>
       </form>
     </div>

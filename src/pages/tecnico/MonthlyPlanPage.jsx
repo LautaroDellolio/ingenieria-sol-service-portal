@@ -1,12 +1,22 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useTechnicianVisits } from '../../hooks/useVisits'
+import { listVisitsForTechnician, listVisitParametersForVisits } from '../../api/visits'
 import { SERVICE_TYPE_LABELS, VISIT_STATUS, VISIT_STATUS_LABELS } from '../../lib/constants'
-import { formatFullDate } from '../../lib/dateUtils'
+import { formatFullDate, formatDateTime } from '../../lib/dateUtils'
+import { useConnectivityStatus, usePendingVisitIds } from '../../offline/useOfflineSync'
+import {
+  saveRouteSheetToCache,
+  saveAllVisitParametersToCache,
+  recordRouteSheetDownload,
+  getLastDownloadInfo,
+  getDownloadedVisitIds,
+} from '../../offline/routeSheetCache'
 import StatusChip from '../../components/ui/StatusChip'
 import EmptyState from '../../components/ui/EmptyState'
 import Spinner from '../../components/ui/Spinner'
+import Button from '../../components/ui/Button'
 
 const STATUS_TONE = {
   [VISIT_STATUS.APROBADA]: 'success',
@@ -50,64 +60,81 @@ function groupVisitsByDateAndClient(visits) {
     }))
 }
 
-function DateGroupList({ section, dateGroups, expandedGroupKeys, onToggleGroup, onSelectVisit }) {
+function DateGroupList({ section, dateGroups, expandedGroupKeys, onToggleGroup, onSelectVisit, pendingVisitIds, downloadedVisitIds }) {
   return (
     <div className="space-y-lg">
-      {dateGroups.map(({ dateKey, clientGroups }) => (
-        <div key={dateKey}>
-          <h3 className="font-label-md text-label-md text-on-surface uppercase tracking-wide mb-sm pb-xs border-b border-outline-variant">
-            {dateKey === 'sin-fecha' ? 'Sin fecha asignada' : formatFullDate(dateKey)}
-          </h3>
-          <div className="space-y-sm">
-            {clientGroups.map((group) => {
-              const key = clientGroupKey(section, dateKey, group.clientId)
-              const expanded = expandedGroupKeys.has(key)
-              return (
-                <div key={key} className="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-lowest">
-                  <button
-                    type="button"
-                    onClick={() => onToggleGroup(key)}
-                    className="w-full flex items-center gap-sm py-sm px-md bg-secondary hover:bg-secondary-container transition-colors text-left"
-                  >
-                    <span className="material-symbols-outlined text-[2rem] text-secondary-fixed-dim">
-                      {expanded ? 'expand_more' : 'chevron_right'}
-                    </span>
-                    <span className="flex-1 font-label-md text-label-md text-on-secondary">{group.clientName}</span>
-                    <span className="font-label-sm text-label-sm text-secondary-fixed-dim">({group.visits.length})</span>
-                  </button>
-                  {expanded && (
-                    <div className="p-sm space-y-sm">
-                      {group.visits.map((visit) => (
-                        <button
-                          key={visit.id}
-                          type="button"
-                          onClick={() => onSelectVisit(visit.id)}
-                          className="w-full text-left border border-outline-variant rounded-lg p-md hover:border-secondary transition-colors flex items-center justify-between gap-sm"
-                        >
-                          <div>
-                            <p className="font-label-md text-label-md text-on-surface">{visit.equipment?.motor}</p>
-                            <p className="font-body-sm text-body-sm text-on-surface-variant">
-                              {SERVICE_TYPE_LABELS[visit.service_type] ?? 'Sin tipo'}
-                            </p>
-                          </div>
-                          <div className="flex items-center gap-sm">
-                            {visit.scheduled_time_start && (
-                              <span className="font-label-sm text-label-sm text-on-surface-variant">
-                                {visit.scheduled_time_start.slice(0, 5)}
-                              </span>
-                            )}
-                            <StatusChip label={VISIT_STATUS_LABELS[visit.status]} tone={STATUS_TONE[visit.status]} variant="tag" />
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )
-            })}
+      {dateGroups.map(({ dateKey, clientGroups }) => {
+        const visitsInDay = clientGroups.flatMap((group) => group.visits)
+        const dayAvailableOffline = visitsInDay.length > 0 && visitsInDay.every((visit) => downloadedVisitIds.has(visit.id))
+
+        return (
+          <div key={dateKey}>
+            <h3 className="font-label-md text-label-md text-on-surface uppercase tracking-wide mb-sm pb-xs border-b border-outline-variant flex items-center gap-xs">
+              {dateKey === 'sin-fecha' ? 'Sin fecha asignada' : formatFullDate(dateKey)}
+              {dayAvailableOffline && (
+                <span
+                  className="material-symbols-outlined text-[1.6rem] text-on-tertiary-fixed-variant"
+                  aria-label="Disponible sin conexión"
+                  title="Disponible sin conexión"
+                >
+                  cloud_done
+                </span>
+              )}
+            </h3>
+            <div className="space-y-sm">
+              {clientGroups.map((group) => {
+                const key = clientGroupKey(section, dateKey, group.clientId)
+                const expanded = expandedGroupKeys.has(key)
+                return (
+                  <div key={key} className="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-lowest">
+                    <button
+                      type="button"
+                      onClick={() => onToggleGroup(key)}
+                      className="w-full flex items-center gap-sm py-sm px-md bg-secondary hover:bg-secondary-container transition-colors text-left"
+                    >
+                      <span className="material-symbols-outlined text-[2rem] text-secondary-fixed-dim">
+                        {expanded ? 'expand_more' : 'chevron_right'}
+                      </span>
+                      <span className="flex-1 font-label-md text-label-md text-on-secondary">{group.clientName}</span>
+                      <span className="font-label-sm text-label-sm text-secondary-fixed-dim">({group.visits.length})</span>
+                    </button>
+                    {expanded && (
+                      <div className="p-sm space-y-sm">
+                        {group.visits.map((visit) => (
+                          <button
+                            key={visit.id}
+                            type="button"
+                            onClick={() => onSelectVisit(visit.id)}
+                            className="w-full text-left border border-outline-variant rounded-lg p-md hover:border-secondary transition-colors flex items-center justify-between gap-sm"
+                          >
+                            <div>
+                              <p className="font-label-md text-label-md text-on-surface">{visit.equipment?.motor}</p>
+                              <p className="font-body-sm text-body-sm text-on-surface-variant">
+                                {SERVICE_TYPE_LABELS[visit.service_type] ?? 'Sin tipo'}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-sm">
+                              {visit.scheduled_time_start && (
+                                <span className="font-label-sm text-label-sm text-on-surface-variant">
+                                  {visit.scheduled_time_start.slice(0, 5)}
+                                </span>
+                              )}
+                              {pendingVisitIds.has(visit.id) && (
+                                <StatusChip label="Sin sincronizar" tone="warning" variant="tag" />
+                              )}
+                              <StatusChip label={VISIT_STATUS_LABELS[visit.status]} tone={STATUS_TONE[visit.status]} variant="tag" />
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
           </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }
@@ -115,9 +142,45 @@ function DateGroupList({ section, dateGroups, expandedGroupKeys, onToggleGroup, 
 export default function MonthlyPlanPage() {
   const { profile } = useAuth()
   const navigate = useNavigate()
-  const { data: visits, loading } = useTechnicianVisits(profile?.id)
+  const { data: visits, loading, reload } = useTechnicianVisits(profile?.id)
+  const online = useConnectivityStatus()
+  const pendingVisitIds = usePendingVisitIds()
   // Vacio por defecto = todos los grupos de cliente arrancan contraidos.
   const [expandedGroupKeys, setExpandedGroupKeys] = useState(() => new Set())
+  const [downloading, setDownloading] = useState(false)
+  const [downloadError, setDownloadError] = useState(null)
+  const [downloadInfo, setDownloadInfo] = useState(null)
+  const [downloadedVisitIds, setDownloadedVisitIds] = useState(() => new Set())
+
+  async function refreshDownloadedVisitIds() {
+    const ids = await getDownloadedVisitIds()
+    setDownloadedVisitIds(new Set(ids))
+  }
+
+  useEffect(() => {
+    getLastDownloadInfo().then(setDownloadInfo)
+    refreshDownloadedVisitIds()
+  }, [])
+
+  async function handleDownloadRouteSheet() {
+    setDownloading(true)
+    setDownloadError(null)
+    try {
+      const freshVisits = await listVisitsForTechnician(profile.id)
+      const visitIds = freshVisits.map((visit) => visit.id)
+      const parameterRows = await listVisitParametersForVisits(visitIds)
+      await saveRouteSheetToCache(profile.id, freshVisits)
+      await saveAllVisitParametersToCache(visitIds, parameterRows)
+      await recordRouteSheetDownload(profile.id, freshVisits.length)
+      setDownloadInfo(await getLastDownloadInfo())
+      await refreshDownloadedVisitIds()
+      await reload()
+    } catch (error) {
+      setDownloadError(error)
+    } finally {
+      setDownloading(false)
+    }
+  }
 
   const plannedGroups = useMemo(
     () =>
@@ -153,8 +216,37 @@ export default function MonthlyPlanPage() {
 
   return (
     <div>
-      <h1 className="font-headline-lg text-headline-lg text-on-surface mb-xs">Mi Plan Mensual</h1>
-      <p className="font-body-md text-body-md text-on-surface-variant mb-lg">Visitas asignadas por el administrativo.</p>
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-sm mb-xs">
+        <div>
+          <h1 className="font-headline-lg text-headline-lg text-on-surface mb-xs">Mi Plan Mensual</h1>
+          <p className="font-body-md text-body-md text-on-surface-variant">Visitas asignadas por el administrativo.</p>
+        </div>
+        <Button
+          variant="secondary-outline"
+          icon="download"
+          disabled={!online || downloading}
+          onClick={handleDownloadRouteSheet}
+        >
+          {downloading ? 'Descargando…' : 'Descargar hoja de ruta'}
+        </Button>
+      </div>
+
+      <div className="mb-lg">
+        {downloadInfo ? (
+          <p className="font-body-sm text-body-sm text-on-surface-variant">
+            Última descarga: {formatDateTime(downloadInfo.downloadedAt)} · {downloadInfo.count} visitas
+          </p>
+        ) : (
+          <p className="font-body-sm text-body-sm text-on-surface-variant">
+            Todavía no descargaste la hoja de ruta para trabajar sin conexión.
+          </p>
+        )}
+        {downloadError && (
+          <p className="font-body-sm text-body-sm text-error mt-xs">
+            No se pudo descargar la hoja de ruta. Intentá de nuevo cuando tengas conexión.
+          </p>
+        )}
+      </div>
 
       {isEmpty ? (
         <div className="bg-surface-container-lowest border border-outline-variant rounded-lg">
@@ -169,6 +261,8 @@ export default function MonthlyPlanPage() {
               expandedGroupKeys={expandedGroupKeys}
               onToggleGroup={toggleGroupExpanded}
               onSelectVisit={goToVisit}
+              pendingVisitIds={pendingVisitIds}
+              downloadedVisitIds={downloadedVisitIds}
             />
           )}
 
@@ -183,6 +277,8 @@ export default function MonthlyPlanPage() {
                 expandedGroupKeys={expandedGroupKeys}
                 onToggleGroup={toggleGroupExpanded}
                 onSelectVisit={goToVisit}
+                pendingVisitIds={pendingVisitIds}
+                downloadedVisitIds={downloadedVisitIds}
               />
             </div>
           )}

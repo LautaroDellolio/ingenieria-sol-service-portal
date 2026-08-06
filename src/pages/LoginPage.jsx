@@ -4,6 +4,7 @@ import LoginCard from '../components/ui/LoginCard'
 import Modal from '../components/ui/Modal'
 import Button from '../components/ui/Button'
 import { signInWithUsername } from '../api/auth'
+import { isNetworkError } from '../offline/network'
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -21,8 +22,12 @@ export default function LoginPage() {
     try {
       await signInWithUsername(username, password)
       navigate('/', { replace: true })
-    } catch {
-      setErrorMessage('Usuario o contraseña incorrectos.')
+    } catch (error) {
+      setErrorMessage(
+        isNetworkError(error)
+          ? 'Sin conexión a internet. Necesitás conexión para iniciar sesión por primera vez en este dispositivo.'
+          : 'Usuario o contraseña incorrectos.'
+      )
     } finally {
       setSubmitting(false)
     }

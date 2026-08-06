@@ -4,7 +4,7 @@ import TopBar from './TopBar'
 import UserMenu from './UserMenu'
 import MobileTabBar from './MobileTabBar'
 
-export default function RoleLayoutShell({ navItems, title }) {
+export default function RoleLayoutShell({ navItems, title, statusBar = null }) {
   return (
     <div className="min-h-screen bg-background">
       <Sidebar navItems={navItems} />
@@ -24,6 +24,7 @@ export default function RoleLayoutShell({ navItems, title }) {
 
       <main className="md:pl-[25.6rem] md:pt-[6.4rem] pb-[6.4rem] md:pb-0">
         <div className="p-margin-mobile md:p-margin-desktop">
+          {statusBar}
           <Outlet />
         </div>
       </main>

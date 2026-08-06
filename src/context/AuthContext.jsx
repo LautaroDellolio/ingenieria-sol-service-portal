@@ -2,6 +2,8 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { getProfile } from '../api/profiles'
 import { signOut as signOutRequest } from '../api/auth'
+import { isNetworkError } from '../offline/network'
+import { cacheProfile, getCachedProfile } from '../offline/routeSheetCache'
 
 const AuthContext = createContext(null)
 
@@ -21,8 +23,18 @@ export function AuthProvider({ children }) {
       try {
         const loadedProfile = await getProfile(currentSession.user.id)
         if (isMounted) setProfile(loadedProfile)
-      } catch {
-        if (isMounted) setProfile(null)
+        await cacheProfile(loadedProfile)
+      } catch (error) {
+        // Sin red, la sesion (JWT valido en localStorage) puede seguir
+        // viva aunque este fetch falle. En vez de cerrar sesion, se usa el
+        // ultimo perfil cacheado — solo si es del mismo usuario, para no
+        // mostrar datos de otro tecnico en una tablet compartida.
+        if (!isNetworkError(error)) {
+          if (isMounted) setProfile(null)
+          return
+        }
+        const cachedProfile = await getCachedProfile()
+        if (isMounted) setProfile(cachedProfile?.id === currentSession.user.id ? cachedProfile : null)
       }
     }
 
